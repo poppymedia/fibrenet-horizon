@@ -1,0 +1,51 @@
+{%- liquid
+  assign settings = block.settings
+-%}
+
+<div class="header-contact {% if settings.position %}position-{{ settings.position }}{% endif %} {% if settings.row %}row-{{ settings.row }}{% endif %}" {{ block.shopify_attributes }}>
+  {% render 'product-contact', settings: settings %}
+</div>
+
+{% schema %}
+{
+  "name": "Contact",
+  "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "row",
+      "label": "Row",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    }
+  ]
+}
+{% endschema %}

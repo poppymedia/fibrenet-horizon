@@ -1,4 +1,10 @@
 {%- liquid
+  # DEBUG: Output received order for this row
+  comment
+    echo 'DEBUG header-row - Row: ' | append: row
+    echo 'DEBUG header-row - Order: ' | append: order
+  endcomment
+
   assign order = order | split: ','
   assign left = ''
   assign center = ''
@@ -34,7 +40,7 @@
   assign columns = 'left,center,right' | split: ','
 -%}
 
-{%- for column in columns -%}
+  {%- for column in columns -%}
   {%- capture items_for_column -%}
     {% case column %}
       {% when 'left' %}
@@ -47,6 +53,8 @@
   {%- endcapture -%}
 
   {%- assign items_array = items_for_column | strip | split: ' ' | compact -%}
+  
+  <!-- # 7. DEBUG: Column {{ column }} items: {{ items_array | join: ',' }} -->
 
   {%- if items_array.size > 0 -%}
     <div
@@ -70,6 +78,10 @@
               {{ mobile_search }}
             {% when 'actions' %}
               {{ actions }}
+            {% when 'contact' %}
+              {{ contact }}
+            {% when 'phone' %}
+              {{ phone }}
           {% endcase %}
         {% endunless %}
       {% endfor %}

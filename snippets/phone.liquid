@@ -1,0 +1,30 @@
+{%- liquid
+  assign phone_number = settings.phone_number | default: shop.phone
+  assign show_desktop = settings.show_phone_desktop | default: true
+  assign show_mobile = settings.show_phone_mobile | default: false
+  assign phone_text = settings.phone_text | default: phone_number
+  
+  assign visibility_classes = ''
+  if show_desktop and show_mobile
+    assign visibility_classes = ''
+  elsif show_desktop
+    assign visibility_classes = 'mobile:hidden'
+  elsif show_mobile
+    assign visibility_classes = 'desktop:hidden'
+  else
+    assign visibility_classes = 'hidden'
+  endif
+-%}
+
+{%- if phone_number != blank -%}
+  <div class="header-phone {{ visibility_classes }}">
+    <a href="tel:{{ phone_number | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', '' }}" class="phone-link">
+      {%- if settings.phone_icon -%}
+        <svg class="phone-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+      {%- endif -%}
+      <span class="phone-text">{{ phone_text }}</span>
+    </a>
+  </div>
+{%- endif -%}

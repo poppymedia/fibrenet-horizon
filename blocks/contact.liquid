@@ -1,0 +1,107 @@
+{%- liquid
+  assign block_settings = block.settings
+-%}
+
+{% render 'product-contact', settings: block_settings %}
+
+{% schema %}
+{
+  "name": "Contact Buttons", 
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position in Header",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right",
+      "info": "Only applies when used in header"
+    },
+    {
+      "type": "header",
+      "content": "Chat"
+    },
+    {
+      "type": "text",
+      "id": "chat_text",
+      "label": "Chat Text"
+    },
+    {
+      "type": "text",
+      "id": "chat_subtext",
+      "label": "Chat Subtext"
+    },
+    {
+      "type": "url",
+      "id": "chat_link",
+      "label": "Chat Link URL"
+    },    
+    {
+      "type": "color_scheme",
+      "id": "chat_color_scheme",
+      "label": "Chat Colour Scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "Call"
+    },
+    {
+      "type": "text",
+      "id": "call_text",
+      "label": "Call Text"
+    },
+    {
+      "type": "url",
+      "id": "call_link",
+      "label": "Call Link URL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "call_color_scheme",
+      "label": "Call Colour Scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "header",
+      "content": "Email"
+    },
+    {
+      "type": "text",
+      "id": "email_text",
+      "label": "Email Text"
+    },
+    {
+      "type": "url",
+      "id": "email_link",
+      "label": "Email Link URL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "email_color_scheme",
+      "label": "Email Colour Scheme",
+      "default": "scheme-5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Buttons",
+      "category": "Contact"
+    }
+  ]
+}
+{% endschema %}
+{% # theme-check-enable %}

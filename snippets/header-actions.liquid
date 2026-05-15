@@ -24,6 +24,11 @@
       {% render 'cart-icon-component' %}
     </a>
   {% endif %}
+
+  {% comment %} Add phone number to header-actions when positioned right {% endcomment %}
+  {% if settings.show_phone_number and settings.phone_number_position == 'right' %}
+    {% render 'phone', settings: settings %}
+  {% endif %}
 </header-actions>
 
 {% stylesheet %}
@@ -267,5 +272,36 @@
 
   .cart-bubble--animating .cart-bubble__text {
     animation: cartBubbleSlideIn var(--animation-speed) var(--animation-easing);
+  }
+
+  /* Phone number styling when inside header-actions */
+  header-actions .header-phone {
+    display: flex;
+    align-items: center;
+    margin-left: var(--gap-sm);
+  }
+
+  header-actions .phone-link {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    text-decoration: none;
+    color: var(--color-foreground);
+    font-size: var(--font-size--sm);
+    transition: color var(--animation-speed) var(--animation-easing);
+  }
+
+  header-actions .phone-link:hover {
+    color: var(--color-primary);
+  }
+
+  header-actions .phone-icon {
+    flex-shrink: 0;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+  }
+
+  header-actions .phone-text {
+    white-space: nowrap;
   }
 {% endstylesheet %}

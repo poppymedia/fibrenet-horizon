@@ -1,9 +1,6 @@
 {% liquid
-  assign order = 'logo,menu,localization,search,mobile_search,actions'
-
-  if shop.customer_accounts_enabled
-    assign order = 'mobile_search,logo,menu,localization,search,actions'
-  endif
+  # 1. INITIALIZE BASE ORDER - Default order for single row header
+  assign order = 'logo,menu,contact,localization,search,mobile_search,actions'
 
   assign rows = 'top,bottom' | split: ','
   assign search_style = 'none'
@@ -53,12 +50,17 @@
     content_for 'block', type: '_header-menu', id: 'header-menu', variant: 'mobile'
   endcapture
 
+  # 2. CAPTURE CONTACT BUTTONS - Rendered from snippets/product-contact.liquid
+  capture contact
+    render 'product-contact', settings: section.settings
+  endcapture
+
   capture navigation_bar
     content_for 'block', type: '_header-menu', id: 'header-menu', variant: 'navigation_bar', transparent: transparent
   endcapture
 
   capture actions
-    render 'header-actions'
+    render 'header-actions', settings: section.settings
   endcapture
 
   if shop.customer_accounts_enabled
@@ -89,6 +91,37 @@
       endif
     endif
   endif
+
+
+  # Override with phone positioning if phone is enabled and positioned left
+  if section.settings.show_phone_number and section.settings.phone_number_position == 'left'
+    # Insert phone before actions
+    if section.settings.contact_end_of_right_column
+      assign order = 'logo,menu,localization,search,mobile_search,phone,actions,contact'
+    else
+      assign order = 'logo,menu,contact,localization,search,mobile_search,phone,actions'
+    endif
+
+    if shop.customer_accounts_enabled
+      # Insert phone before actions
+      if section.settings.contact_end_of_right_column
+        assign order = 'mobile_search,logo,menu,localization,search,phone,actions,contact'
+      else
+        assign order = 'mobile_search,logo,menu,contact,localization,search,phone,actions'
+      endif
+    endif
+  endif
+
+  # Debug: Output current order (remove in production)
+  if section.settings.show_phone_number
+    comment
+      echo 'Phone Order: ' | append: order
+      echo 'Phone Position: ' | append: section.settings.phone_number_position
+      echo 'Phone Content: ' | append: phone
+    endcomment
+  endif
+
+  # 3. CAPTURE SEARCH BUTTON - Rendered from snippets/search.liquid
   capture search
     render 'search', style: search_style, class: search_class
   endcapture
@@ -99,6 +132,12 @@
   assign skip_mobile_search = false
   if shop.customer_accounts_enabled == false and section.settings.search_position == 'left' and search_style != 'none'
     assign skip_mobile_search = true
+  endif
+
+  if section.settings.show_phone_number and section.settings.phone_number_position == 'left'
+    capture phone
+      render 'phone', settings: section.settings
+    endcapture
   endif
 
   if section.settings.search_row == 'bottom' or search_style != 'none' and skip_mobile_search == false
@@ -124,25 +163,86 @@
     endcapture
   endif
 
+  # 4. INITIALIZE BOTTOM ROW BLOCKS ARRAY - For two-row header system
   assign bottom_row_blocks = ''
 
-  if section.settings.menu_row == 'bottom'
-    assign bottom_row_blocks = bottom_row_blocks | append: 'menu,'
-  endif
+  # 5. BUILD BOTTOM ROW BLOCKS - Determine which elements go to bottom row
+  # Handle two-row header system
+  if section.settings.enable_two_row_header
 
-  if section.settings.search_style != 'none'
-    if section.settings.search_row == 'bottom'
-      assign bottom_row_blocks = bottom_row_blocks | append: 'search,'
+    # Actions row positioning
+    if section.settings.actions_row == 'bottom'
+      assign bottom_row_blocks = bottom_row_blocks | append: 'actions,'
     endif
-  endif
 
-  if section.settings.show_country or section.settings.show_language
-    if section.settings.localization_row == 'bottom'
-      assign bottom_row_blocks = bottom_row_blocks | append: 'localization,'
+    # Logo row positioning
+    if section.settings.logo_row == 'bottom'
+      assign bottom_row_blocks = bottom_row_blocks | append: 'logo,'
     endif
+
+    # Menu row positioning
+    if section.settings.menu_row == 'bottom'
+      assign bottom_row_blocks = bottom_row_blocks | append: 'menu,'
+    endif
+
+   
+    
+    # Search row positioning (override)
+    if section.settings.show_search
+      if section.settings.search_row_override == 'bottom'
+        assign bottom_row_blocks = bottom_row_blocks | append: 'search,'
+      endif
+    endif
+
+    # Contact row positioning
+    if section.settings.contact_row == 'bottom'
+      assign bottom_row_blocks = bottom_row_blocks | append: 'contact,'
+    endif
+
+    # Localization row positioning (override)
+    if section.settings.show_country or section.settings.show_language
+      if section.settings.localization_row_override == 'bottom'
+        assign bottom_row_blocks = bottom_row_blocks | append: 'localization,'
+      endif
+    endif
+  else
+    # Original single-row logic
+    if section.settings.menu_row == 'bottom'
+      assign bottom_row_blocks = bottom_row_blocks | append: 'menu,'
+    endif
+
+    if section.settings.show_search
+      if section.settings.search_row == 'bottom'
+        assign bottom_row_blocks = bottom_row_blocks | append: 'search,'
+      endif
+    endif
+
+    if section.settings.show_country or section.settings.show_language
+      if section.settings.localization_row == 'bottom'
+        assign bottom_row_blocks = bottom_row_blocks | append: 'localization,'
+      endif
+    endif
+
+ 
+    # Phone row positioning
+    if section.settings.show_phone_number
+      if section.settings.phone_row == 'bottom'
+        assign bottom_row_blocks = bottom_row_blocks | append: 'phone,'
+      endif
+    endif
+
   endif
 
   assign bottom_row_blocks = bottom_row_blocks | split: ',' | compact
+
+  # DEBUG: Output current order and bottom row blocks
+  comment
+    echo 'DEBUG - Main Order: ' | append: order
+    echo 'DEBUG - Bottom Row Blocks: ' | append: bottom_row_blocks | join: ','
+    echo 'DEBUG - Two Row Enabled: ' | append: section.settings.enable_two_row_header
+    echo 'DEBUG - Search Row Override: ' | append: section.settings.search_row_override
+    echo 'DEBUG - Contact Row: ' | append: section.settings.contact_row
+  endcomment
 
   if section.settings.section_height == 'compact'
     assign header_height_class = ' header--compact'
@@ -182,6 +282,7 @@
     "url": {{ request.origin | append: page.url | json }}
   }
 </script>
+
 
 <header-component
   id="header-component"
@@ -231,16 +332,27 @@
     %}
 
     {% capture content %}
+      {%- liquid
+        # Use different order for top vs bottom row
+        assign row_order = order
+        if row == 'bottom' and bottom_row_blocks.size > 0
+          assign row_order = bottom_row_blocks | join: ','
+        endif
+      -%}
+      
+      <!-- # 1. RENDER HEADER ROW - Order: {{ row_order }} for {{ row }} row -->
       {% render 'header-row',
         row: row,
-        order: order,
+        order: row_order,
         settings: section.settings,
         first: first,
         logo: logo,
         menu: menu,
+        contact: contact,
+        search: search,
         actions: actions,
         localization: localization_markup,
-        search: search,
+        phone: phone,
         mobile_search: mobile_search
       %}
     {% endcapture %}
@@ -465,6 +577,49 @@
     .overflow-menu::part(list) {
       justify-content: flex-end;
     }
+
+    /* Special styling for contact at end of right column */
+    &:has(.contacts:last-child) {
+      .contacts {
+        margin-left: auto;
+      }
+    }
+  }
+
+  /* Phone number styling */
+  .header-phone {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .phone-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.875rem;
+    transition: color var(--animation-speed) var(--animation-easing);
+  }
+
+  .phone-link:hover {
+    color: var(--color-primary);
+  }
+
+  .phone-icon {
+    flex-shrink: 0;
+  }
+
+  .phone-text {
+    white-space: nowrap;
+  }
+
+  /* Ensure phone appears at the end of right column when positioned right */
+  .header__column--right:has(.header-phone:last-child) {
+    .header-phone {
+      margin-left: auto;
+    }
   }
 
   .header__columns {
@@ -681,6 +836,188 @@
     },
     {
       "type": "header",
+      "content": "t:content.contact_buttons"
+    },
+    {
+      "type": "select",
+      "id": "contact_position",
+      "label": "t:settings.position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "right",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "contact_row",
+      "label": "t:settings.row",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "checkbox",
+      "id": "contact_end_of_right_column",
+      "label": "Place Contact at End of Right Column",
+      "info": "Places contact buttons at the very end of the right column, after all other elements",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_two_row_header",
+      "label": "Enable Two Row Header",
+      "info": "Allows positioning elements in separate top and bottom rows",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "actions_row",
+      "label": "Actions Row (Login, Cart, Currency)",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
+        }
+      ],
+      "default": "top",
+      "visible_if": "{{ section.settings.enable_two_row_header }}"
+    },
+    {
+      "type": "select",
+      "id": "logo_row",
+      "label": "Logo Row",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
+        }
+      ],
+      "default": "top",
+      "visible_if": "{{ section.settings.enable_two_row_header }}"
+    },
+    {
+      "type": "select",
+      "id": "search_row_override",
+      "label": "Search Row Override",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
+        }
+      ],
+      "default": "top",
+      "visible_if": "{{ section.settings.enable_two_row_header }}"
+    },
+    {
+      "type": "select",
+      "id": "localization_row_override",
+      "label": "Localization Row Override",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
+        }
+      ],
+      "default": "top",
+      "visible_if": "{{ section.settings.enable_two_row_header }}"
+    },
+    {
+      "type": "text",
+      "id": "chat_text",
+      "label": "Chat Text",
+      "default": "Chat"
+    },
+    {
+      "type": "text",
+      "id": "chat_subtext",
+      "label": "Chat Subtext"
+    },
+    {
+      "type": "url",
+      "id": "chat_link",
+      "label": "Chat Link URL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "chat_color_scheme",
+      "label": "Chat Colour Scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "text",
+      "id": "call_text",
+      "label": "Call Text",
+      "default": "Call"
+    },
+    {
+      "type": "url",
+      "id": "call_link",
+      "label": "Call Link URL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "call_color_scheme",
+      "label": "Call Colour Scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "text",
+      "id": "email_text",
+      "label": "Email Text",
+      "default": "Email"
+    },
+    {
+      "type": "url",
+      "id": "email_link",
+      "label": "Email Link URL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "email_color_scheme",
+      "label": "Email Colour Scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "header",
       "content": "t:content.menu"
     },
     {
@@ -726,6 +1063,86 @@
     {
       "type": "paragraph",
       "content": "t:content.manage_customer_accounts"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.phone_number"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone_number",
+      "label": "t:settings.phone_number",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone Number",
+      "info": "Leave blank to use store phone number",
+      "placeholder": "{{ shop.phone }}",
+      "visible_if": "{{ section.settings.show_phone_number }}"
+    },
+    {
+      "type": "text",
+      "id": "phone_text",
+      "label": "Display Text",
+      "info": "Custom text to display (defaults to phone number)",
+      "visible_if": "{{ section.settings.show_phone_number }}"
+    },
+    {
+      "type": "select",
+      "id": "phone_number_position",
+      "label": "t:settings.phone_number_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "right",
+      "visible_if": "{{ section.settings.show_phone_number }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone_desktop",
+      "label": "Show on Desktop",
+      "default": true,
+      "visible_if": "{{ section.settings.show_phone_number }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone_mobile",
+      "label": "Show on Mobile",
+      "default": false,
+      "visible_if": "{{ section.settings.show_phone_number }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_icon",
+      "label": "Show Phone Icon",
+      "default": true,
+      "visible_if": "{{ section.settings.show_phone_number }}"
+    },
+    {
+      "type": "select",
+      "id": "phone_row",
+      "label": "Phone Row",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:options.top"
+        },
+        {
+          "value": "bottom",
+          "label": "t:options.bottom"
+        }
+      ],
+      "default": "top",
+      "visible_if": "{{ section.settings.enable_two_row_header and section.settings.show_phone_number }}"
     },
     {
       "type": "header",

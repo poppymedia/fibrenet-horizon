@@ -42,6 +42,8 @@
     "background_video": "Background video",
     "block_link": "Block link",
     "block_size": "Block size",
+    // Contact buttons
+    "contact_buttons": "Contact buttons",
     // Typography setting for body text size
     "body_size": "Body size",
     "borders": "Borders",
@@ -712,6 +714,10 @@
     "youtube": "YouTube"
   },
   "settings": {
+    // Phone number
+    "phone_number": "Phone number",
+    // Phone number
+    "phone_number_position": "Position",
     "accordion": "Accordion",
     "account": "Account",
     "alignment": "Alignment",

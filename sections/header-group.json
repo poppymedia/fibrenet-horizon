@@ -77,8 +77,22 @@
             "drawer_dividers": false
           },
           "blocks": {}
+        },
+        "header-contact": {
+          "type": "_header-contact",
+          "static": true,
+          "settings": {
+            "position": "right",
+            "row": "top"
+          },
+          "blocks": {}
         }
       },
+      "block_order": [
+        "header-logo",
+        "header-menu",
+        "header-contact"
+      ],
       "settings": {
         "logo_position": "left",
         "menu_position": "left",

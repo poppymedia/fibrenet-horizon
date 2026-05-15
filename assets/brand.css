@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Futura';
+  src: url('FuturaMedium.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FuturaRegular';
+  src: url('FuturaRegular.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: 'Futura', Arial, sans-serif !important;
+}
+
+/* Override theme typography */
+html,
+body,
+body *,
+.shopify-section,
+.shopify-section *,
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+p, span, div, a, button,
+input, textarea, select,
+.heading, .body-text, .title, .subtitle {
+    font-family: 'Futura', Arial, sans-serif !important;
+}
+
+legend {
+    font-family: 'FuturaRegular', Arial, sans-serif !important;
+    font-size: 16px !important;
+}
+
+/* Overrides */
+.product-form-buttons {
+    display: grid !important;
+}
+.quantity-selector {
+    width: 150px !important;
+    margin: 0 auto !important;
+}

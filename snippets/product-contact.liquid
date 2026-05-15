@@ -1,0 +1,11 @@
+<!-- # 6. CONTACT BUTTONS SNIPPET - This is where contact buttons are rendered -->
+<p class="contacts">
+    <a href="{{ settings.chat_link }}" class="btn chat color-{{ settings.chat_color_scheme }}">
+        <span class="title">{{ settings.chat_text }}</span>
+        {% if settings.chat_subtext %}
+        <span class="hr"></span>
+        <em class="subtitle">{{ settings.chat_subtext }}</em>{% endif %}
+    </a>
+    <a href="tel:{{ settings.call_link }}" class="btn call color-{{ settings.call_color_scheme }}">{{ settings.call_text }}</a>
+    <a href="mailto:{{ settings.email_link }}" class="btn email color-{{ settings.email_color_scheme }}">{{ settings.email_text }}</a>
+</p>
