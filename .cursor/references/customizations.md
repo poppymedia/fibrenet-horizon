@@ -167,6 +167,28 @@ Added to `sections/header.liquid`:
 - [ ] Brand styling applies
 - [ ] Mobile responsiveness
 
+## Legacy donor theme → Horizon `settings_data.json`
+
+When migrating flat legacy colour keys from another theme into Horizon, paste donor JSON locally as reference only (`settings_data_donor.json`). Do **not** replace Horizon `settings_data.json` wholesale — map semantics into Horizon tokens (`color_schemes.*`, fonts, etc.). Keeping `presets.Default.color_schemes` identical to `current.color_schemes` avoids mismatched defaults after edits.
+
+**Initial Fibrenet mapping applied:**
+
+| Donor idea | Horizon target |
+|------------|----------------|
+| `color_body_bg` `#E9F0FE` | Main surfaces (`scheme-1`) |
+| `color_button`, drawers `#FF6610` | Primary buttons + accents across schemes |
+| `color_header` / `color_footer` `#0D0D52` | `scheme-5` (footer group defaults here) |
+| `color_announcement` `#525BFF` | `scheme-4` — assign announcement sections if desired |
+| `color_drawer_*`, white cart UI | `scheme-2` |
+| `color_savings_text` `#ff4e4e` | Sale badges → repurposed UUID scheme + `badge_sale_color_scheme` |
+| Logo PNG URLs | Theme `logo` / `logo_inverse`; favicon asset URL |
+| `type_*_font_family` Futura | `type_heading_font` `futura_n6`, `type_body_font` `futura_n3`, `type_subheading_font` `futura_n4` |
+| Square buttons | `button_border_radius_*` = `0`, `variant_button_radius` = `0` |
+
+Donor checkout branding (`checkout_*`) belongs under **Shopify Admin → Settings → Checkout**, not Horizon theme JSON.
+
+After pulling Futura values into JSON, confirm fonts resolve in the theme editor (slugs must exist on the shop).
+
 ## Maintenance Notes
 
 ### Files to Monitor During Updates
