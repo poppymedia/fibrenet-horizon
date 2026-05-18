@@ -320,6 +320,28 @@
     },
     {
       "type": "select",
+      "id": "fibrenet_title_mode",
+      "label": "Fibrenet title mode",
+      "info": "title_mode: cables | public_sku | cwdm | aocdac — composite H1 for alternate product templates.",
+      "options": [
+        { "value": "cables", "label": "Cables (variant SKU + title + option)" },
+        { "value": "public_sku", "label": "Public SKU (compatibles / DWDM)" },
+        { "value": "cwdm", "label": "CWDM (public SKU + subtitle prefix)" },
+        { "value": "aocdac", "label": "AOC/DAC (public SKU + barcode)" }
+      ],
+      "default": "public_sku",
+      "visible_if": "{{ section.settings.layout_style == 'fibrenet' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "fibrenet_stock_protect",
+      "label": "Fibrenet stock protect (AOC/DAC)",
+      "info": "When enabled, prevents other scripts from clearing in-stock state while quantity remains positive.",
+      "default": false,
+      "visible_if": "{{ section.settings.layout_style == 'fibrenet' }}"
+    },
+    {
+      "type": "select",
       "id": "content_width",
       "label": "t:settings.width",
       "options": [

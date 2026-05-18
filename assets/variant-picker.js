@@ -1,6 +1,7 @@
 import { Component } from '@theme/component';
 import { VariantSelectedEvent, VariantUpdateEvent } from '@theme/events';
 import { morph } from '@theme/morph';
+import { normalizeSectionId, sectionRenderer } from '@theme/section-renderer';
 import { requestYieldCallback } from '@theme/utilities';
 
 /**
@@ -69,8 +70,17 @@ export default class VariantPicker extends Component {
     const currentUrl = this.dataset.productUrl?.split('?')[0];
     const newUrl = selectedOption.dataset.connectedProductUrl;
     const loadsNewProduct = isOnProductPage && !!newUrl && newUrl !== currentUrl;
+    const useSectionRenderer =
+      isOnProductPage &&
+      !loadsNewProduct &&
+      Boolean(this.closest('.product-information--fibrenet')) &&
+      Boolean(this.dataset.sectionId);
 
-    this.fetchUpdatedSection(this.buildRequestUrl(selectedOption), loadsNewProduct);
+    if (useSectionRenderer) {
+      this.#renderProductSection(this.buildRequestUrl(selectedOption));
+    } else {
+      this.fetchUpdatedSection(this.buildRequestUrl(selectedOption), loadsNewProduct);
+    }
 
     const url = new URL(window.location.href);
 
@@ -209,6 +219,59 @@ export default class VariantPicker extends Component {
   }
 
   /**
+   * Re-renders the product-information section via the Section Rendering API (Fibrenet product pages).
+   * Morphs the full section so blocks such as fibrenet-product-title update from Liquid.
+   * @param {string} requestUrl - The request URL (with option_values).
+   */
+  #renderProductSection(requestUrl) {
+    const sectionId = this.dataset.sectionId;
+    if (!sectionId) return;
+
+    const url = new URL(requestUrl, window.location.origin);
+
+    sectionRenderer
+      .renderSection(normalizeSectionId(sectionId), { cache: false, url })
+      .then((sectionHTML) => {
+        this.#pendingRequestUrl = undefined;
+        this.#dispatchVariantUpdateFromSectionHtml(sectionHTML);
+      })
+      .catch((error) => {
+        if (error.name === 'AbortError') {
+          console.warn('Section render aborted by user');
+        } else {
+          console.error(error);
+        }
+      });
+  }
+
+  /**
+   * Parses section HTML and dispatches variant:update for listeners (stock, price, etc.).
+   * @param {string} sectionHTML
+   */
+  #dispatchVariantUpdateFromSectionHtml(sectionHTML) {
+    const html = new DOMParser().parseFromString(sectionHTML, 'text/html');
+    html.querySelector('overflow-list[defer]')?.removeAttribute('defer');
+
+    const picker =
+      html.querySelector(
+        `variant-picker[data-product-id="${this.dataset.productId}"][data-section-id="${this.dataset.sectionId}"]`
+      ) || html.querySelector(`variant-picker[data-product-id="${this.dataset.productId}"]`);
+
+    const textContent = picker?.querySelector('script[type="application/json"]')?.textContent;
+    if (!textContent) return;
+
+    const variantData = JSON.parse(textContent);
+    const sourceId = this.selectedOptionId ?? String(variantData.id ?? '');
+
+    this.dispatchEvent(
+      new VariantUpdateEvent(variantData, sourceId, {
+        html,
+        productId: this.dataset.productId ?? '',
+      })
+    );
+  }
+
+  /**
    * Fetches the updated section.
    * @param {string} requestUrl - The request URL.
    * @param {boolean} shouldMorphMain - If the entire main content should be morphed. By default, only the variant picker is morphed.
@@ -226,24 +289,31 @@ export default class VariantPicker extends Component {
         // Defer is only useful for the initial rendering of the page. Remove it here.
         html.querySelector('overflow-list[defer]')?.removeAttribute('defer');
 
-        const textContent = html.querySelector(`variant-picker script[type="application/json"]`)?.textContent;
+        const newPickerSource =
+          html.querySelector(
+            `variant-picker[data-product-id="${this.dataset.productId}"][data-section-id="${this.dataset.sectionId}"]`
+          ) ||
+          html.querySelector(`variant-picker[data-product-id="${this.dataset.productId}"]`) ||
+          html.querySelector('variant-picker[data-template-product-match="true"]');
+
+        const textContent = newPickerSource?.querySelector('script[type="application/json"]')?.textContent;
         if (!textContent) return;
 
         if (shouldMorphMain) {
           this.updateMain(html);
         } else {
           const newProduct = this.updateVariantPicker(html);
+          const variantData = JSON.parse(textContent);
+          const sourceId = this.selectedOptionId ?? String(variantData.id ?? '');
 
-          // We grab the variant object from the response and dispatch an event with it.
-          if (this.selectedOptionId) {
-            this.dispatchEvent(
-              new VariantUpdateEvent(JSON.parse(textContent), this.selectedOptionId, {
-                html,
-                productId: this.dataset.productId ?? '',
-                newProduct,
-              })
-            );
-          }
+          // Always dispatch — fibrenet title/stock rely on variant:update after option changes.
+          this.dispatchEvent(
+            new VariantUpdateEvent(variantData, sourceId, {
+              html,
+              productId: this.dataset.productId ?? '',
+              newProduct,
+            })
+          );
         }
       })
       .catch((error) => {

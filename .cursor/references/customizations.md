@@ -231,6 +231,23 @@ After pulling Futura values into JSON, confirm fonts resolve in the theme editor
 - **Pitfall:** Horizon allows only one `{% content_for 'blocks' %}` per section file — never duplicate it inside `if`/`else` layout branches; place a single call after the branch closes.
 - **Page head H1:** Unified in `brand.css` via `--fibrenet-head-to-title-gap` (`--spacing-2xl` / 56px desktop, 32px mobile). Gap is `margin-block-start` on the `h1` with `!important` — Horizon `base.css` sets `.text-block > *:first-child { margin-block-start: 0 }`, so section/block padding alone does not add space above the title. Keep title text blocks at `padding-block-start: 0`. Page/collection/product: gap from header; blog/article: gap from tag bar. Homepage exempt.
 
+## Fibrenet alternate product templates
+
+Five assignable templates share `product-information` + Fibrenet blocks; section settings set behaviour:
+
+| Template | `fibrenet_title_mode` | `fibrenet_stock_protect` |
+|----------|----------------------|---------------------------|
+| `product.aocdac.json` | `aocdac` | `true` |
+| `product.cables.json` | `cables` | `false` |
+| `product.compatibles.json` | `public_sku` | `false` |
+| `product.cwdm.json` | `cwdm` | `false` |
+| `product.dwdm.json` | `public_sku` | `false` |
+
+- **Title:** `blocks/_fibrenet-product-title.liquid` + `assets/fibrenet-product-title.js` — on Fibrenet product pages (`product-information--fibrenet`), **`assets/variant-picker.js`** re-renders the whole `product-information` section via `sectionRenderer.renderSection()` (Section Rendering API + `morphSection`), so the H1 updates from Liquid like other section blocks. `fibrenet-product-title.js` listens on `document` (survives morph) and prefers copying `.fibrenet-product-title__heading` from `event.detail.data.html`; falls back to variant JSON. Non-Fibrenet product pages still morph only `variant-picker`. Title Liquid must live in the block file (not a rendered snippet) because `{% render %}` does not expose snippet assigns to the parent.
+- **Stock:** `blocks/_fibrenet-product-stock.liquid` + `snippets/fibrenet-product-stock-helpers.liquid` + `assets/fibrenet-product-stock.js` — replaces `product-inventory` on all product templates; lead-time from `custom.lead_time.value.entries`.
+- **Locales:** `products.product.in_stock_label`, `stock_label_fibrenet_html`, `sold_out_fibrenet_html`, `lead_time_label`, `download_datasheet`, `no_download_datasheet` in `locales/en.default.json`.
+- **Pending:** full `spec.*` metafield table, linked-product variant UI (`custom.variants_from_another_product`).
+
 ## Fibrenet product page (`templates/product.json`)
 
 - **Layout:** `product-information` with `layout_style: fibrenet` → class `product-information--fibrenet`. Uses Horizon `equal_columns: true` for 50/50 grid (`product-information__grid--half`), `gap: 48`, `sticky_details_desktop: false`. Media: carousel + dots, `aspect_ratio: 1` (square), `zoom: false`.

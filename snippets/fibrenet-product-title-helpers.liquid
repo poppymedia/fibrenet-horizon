@@ -1,0 +1,74 @@
+{%- doc -%}
+  Reference only — title logic lives in blocks/_fibrenet-product-title.liquid (render tag does not return assigns).
+
+  @param {object} product - Product object
+  @param {object} variant - Selected or first available variant
+  @param {string} title_mode - cables | public_sku | cwdm | aocdac
+{%- enddoc -%}
+
+{%- liquid
+  assign product_title_clean = product.title | replace: '(Second)', '' | replace: '(second)', '' | strip
+  assign public_sku = product.metafields.data.public_sku.value | default: ''
+  assign subtitle_prefix = product.metafields.custom.subtitle_prefix.value | default: ''
+
+  assign base_sku = product.variants.first.sku | default: ''
+  if product.type contains 'Compatibles-'
+    assign base_sku = product.type | remove: 'Compatibles-' | strip
+  endif
+  if public_sku != blank
+    assign base_sku = public_sku
+  endif
+
+  assign title_product = subtitle_prefix
+  if title_product == blank
+    assign title_product = product_title_clean
+  endif
+
+  assign variant_label = variant.title
+  if product.has_only_default_variant
+    assign variant_label = ''
+  endif
+
+  if product.options.size > 1
+    assign option_label = variant.title
+  else
+    assign option_label = variant.option1 | default: variant_label
+  endif
+
+  assign option_label_lower = option_label | downcase
+  if option_label_lower contains 'uncoded'
+    assign option_label_trimmed = option_label | replace: 'compatible', '' | replace: 'Compatible', '' | strip
+    assign display_leading_sku = base_sku
+    assign display_option_suffix = option_label_trimmed
+  else
+    assign display_leading_sku = variant.sku | default: base_sku
+    assign display_option_suffix = option_label
+  endif
+
+  if title_mode == 'cables'
+    assign h1_leading = display_leading_sku
+    assign h1_middle = product_title_clean
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = ''
+  elsif title_mode == 'cwdm'
+    assign h1_leading = public_sku
+    assign h1_middle = title_product
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = ''
+  elsif title_mode == 'aocdac'
+    assign h1_leading = public_sku
+    assign h1_middle = product_title_clean
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = variant.barcode | default: ''
+  else
+    assign h1_leading = public_sku
+    assign h1_middle = product_title_clean
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = ''
+  endif
+
+  assign show_sku_part = true
+  if product.title contains 'Cat6 Ethernet'
+    assign show_sku_part = false
+  endif
+%}

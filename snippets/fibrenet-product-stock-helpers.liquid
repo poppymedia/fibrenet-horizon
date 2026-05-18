@@ -1,0 +1,38 @@
+{%- doc -%}
+  Fibrenet stock message for a variant. Sets: stock_message_type, stock_count, stock_lead_time_entries.
+
+  @param {object} product
+  @param {object} variant
+{%- enddoc -%}
+
+{%- liquid
+  assign stock_lead_time_entries = ''
+  if product.metafields.custom.lead_time.value.entries != blank
+    assign stock_lead_time_entries = product.metafields.custom.lead_time.value.entries
+  endif
+
+  assign inventory_managed = false
+  if variant.inventory_management == 'shopify'
+    assign inventory_managed = true
+  endif
+
+  assign stock_message_type = 'in_stock_untracked'
+  assign stock_count = 0
+
+  if inventory_managed or stock_lead_time_entries != blank
+    if stock_lead_time_entries != blank
+      assign stock_message_type = 'lead_time'
+    elsif inventory_managed
+      assign stock_count = variant.inventory_quantity | default: 0
+      if stock_count > 0
+        assign stock_message_type = 'quantity'
+      else
+        assign stock_message_type = 'sold_out'
+      endif
+    else
+      assign stock_message_type = 'in_stock_untracked'
+    endif
+  else
+    assign stock_message_type = 'in_stock_untracked'
+  endif
+%}

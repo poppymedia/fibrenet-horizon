@@ -2002,16 +2002,24 @@ body.template-product .product-details .text-block h1 {
 }
 
 .product-information--fibrenet .product-details .text-block,
-.product-information--fibrenet .product-details rte-formatter {
+.product-information--fibrenet .product-details rte-formatter,
+.product-information--fibrenet .fibrenet-product-title {
   --horizontal-alignment: center;
   --text-align-default: center;
   width: 100%;
   max-width: 100%;
 }
 
+.product-information--fibrenet fibrenet-product-title,
+.product-information--fibrenet .fibrenet-product-title {
+  display: block;
+}
+
 /* Product H1 — same tokens as blog/page; centred in Fibrenet product column only */
 .product-information--fibrenet .product-details .text-block h1,
-body.template-product .product-information--fibrenet .product-details .text-block h1 {
+.product-information--fibrenet .fibrenet-product-title__heading,
+body.template-product .product-information--fibrenet .product-details .text-block h1,
+body.template-product .product-information--fibrenet .fibrenet-product-title__heading {
   margin-block-start: var(--fibrenet-head-to-title-gap) !important;
   margin-block-end: var(--spacing-lg);
   font-family: var(--fibrenet-font-stack);
@@ -2022,6 +2030,31 @@ body.template-product .product-information--fibrenet .product-details .text-bloc
   text-transform: none;
   color: var(--fibrenet-brand-purple);
   text-align: center;
+}
+
+.product-information--fibrenet .fibrenet-product-title__heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.35em;
+}
+
+.product-information--fibrenet .fibrenet-product-title__leading {
+  font-weight: var(--fibrenet-type-bold-weight, 700);
+  color: inherit;
+}
+
+.product-information--fibrenet .fibrenet-product-title__middle,
+.product-information--fibrenet .fibrenet-product-title__suffix,
+.product-information--fibrenet .fibrenet-product-title__barcode {
+  font-weight: var(--fibrenet-type-base-weight, 400);
+  color: inherit;
+}
+
+.product-information--fibrenet .fibrenet-product-title__suffix::before,
+.product-information--fibrenet .fibrenet-product-title__barcode::before {
+  content: ' ';
 }
 
 .product-information--fibrenet .fibrenet-product-subtitle {
@@ -2172,7 +2205,9 @@ html body.template-blog .blog-posts--knowledge-centre .text-block h1,
 html body.template-article .fibrenet-article .text-block h1,
 html body.template-collection #MainContent > .shopify-section:first-child .text-block h1,
 html body.template-product .product-details .text-block h1,
-.product-information--fibrenet .product-details .text-block h1 {
+html body.template-product .fibrenet-product-title__heading,
+.product-information--fibrenet .product-details .text-block h1,
+.product-information--fibrenet .fibrenet-product-title__heading {
   margin-block-start: var(--fibrenet-head-to-title-gap) !important;
 }
 

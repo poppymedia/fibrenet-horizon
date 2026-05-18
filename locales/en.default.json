@@ -317,7 +317,13 @@
       "added_to_cart": "Added to cart",
       "add_to_cart_error": "Error adding to cart",
       "sold_out": "Sold out",
-      "unavailable": "Unavailable"
+      "unavailable": "Unavailable",
+      "in_stock_label": "In stock",
+      "stock_label_fibrenet_html": "<strong>{{ count }}</strong> in stock",
+      "sold_out_fibrenet_html": "Sold Out (1 week lead time from order)",
+      "lead_time_label": "Lead time is ",
+      "download_datasheet": "View datasheet",
+      "no_download_datasheet": "No datasheet available"
     }
   }
 }

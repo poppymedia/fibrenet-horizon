@@ -1,0 +1,135 @@
+{%- liquid
+  assign product = closest.product
+  assign variant = product.selected_or_first_available_variant
+  assign title_mode = section.settings.fibrenet_title_mode | default: 'public_sku'
+  assign stock_protect = section.settings.fibrenet_stock_protect
+
+  assign product_title_clean = product.title | replace: '(Second)', '' | replace: '(second)', '' | strip
+  assign public_sku = product.metafields.data.public_sku.value | default: ''
+  assign subtitle_prefix = product.metafields.custom.subtitle_prefix.value | default: ''
+
+  assign base_sku = product.variants.first.sku | default: ''
+  if product.type contains 'Compatibles-'
+    assign base_sku = product.type | remove: 'Compatibles-' | strip
+  endif
+  if public_sku != blank
+    assign base_sku = public_sku
+  endif
+
+  assign title_product = subtitle_prefix
+  if title_product == blank
+    assign title_product = product_title_clean
+  endif
+
+  assign variant_label = variant.title
+  if product.has_only_default_variant
+    assign variant_label = ''
+  endif
+
+  if product.options.size > 1
+    assign option_label = variant.title
+  else
+    assign option_label = variant.option1 | default: variant_label
+  endif
+
+  assign option_label_lower = option_label | downcase
+  if option_label_lower contains 'uncoded'
+    assign option_label_trimmed = option_label | replace: 'compatible', '' | replace: 'Compatible', '' | strip
+    assign display_leading_sku = base_sku
+    assign display_option_suffix = option_label_trimmed
+  else
+    assign display_leading_sku = variant.sku | default: base_sku
+    assign display_option_suffix = option_label
+  endif
+
+  if title_mode == 'cables'
+    assign h1_leading = display_leading_sku
+    assign h1_middle = product_title_clean
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = ''
+  elsif title_mode == 'cwdm'
+    assign h1_leading = public_sku
+    assign h1_middle = title_product
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = ''
+  elsif title_mode == 'aocdac'
+    assign h1_leading = public_sku
+    assign h1_middle = product_title_clean
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = variant.barcode | default: ''
+  else
+    assign h1_leading = public_sku
+    assign h1_middle = product_title_clean
+    assign h1_suffix = display_option_suffix
+    assign h1_barcode = ''
+  endif
+
+  if h1_leading == blank
+    assign h1_leading = base_sku
+  endif
+
+  assign show_sku_part = true
+  if product.title contains 'Cat6 Ethernet'
+    assign show_sku_part = false
+  endif
+-%}
+
+<fibrenet-product-title
+  class="fibrenet-product-title text-block"
+  {{ block.shopify_attributes }}
+  data-product-id="{{ product.id }}"
+  data-title-mode="{{ title_mode }}"
+  data-stock-protect="{{ stock_protect }}"
+  data-product-type="{{ product.type | escape }}"
+  data-product-title-clean="{{ product_title_clean | escape }}"
+  data-public-sku="{{ public_sku | escape }}"
+  data-subtitle-prefix="{{ subtitle_prefix | escape }}"
+  data-base-sku="{{ base_sku | escape }}"
+>
+  <h1 class="fibrenet-product-title__heading">
+    {%- if h1_leading != blank -%}
+      <span class="fibrenet-product-title__leading" data-fibrenet-title="leading">{{ h1_leading | escape }}</span>
+    {%- endif -%}
+    {%- if h1_middle != blank -%}
+      <span class="fibrenet-product-title__middle" data-fibrenet-title="middle">{{ h1_middle | escape }}</span>
+    {%- endif -%}
+    {%- if title_mode == 'aocdac' -%}
+      <span class="fibrenet-product-title__barcode" data-fibrenet-title="barcode"{% if h1_barcode == blank %} hidden{% endif %}>{{ h1_barcode | escape }}</span>
+    {%- endif -%}
+    {%- if h1_suffix != blank -%}
+      <span class="fibrenet-product-title__suffix" data-fibrenet-title="suffix">{{ h1_suffix | escape }}</span>
+    {%- endif -%}
+  </h1>
+
+  {%- if show_sku_part -%}
+    <div id="sku_part" class="visually-hidden" aria-hidden="true">
+      <em class="sku">{{ base_sku | escape }}</em>
+      <em class="variant">{{ variant_label | escape }}</em>
+    </div>
+  {%- endif -%}
+
+  <script type="application/json" data-fibrenet-title-config>
+    {
+      "titleMode": {{ title_mode | json }},
+      "productType": {{ product.type | json }},
+      "productTitleClean": {{ product_title_clean | json }},
+      "publicSku": {{ public_sku | json }},
+      "subtitlePrefix": {{ subtitle_prefix | json }},
+      "baseSku": {{ base_sku | json }},
+      "showSkuPart": {{ show_sku_part | json }}
+    }
+  </script>
+</fibrenet-product-title>
+
+{% schema %}
+{
+  "name": "Fibrenet product title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Composite H1 driven by section Fibrenet title mode (cables, public_sku, cwdm, aocdac). Updates on variant change via fibrenet-product-title.js."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,80 @@
+{%- liquid
+  assign product = closest.product
+  assign variant = product.selected_or_first_available_variant
+  assign stock_protect = section.settings.fibrenet_stock_protect
+
+  render 'fibrenet-product-stock-helpers', product: product, variant: variant
+
+  assign stock_label_html_template = 'products.product.stock_label_fibrenet_html' | t: count: 0 | replace: '0', '__COUNT__'
+-%}
+
+{%- capture variants_inventory -%}
+  {
+  {%- for v in product.variants -%}
+    "{{ v.id }}": {
+      "quantity": {{ v.inventory_quantity | default: 0 }},
+      "managed": {% if v.inventory_management == 'shopify' %}true{% else %}false{% endif %},
+      "available": {{ v.available | json }}
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+  }
+{%- endcapture -%}
+
+<fibrenet-product-stock
+  class="fibrenet-product-stock product-inventory spacing-style"
+  {{ block.shopify_attributes }}
+  data-stock-protect="{{ stock_protect }}"
+  data-product-id="{{ product.id }}"
+  data-lead-time="{{ stock_lead_time_entries | escape }}"
+  data-in-stock-label="{{ 'products.product.in_stock_label' | t | escape }}"
+  data-lead-time-label="{{ 'products.product.lead_time_label' | t | escape }}"
+  data-sold-out-html="{{ 'products.product.sold_out_fibrenet_html' | t | escape }}"
+  data-stock-label-template="{{ stock_label_html_template | escape }}"
+>
+  <span class="fibrenet-product-stock__status product-inventory__status" role="status">
+    <span class="fibrenet-product-stock__text product-inventory__text" data-fibrenet-stock-text>
+      {%- case stock_message_type -%}
+        {%- when 'quantity' -%}
+          {{ 'products.product.stock_label_fibrenet_html' | t: count: stock_count }}
+        {%- when 'lead_time' -%}
+          {{ 'products.product.lead_time_label' | t }}<strong>{{ stock_lead_time_entries | escape }}</strong>
+        {%- when 'sold_out' -%}
+          {{ 'products.product.sold_out_fibrenet_html' | t }}
+        {%- else -%}
+          {{ 'products.product.in_stock_label' | t }}
+      {%- endcase -%}
+    </span>
+  </span>
+
+  <script type="application/json" data-fibrenet-stock-variants>
+    {{ variants_inventory }}
+  </script>
+</fibrenet-product-stock>
+
+{% stylesheet %}
+  .fibrenet-product-stock__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: var(--font-paragraph--size);
+    line-height: var(--font-paragraph--line-height);
+  }
+
+  .fibrenet-product-stock__text {
+    text-align: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Fibrenet stock",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Fibrenet inventory messaging with lead-time override. Replaces default product inventory on alternate product templates."
+    }
+  ]
+}
+{% endschema %}
