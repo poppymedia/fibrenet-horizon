@@ -3,7 +3,35 @@
   assign variant = product.selected_or_first_available_variant
   assign stock_protect = section.settings.fibrenet_stock_protect
 
-  render 'fibrenet-product-stock-helpers', product: product, variant: variant
+  assign stock_lead_time_entries = ''
+  if product.metafields.custom.lead_time.value.entries != blank
+    assign stock_lead_time_entries = product.metafields.custom.lead_time.value.entries
+  endif
+
+  assign inventory_managed = false
+  if variant.inventory_management == 'shopify'
+    assign inventory_managed = true
+  endif
+
+  assign stock_message_type = 'in_stock_untracked'
+  assign stock_count = 0
+
+  if inventory_managed or stock_lead_time_entries != blank
+    if stock_lead_time_entries != blank
+      assign stock_message_type = 'lead_time'
+    elsif inventory_managed
+      assign stock_count = variant.inventory_quantity | default: 0
+      if stock_count > 0
+        assign stock_message_type = 'quantity'
+      else
+        assign stock_message_type = 'sold_out'
+      endif
+    else
+      assign stock_message_type = 'in_stock_untracked'
+    endif
+  else
+    assign stock_message_type = 'in_stock_untracked'
+  endif
 
   assign stock_label_html_template = 'products.product.stock_label_fibrenet_html' | t: count: 0 | replace: '0', '__COUNT__'
 -%}
@@ -57,7 +85,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    font-size: var(--font-paragraph--size);
+    font-size: var(--fibrenet-type-min-size, 0.875rem);
     line-height: var(--font-paragraph--line-height);
   }
 

@@ -2098,10 +2098,11 @@ body.template-product .product-information--fibrenet .fibrenet-product-title__he
   text-align: center;
 }
 
-.product-information--fibrenet .product-inventory {
+.product-information--fibrenet .product-inventory,
+.product-information--fibrenet .fibrenet-product-stock {
   justify-content: center;
   color: var(--color-text-subdued, var(--color-foreground-muted));
-  font-size: 0.875rem;
+  font-size: var(--fibrenet-type-min-size, 0.875rem);
 }
 
 .product-information--fibrenet .product-contact--fibrenet {

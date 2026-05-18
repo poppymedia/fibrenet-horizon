@@ -1,5 +1,7 @@
 {%- doc -%}
-  Fibrenet stock message for a variant. Sets: stock_message_type, stock_count, stock_lead_time_entries.
+  Reference copy of Fibrenet stock message rules (stock_message_type, stock_count, stock_lead_time_entries).
+
+  Logic is inlined in `blocks/_fibrenet-product-stock.liquid` — `{% render %}` does not expose snippet assigns to the parent.
 
   @param {object} product
   @param {object} variant
