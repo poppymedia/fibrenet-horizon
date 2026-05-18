@@ -2006,7 +2006,7 @@ body.template-product .product-details .text-block h1 {
   background: transparent;
 }
 
-/* Fibrenet product page — uses Horizon product-information__grid--half (1fr 1fr) */
+/* Fibrenet product page — column ratio via product-information desktop_media_width (default 40/60) */
 .product-information--fibrenet {
   --fibrenet-product-heading-size: 1.5rem;
   --fibrenet-product-subtitle-size: 1rem;

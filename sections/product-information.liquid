@@ -20,6 +20,8 @@
     assign product_grid_class = product_grid_class | append: ' product-information--media-left'
   endif
 
+  assign desktop_media_width = section.settings.desktop_media_width | default: 40
+
   if section.settings.equal_columns
     assign product_grid_class = product_grid_class | append: ' product-information__grid--half'
 
@@ -57,6 +59,9 @@
   <div
     class="{{ product_grid_class }}"
     data-product-grid-content
+    {% if section.settings.equal_columns %}
+      style="--product-media-width: {{ desktop_media_width }};"
+    {% endif %}
   >
     {% assign render_order_array = render_order | split: ',' %}
     {% capture media %}
@@ -179,14 +184,14 @@
         }
       }
 
-      /* Equal width columns */
+      /* Equal width columns — media/details split via --product-media-width (unitless %, default 40) */
       &.product-information__grid--half,
       &.product-information__grid--half:has(.media-gallery--extend) {
         grid-column: 1 / -1;
         grid-template-columns:
-          var(--full-page-grid-margin) calc(var(--full-page-grid-central-column-width) / 2) calc(
-            var(--full-page-grid-central-column-width) / 2
-          )
+          var(--full-page-grid-margin)
+          calc(var(--full-page-grid-central-column-width) * var(--product-media-width, 50) / 100)
+          calc(var(--full-page-grid-central-column-width) * (100 - var(--product-media-width, 50)) / 100)
           var(--full-page-grid-margin);
 
         &.product-information--media-left {
@@ -377,6 +382,17 @@
       "id": "equal_columns",
       "label": "t:settings.equal_columns",
       "default": false
+    },
+    {
+      "type": "range",
+      "id": "desktop_media_width",
+      "label": "t:settings.media_width",
+      "min": 25,
+      "max": 75,
+      "step": 5,
+      "unit": "%",
+      "default": 40,
+      "visible_if": "{{ section.settings.equal_columns }}"
     },
     {
       "type": "checkbox",

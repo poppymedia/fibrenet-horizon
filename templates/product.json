@@ -254,6 +254,7 @@
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": true,
+        "desktop_media_width": 40,
         "limit_details_width": false,
         "gap": 48,
         "color_scheme": "scheme-1",
