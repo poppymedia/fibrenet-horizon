@@ -1,11 +1,24 @@
-<!-- # 6. CONTACT BUTTONS SNIPPET - This is where contact buttons are rendered -->
-<p class="contacts">
-    <a href="{{ settings.chat_link }}" class="btn chat color-{{ settings.chat_color_scheme }}">
-        <span class="title">{{ settings.chat_text }}</span>
-        {% if settings.chat_subtext %}
-        <span class="hr"></span>
-        <em class="subtitle">{{ settings.chat_subtext }}</em>{% endif %}
-    </a>
-    <a href="tel:{{ settings.call_link }}" class="btn call color-{{ settings.call_color_scheme }}">{{ settings.call_text }}</a>
-    <a href="mailto:{{ settings.email_link }}" class="btn email color-{{ settings.email_color_scheme }}">{{ settings.email_text }}</a>
-</p>
+{%- doc -%}
+  Contact CTA group for product pages and legacy block usage.
+
+  @param {object} settings - Settings object with CTA fields
+  @param {boolean} [show_sub_label] - Show sub-labels on buttons (default true for product)
+  @param {string} [layout] - When 'fibrenet', applies full-width stacked product layout
+{%- enddoc -%}
+
+{%- liquid
+  if show_sub_label == nil
+    assign show_sub_label = true
+  endif
+-%}
+
+<div class="product-contact{% if layout == 'fibrenet' %} product-contact--fibrenet{% endif %}">
+  {% render 'header-cta-buttons',
+    settings: settings,
+    show_sub_label: show_sub_label,
+    product_layout: layout == 'fibrenet'
+  %}
+  {%- if layout == 'fibrenet' and settings.product_cta_helper != blank -%}
+    <p class="product-contact__helper">{{ settings.product_cta_helper | escape }}</p>
+  {%- endif -%}
+</div>

@@ -1,0 +1,129 @@
+{% capture partner_items %}
+  {%- for block in section.blocks -%}
+    <li
+      class="partner-bar__item"
+      {{ block.shopify_attributes }}
+    >
+      {%- if block.settings.link_url != blank -%}
+        <a
+          class="partner-bar__link"
+          href="{{ block.settings.link_url }}"
+          {% if block.settings.link_url contains 'http' %}
+            target="_blank"
+            rel="noopener noreferrer"
+          {% endif %}
+        >
+      {%- endif -%}
+      {%- if block.settings.image != blank -%}
+        {{
+          block.settings.image
+          | image_url: width: 240
+          | image_tag:
+            class: 'partner-bar__logo',
+            alt: block.settings.alt_text,
+            loading: 'lazy',
+            widths: '120, 180, 240',
+            sizes: '120px'
+        }}
+      {%- else -%}
+        <span class="partner-bar__placeholder">{{ block.settings.alt_text | default: 'Partner' | escape }}</span>
+      {%- endif -%}
+      {%- if block.settings.link_url != blank -%}
+        </a>
+      {%- endif -%}
+    </li>
+  {%- endfor -%}
+{% endcapture %}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="partner-bar section section--full-width color-{{ section.settings.color_scheme }} spacing-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {% render 'overflow-list',
+    class: 'partner-bar__list',
+    children: partner_items,
+    disabled: true,
+    minimum-items: section.blocks.size
+  %}
+</div>
+
+{% schema %}
+{
+  "name": "Partner bar",
+  "tag": "section",
+  "class": "partner-bar-section",
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Partner logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt text",
+          "default": "Partner logo"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Partner bar",
+      "category": "Fibrenet",
+      "blocks": [
+        { "type": "logo", "settings": { "alt_text": "Cisco" } },
+        { "type": "logo", "settings": { "alt_text": "Juniper" } },
+        { "type": "logo", "settings": { "alt_text": "Ciena" } },
+        { "type": "logo", "settings": { "alt_text": "Huawei" } },
+        { "type": "logo", "settings": { "alt_text": "HP" } },
+        { "type": "logo", "settings": { "alt_text": "Aruba" } },
+        { "type": "logo", "settings": { "alt_text": "H3C" } },
+        { "type": "logo", "settings": { "alt_text": "Extreme" } },
+        { "type": "logo", "settings": { "alt_text": "Brocade" } },
+        { "type": "logo", "settings": { "alt_text": "Nokia" } },
+        { "type": "logo", "settings": { "alt_text": "Calix" } },
+        { "type": "logo", "settings": { "alt_text": "Arista" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

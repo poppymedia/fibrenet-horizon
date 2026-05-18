@@ -8,11 +8,11 @@
           "name": "t:names.title",
           "settings": {
             "text": "<h1>{{ closest.page.title }}</h1>",
-            "width": "100%",
+            "width": "fit-content",
             "max_width": "normal",
-            "alignment": "center",
-            "type_preset": "h2",
-            "font": "var(--font-primary--family)",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
             "font_size": "",
             "line_height": "normal",
             "letter_spacing": "normal",
@@ -61,7 +61,7 @@
         "content_direction": "column",
         "gap": 32,
         "color_scheme": "",
-        "padding-block-start": 40,
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },

@@ -1,5 +1,6 @@
 {% liquid
   assign block_settings = block.settings
+  assign fibrenet_header = section.settings.enable_fibrenet_header | default: true, allow_false: true
   assign menu_content_type = block_settings.menu_style | default: 'text'
   assign image_border_radius = block_settings.image_border_radius
   assign color_scheme_classes = ''
@@ -45,23 +46,38 @@
         ref="menuitem"
       >
         <span class="menu-list__link-title">{{- link.title -}}</span>
+        {%- if link.links != blank and fibrenet_header -%}
+          <span class="menu-list__link-caret svg-wrapper icon-caret" aria-hidden="true">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        {%- endif -%}
       </a>
       {%- if link.links != blank -%}
-        <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+        <div
+          class="menu-list__submenu{% if fibrenet_header %} menu-list__submenu--fibrenet{% else %}{{ color_scheme_classes }}{% endif %}"
+          ref="submenu[]"
+        >
           <div
             id="submenu-{{ forloop.index }}"
             class="menu-list__submenu-inner"
-            style="{% render 'submenu-font-styles', settings: block_settings %}"
+            {% unless fibrenet_header %}
+              style="{% render 'submenu-font-styles', settings: block_settings %}"
+            {% endunless %}
           >
-            {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
-            {% render 'mega-menu',
-              section: section,
-              parent_link: link,
-              id: list_id,
-              menu_content_type: menu_content_type,
-              content_aspect_ratio: ratio,
-              image_border_radius: image_border_radius
-            %}
+            {%- if fibrenet_header -%}
+              {% assign list_id = 'FibrenetSubmenu-' | append: forloop.index %}
+              {% render 'fibrenet-header-submenu', parent_link: link, id: list_id %}
+            {%- else -%}
+              {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
+              {% render 'mega-menu',
+                section: section,
+                parent_link: link,
+                id: list_id,
+                menu_content_type: menu_content_type,
+                content_aspect_ratio: ratio,
+                image_border_radius: image_border_radius
+              %}
+            {%- endif -%}
           </div>
         </div>
       {%- endif -%}

@@ -1,0 +1,33 @@
+{%- doc -%}
+  Knowledge Centre article metadata lines (custom metafields).
+
+  @param {object} article - Article object
+{%- enddoc -%}
+
+{%- liquid
+  assign sector = article.metafields.custom.sector.value | default: article.metafields.custom.sector
+  assign location = article.metafields.custom.location.value | default: article.metafields.custom.location
+  assign network_type = article.metafields.custom.network_type.value | default: article.metafields.custom.network_type
+  assign speed = article.metafields.custom.speed.value | default: article.metafields.custom.speed
+  assign solution = article.metafields.custom.solution.value | default: article.metafields.custom.solution
+-%}
+
+{%- if sector != blank or location != blank or network_type != blank or speed != blank or solution != blank -%}
+  <div class="fibrenet-article__metadata">
+    {%- if sector != blank -%}
+      <p class="fibrenet-article__meta-line">Sector: {{ sector | escape }}</p>
+    {%- endif -%}
+    {%- if location != blank -%}
+      <p class="fibrenet-article__meta-line">Location: {{ location | escape }}</p>
+    {%- endif -%}
+    {%- if network_type != blank -%}
+      <p class="fibrenet-article__meta-line">Network type: {{ network_type | escape }}</p>
+    {%- endif -%}
+    {%- if speed != blank -%}
+      <p class="fibrenet-article__meta-line">Speed: {{ speed | escape }}</p>
+    {%- endif -%}
+    {%- if solution != blank -%}
+      <p class="fibrenet-article__meta-line">Solution: {{ solution | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

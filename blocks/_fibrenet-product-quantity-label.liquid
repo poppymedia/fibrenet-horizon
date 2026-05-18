@@ -1,0 +1,20 @@
+{%- if block.settings.label != blank -%}
+  <p class="fibrenet-product-quantity-label" {{ block.shopify_attributes }}>
+    {{ block.settings.label | escape }}
+  </p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Quantity label",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Quantity"
+    }
+  ]
+}
+{% endschema %}

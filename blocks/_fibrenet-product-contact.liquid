@@ -1,0 +1,133 @@
+{% render 'product-contact', settings: block.settings, show_sub_label: true, layout: 'fibrenet' %}
+
+{% schema %}
+{
+  "name": "Product contact CTAs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Chat"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_chat_cta",
+      "label": "Show Chat button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "chat_text",
+      "label": "Chat label",
+      "default": "Chat"
+    },
+    {
+      "type": "text",
+      "id": "chat_subtext",
+      "label": "Chat sub-label",
+      "default": "For bulk orders chat with UK team now for savings"
+    },
+    {
+      "type": "url",
+      "id": "chat_link",
+      "label": "Chat URL"
+    },
+    {
+      "type": "select",
+      "id": "chat_button_style",
+      "label": "Chat button style",
+      "options": [
+        { "value": "primary", "label": "Primary (orange)" },
+        { "value": "secondary", "label": "Secondary (blue)" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "Call"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_call_cta",
+      "label": "Show Call button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "call_text",
+      "label": "Call label",
+      "default": "Call"
+    },
+    {
+      "type": "text",
+      "id": "call_subtext",
+      "label": "Call sub-label"
+    },
+    {
+      "type": "url",
+      "id": "call_link",
+      "label": "Call URL"
+    },
+    {
+      "type": "select",
+      "id": "call_button_style",
+      "label": "Call button style",
+      "options": [
+        { "value": "primary", "label": "Primary (orange)" },
+        { "value": "secondary", "label": "Secondary (blue)" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "secondary"
+    },
+    {
+      "type": "header",
+      "content": "Email"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_email_cta",
+      "label": "Show Email button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_text",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "email_subtext",
+      "label": "Email sub-label"
+    },
+    {
+      "type": "url",
+      "id": "email_link",
+      "label": "Email URL"
+    },
+    {
+      "type": "select",
+      "id": "email_button_style",
+      "label": "Email button style",
+      "options": [
+        { "value": "primary", "label": "Primary (orange)" },
+        { "value": "secondary", "label": "Secondary (blue)" },
+        { "value": "outline", "label": "Outline" },
+        { "value": "inverted", "label": "Inverted (navy)" }
+      ],
+      "default": "inverted"
+    },
+    {
+      "type": "header",
+      "content": "Helper text"
+    },
+    {
+      "type": "text",
+      "id": "product_cta_helper",
+      "label": "Text below buttons",
+      "default": "For even better potential pricing, contact UK office now"
+    }
+  ]
+}
+{% endschema %}

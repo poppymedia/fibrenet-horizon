@@ -1,0 +1,112 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="category-navigator section section--page-width color-{{ section.settings.color_scheme }} spacing-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  <div class="category-navigator__desktop hidden--mobile">
+    <ul class="category-navigator__grid list-unstyled" role="list">
+      {%- for block in section.blocks -%}
+        <li class="category-navigator__item" {{ block.shopify_attributes }}>
+          {% render 'category-navigator-item', block: block %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  <div class="category-navigator__mobile hidden--desktop">
+    {% capture category_items %}
+      {%- for block in section.blocks -%}
+        <li class="category-navigator__item">
+          {% render 'category-navigator-item', block: block %}
+        </li>
+      {%- endfor -%}
+    {% endcapture %}
+    {% render 'overflow-list',
+      class: 'category-navigator__list',
+      children: category_items,
+      disabled: true,
+      minimum-items: section.blocks.size
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Category navigator",
+  "tag": "section",
+  "class": "category-navigator-section",
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Illustration"
+        },
+        {
+          "type": "text",
+          "id": "label_line_1",
+          "label": "Label (line 1)",
+          "default": "1G"
+        },
+        {
+          "type": "text",
+          "id": "label_line_2",
+          "label": "Label (line 2)",
+          "default": "SFP"
+        },
+        {
+          "type": "url",
+          "id": "collection_url",
+          "label": "Collection link"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category navigator",
+      "category": "Fibrenet",
+      "blocks": [
+        { "type": "category", "settings": { "label_line_1": "1G", "label_line_2": "SFP" } },
+        { "type": "category", "settings": { "label_line_1": "10G", "label_line_2": "SFP+" } },
+        { "type": "category", "settings": { "label_line_1": "25G", "label_line_2": "SFP28" } },
+        { "type": "category", "settings": { "label_line_1": "40G", "label_line_2": "QSFP+" } },
+        { "type": "category", "settings": { "label_line_1": "100G", "label_line_2": "QSFP28" } },
+        { "type": "category", "settings": { "label_line_1": "400G", "label_line_2": "QSFP-DD" } },
+        { "type": "category", "settings": { "label_line_1": "GPON &", "label_line_2": "XGS-PON" } },
+        { "type": "category", "settings": { "label_line_1": "DAC &", "label_line_2": "AOC" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

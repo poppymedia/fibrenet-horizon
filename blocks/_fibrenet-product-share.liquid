@@ -1,0 +1,28 @@
+{% render 'product-share', product: closest.product, settings: block.settings %}
+
+{% schema %}
+{
+  "name": "Social share",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "share_label",
+      "label": "Share link label",
+      "default": "Share"
+    },
+    {
+      "type": "text",
+      "id": "tweet_label",
+      "label": "Tweet link label",
+      "default": "Tweet"
+    },
+    {
+      "type": "text",
+      "id": "pin_label",
+      "label": "Pin link label",
+      "default": "Pin it"
+    }
+  ]
+}
+{% endschema %}

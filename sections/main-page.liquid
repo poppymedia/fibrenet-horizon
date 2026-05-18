@@ -1,7 +1,11 @@
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div class="section page-width-content color-{{ section.settings.color_scheme }}">
+<div
+  class="section fibrenet-editorial color-{{ section.settings.color_scheme }} spacing-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
   <div
     class="
+      fibrenet-editorial__inner
       spacing-style
       layout-panel-flex
       layout-panel-flex--column

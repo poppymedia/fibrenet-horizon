@@ -39,8 +39,13 @@
   {{ block.shopify_attributes }}
 >
   {% liquid
-    assign logo_width = settings.logo_height | times: settings.logo.aspect_ratio | ceil
-    assign logo_width_mobile = settings.logo_height_mobile | times: settings.logo.aspect_ratio | ceil
+    if settings.logo != blank
+      assign logo_aspect_ratio = settings.logo.aspect_ratio
+    else
+      assign logo_aspect_ratio = 2.225
+    endif
+    assign logo_width = settings.logo_height | times: logo_aspect_ratio | ceil
+    assign logo_width_mobile = settings.logo_height_mobile | times: logo_aspect_ratio | ceil
     assign inverse_logo_width = settings.logo_height | times: inverse_logo.aspect_ratio | ceil
     assign inverse_logo_width_mobile = settings.logo_height_mobile | times: inverse_logo.aspect_ratio | ceil
     assign logo_style = '--header-logo-image-width: ' | append: logo_width | append: 'px;' | append: '--header-logo-image-width-mobile: ' | append: logo_width_mobile | append: 'px; --header-logo-image-height: ' | append: settings.logo_height | append: 'px; --header-logo-image-height-mobile: ' | append: settings.logo_height_mobile | append: 'px;'
@@ -51,13 +56,24 @@
     class="header-logo__image-container header-logo__image-container--original"
     data-testid="header-logo"
   >
-    {% render 'image',
-      image: settings.logo,
-      class: 'header-logo__image',
-      height: settings.logo_height,
-      text_fallback: shop.name,
-      style: logo_style
-    %}
+    {% if settings.logo != blank %}
+      {% render 'image',
+        image: settings.logo,
+        class: 'header-logo__image',
+        height: settings.logo_height,
+        text_fallback: shop.name,
+        style: logo_style
+      %}
+    {% else %}
+      <span
+        class="header-logo__image header-logo__image--asset header-logo__svg"
+        style="{{ logo_style }}"
+        role="img"
+        aria-label="{{ shop.name | escape }}"
+      >
+        {{ 'logo.svg' | inline_asset_content }}
+      </span>
+    {% endif %}
   </span>
 
   {% if use_inverse_logo %}
@@ -114,6 +130,30 @@
 
     &:hover {
       text-decoration: none;
+    }
+  }
+
+  .header-logo__image--asset:not(.header-logo__svg) {
+    object-fit: contain;
+  }
+
+  .header-logo__svg {
+    display: block;
+    flex-shrink: 0;
+    height: var(--header-logo-image-height-mobile);
+    width: var(--header-logo-image-width-mobile);
+  }
+
+  .header-logo__svg > svg.logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .header-logo__svg {
+      height: var(--header-logo-image-height);
+      width: var(--header-logo-image-width);
     }
   }
 

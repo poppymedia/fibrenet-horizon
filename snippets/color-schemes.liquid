@@ -92,6 +92,17 @@
       }
   {% endfor %}
 
+  {%- comment -%}
+    Fibrenet: expose scheme-5 background on :root for cross-scheme use (e.g. product variant selected border).
+  {%- endcomment -%}
+  {% for scheme in settings.color_schemes %}
+    {% if scheme.id == 'scheme-5' %}
+      :root {
+        --fibrenet-scheme-5-background: rgb({{ scheme.settings.background.rgba }});
+      }
+    {% endif %}
+  {% endfor %}
+
   {{ scheme_classes | prepend: 'body' }} {
     color: var(--color-foreground);
     background-color: var(--color-background);

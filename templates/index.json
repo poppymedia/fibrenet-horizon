@@ -1,104 +1,123 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
- {
+{
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "fibrenet_slideshow": {
+      "type": "fibrenet-slideshow",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "slide_1": {
+          "type": "fibrenet-slide",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground-heading)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "heading": "Tested, evaluated, approved",
+            "subheading": "and used by the largest service providers in the world",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_1_resized_1000x355_JPG.jpg?v=1777381124"
+          }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "slide_2": {
+          "type": "fibrenet-slide",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-secondary",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+            "heading": "95% of orders shipped same day from UK stock",
+            "subheading": "with tracked UPS overnight delivery",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_2_resized_and_flipped_1000x355_PNG.png?v=1777381144"
+          }
+        },
+        "slide_3": {
+          "type": "fibrenet-slide",
+          "settings": {
+            "heading": "Guaranteed compatibility for all network vendors",
+            "subheading": "We constantly research and provide the latest vendor coding",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_3_resized_1000x355_JPG.jpg?v=1777381162"
+          }
+        },
+        "slide_4": {
+          "type": "fibrenet-slide",
+          "settings": {
+            "heading": "Minimum 5 year warranty on all Fibrenet products",
+            "subheading": "with advance replacement as standard",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_4_resized_1000x355_JPG.jpg?v=1777381165"
+          }
         }
       },
-      "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
-      ],
-      "name": "t:names.hero",
+      "block_order": ["slide_1", "slide_2", "slide_3", "slide_4"],
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
+        "auto_rotate": true,
+        "change_slides_speed": 5,
+        "show_arrows": true,
+        "icons_style": "arrows_large",
+        "slideshow_controls_style": "dots",
+        "slide_height_desktop": 250,
+        "slide_height_mobile": "auto",
         "color_scheme": "scheme-6",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     },
-    "product_list_fa6P9H": {
+    "partner_bar": {
+      "type": "partner-bar",
+      "blocks": {
+        "logo_cisco": { "type": "logo", "settings": { "alt_text": "Cisco" } },
+        "logo_juniper": { "type": "logo", "settings": { "alt_text": "Juniper" } },
+        "logo_ciena": { "type": "logo", "settings": { "alt_text": "Ciena" } },
+        "logo_huawei": { "type": "logo", "settings": { "alt_text": "Huawei" } },
+        "logo_hp": { "type": "logo", "settings": { "alt_text": "HP" } },
+        "logo_aruba": { "type": "logo", "settings": { "alt_text": "Aruba" } },
+        "logo_h3c": { "type": "logo", "settings": { "alt_text": "H3C" } },
+        "logo_extreme": { "type": "logo", "settings": { "alt_text": "Extreme" } },
+        "logo_brocade": { "type": "logo", "settings": { "alt_text": "Brocade" } },
+        "logo_nokia": { "type": "logo", "settings": { "alt_text": "Nokia" } },
+        "logo_calix": { "type": "logo", "settings": { "alt_text": "Calix" } },
+        "logo_arista": { "type": "logo", "settings": { "alt_text": "Arista" } }
+      },
+      "block_order": [
+        "logo_cisco",
+        "logo_juniper",
+        "logo_ciena",
+        "logo_huawei",
+        "logo_hp",
+        "logo_aruba",
+        "logo_h3c",
+        "logo_extreme",
+        "logo_brocade",
+        "logo_nokia",
+        "logo_calix",
+        "logo_arista"
+      ],
+      "settings": {
+        "color_scheme": "scheme-4",
+        "padding-block-start": 16,
+        "padding-block-end": 16
+      }
+    },
+    "category_navigator": {
+      "type": "category-navigator",
+      "blocks": {
+        "cat_1g": { "type": "category", "settings": { "label_line_1": "1G", "label_line_2": "SFP" } },
+        "cat_10g": { "type": "category", "settings": { "label_line_1": "10G", "label_line_2": "SFP+" } },
+        "cat_25g": { "type": "category", "settings": { "label_line_1": "25G", "label_line_2": "SFP28" } },
+        "cat_40g": { "type": "category", "settings": { "label_line_1": "40G", "label_line_2": "QSFP+" } },
+        "cat_100g": { "type": "category", "settings": { "label_line_1": "100G", "label_line_2": "QSFP28" } },
+        "cat_400g": { "type": "category", "settings": { "label_line_1": "400G", "label_line_2": "QSFP-DD" } },
+        "cat_gpon": { "type": "category", "settings": { "label_line_1": "GPON &", "label_line_2": "XGS-PON" } },
+        "cat_dac": { "type": "category", "settings": { "label_line_1": "DAC &", "label_line_2": "AOC" } }
+      },
+      "block_order": ["cat_1g", "cat_10g", "cat_25g", "cat_40g", "cat_100g", "cat_400g", "cat_gpon", "cat_dac"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "most_popular": {
       "type": "product-list",
       "blocks": {
         "static-header": {
           "type": "_product-list-content",
-          "name": "t:names.header",
           "static": true,
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "center",
             "gap": 12,
@@ -123,15 +142,14 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_list_text_YFtzcL": {
+            "product_list_text": {
               "type": "_product-list-text",
-              "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
+                "text": "<h2>Most Popular</h2>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "h4",
+                "type_preset": "rte",
                 "font": "var(--font-body--family)",
                 "font_size": "",
                 "line_height": "normal",
@@ -148,33 +166,15 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "link",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
             }
           },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
+          "block_order": ["product_list_text"]
         },
         "static-product-card": {
           "type": "_product-card",
-          "name": "t:names.product_card",
           "static": true,
           "settings": {
-            "product_card_gap": 4,
+            "product_card_gap": 8,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "border": "none",
@@ -187,11 +187,10 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_card_gallery_677WP3": {
+            "product_card_gallery": {
               "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -203,16 +202,15 @@
               },
               "blocks": {}
             },
-            "product_title_YXxMTj": {
+            "product_title": {
               "type": "product-title",
-              "name": "t:names.product_title",
               "settings": {
                 "width": "100%",
                 "max_width": "normal",
-                "alignment": "left",
+                "alignment": "center",
                 "type_preset": "rte",
                 "font": "var(--font-body--family)",
-                "font_size": "1rem",
+                "font_size": "0.875rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
@@ -228,18 +226,17 @@
               },
               "blocks": {}
             },
-            "price_JQzVV4": {
+            "price": {
               "type": "price",
-              "name": "t:names.product_price",
               "settings": {
                 "show_sale_price_first": true,
                 "show_installments": false,
                 "show_tax_info": false,
                 "type_preset": "h6",
                 "width": "100%",
-                "alignment": "left",
+                "alignment": "center",
                 "font": "var(--font-body--family)",
-                "font_size": "1rem",
+                "font_size": "0.875rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
@@ -252,23 +249,18 @@
               "blocks": {}
             }
           },
-          "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
-          ]
+          "block_order": ["product_card_gallery", "product_title", "price"]
         }
       },
-      "name": "t:names.featured_collection",
       "settings": {
         "collection": "all",
         "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
+        "carousel_on_mobile": true,
+        "max_products": 5,
+        "columns": 5,
+        "mobile_columns": "1",
+        "mobile_card_size": "72cqw",
+        "columns_gap": 24,
         "rows_gap": 24,
         "icons_style": "arrow",
         "icons_shape": "none",
@@ -276,13 +268,15 @@
         "horizontal_alignment": "flex-start",
         "gap": 28,
         "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "fibrenet_slideshow",
+    "partner_bar",
+    "category_navigator",
+    "most_popular"
   ]
 }

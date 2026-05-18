@@ -1,0 +1,82 @@
+{%- doc -%}
+  Fibrenet footer newsletter signup — uses Horizon customer form and email-signup-block JS.
+
+  @param {string} section_id - Parent section id for unique input ids
+{%- enddoc -%}
+
+<email-signup-block class="fibrenet-footer__newsletter email-signup-block">
+  {%- form 'customer', class: 'email-signup__form fibrenet-footer__newsletter-form' -%}
+    <div class="email-signup__input-group fibrenet-footer__newsletter-input-group">
+      <label
+        class="visually-hidden"
+        for="FibrenetFooterEmail-{{ section_id }}"
+      >
+        {{ 'blocks.email_signup.label' | t }}
+      </label>
+      <input
+        id="FibrenetFooterEmail-{{ section_id }}"
+        class="email-signup__input email-signup__input--underline fibrenet-footer__newsletter-input"
+        type="email"
+        name="contact[email]"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="email"
+        placeholder="{{ 'blocks.email_signup.placeholder' | t }}"
+        required
+        {% if form.errors %}
+          autofocus
+          aria-invalid="true"
+          aria-describedby="FibrenetFooterEmail-error-{{ section_id }}"
+        {% elsif form.posted_successfully? %}
+          aria-describedby="FibrenetFooterEmail-success-{{ section_id }}"
+        {% endif %}
+      >
+      <button
+        type="submit"
+        class="email-signup__button email-signup__button--integrated button-unstyled fibrenet-footer__newsletter-submit"
+        aria-label="{{ 'actions.sign_up' | t }}"
+      >
+        <span class="fibrenet-footer__newsletter-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false" fill="none">
+            <path
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 8.25l9 5.625 9-5.625M4.5 7.5h15A1.5 1.5 0 0121 9v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 18V9a1.5 1.5 0 011.5-1.5z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    {%- if form.errors -%}
+      <div
+        id="FibrenetFooterEmail-error-{{ section_id }}"
+        class="email-signup__message email-signup__message--error"
+        tabindex="-1"
+      >
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true" class="icon-error">
+          {%- render 'icon', icon: 'error' -%}
+        </svg>
+        {{- form.errors.translated_fields.email | capitalize }}
+        {{ form.errors.messages.email -}}
+      </div>
+    {%- endif -%}
+
+    {%- if form.posted_successfully? -%}
+      <div
+        id="FibrenetFooterEmail-success-{{ section_id }}"
+        class="email-signup__message email-signup__message--success"
+        tabindex="-1"
+      >
+        <span class="svg-wrapper icon-success">
+          {{ 'icon-checkmark.svg' | inline_asset_content }}
+        </span>
+        <p class="email-signup__message-text">{{ 'blocks.email_signup.success' | t }}</p>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+
+  <script src="{{ 'email-signup.js' | asset_url }}" defer></script>
+</email-signup-block>

@@ -1,0 +1,42 @@
+{%- doc -%}
+  Single category cell for category-navigator section.
+
+  @param {object} block - Section block with image, labels, and collection_url settings.
+{%- enddoc -%}
+
+<a
+  class="category-navigator__link"
+  {% if block.settings.collection_url != blank %}
+    href="{{ block.settings.collection_url }}"
+  {% else %}
+    role="link"
+    aria-disabled="true"
+  {% endif %}
+>
+  {%- if block.settings.image != blank -%}
+    {{
+      block.settings.image
+      | image_url: width: 160
+      | image_tag:
+        class: 'category-navigator__image',
+        alt: block.settings.label_line_1,
+        loading: 'lazy',
+        widths: '80, 120, 160',
+        sizes: '80px'
+    }}
+  {%- else -%}
+    <span class="category-navigator__image-placeholder" aria-hidden="true"></span>
+  {%- endif -%}
+  <span class="category-navigator__labels">
+    {%- if block.settings.label_line_1 != blank -%}
+      <span class="category-navigator__label category-navigator__label--primary">
+        {{- block.settings.label_line_1 | escape -}}
+      </span>
+    {%- endif -%}
+    {%- if block.settings.label_line_2 != blank -%}
+      <span class="category-navigator__label category-navigator__label--secondary">
+        {{- block.settings.label_line_2 | escape -}}
+      </span>
+    {%- endif -%}
+  </span>
+</a>

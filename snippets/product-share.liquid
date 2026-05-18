@@ -1,0 +1,39 @@
+{%- doc -%}
+  Product social share links (Facebook, X/Twitter, Pinterest).
+
+  @param {object} product - Product object
+  @param {object} [settings] - Optional label settings
+{%- enddoc -%}
+
+{%- liquid
+  assign share_url = shop.url | append: product.url
+  assign encoded_url = share_url | url_encode
+  assign share_title = product.title | url_encode
+-%}
+
+<nav class="fibrenet-product-share" aria-label="Share">
+  <a
+    class="fibrenet-product-share__link link"
+    href="https://www.facebook.com/sharer.php?u={{ encoded_url }}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {{ settings.share_label | default: 'Share' | escape }}
+  </a>
+  <a
+    class="fibrenet-product-share__link link"
+    href="https://twitter.com/intent/tweet?url={{ encoded_url }}&text={{ share_title }}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {{ settings.tweet_label | default: 'Tweet' | escape }}
+  </a>
+  <a
+    class="fibrenet-product-share__link link"
+    href="https://pinterest.com/pin/create/button/?url={{ encoded_url }}&description={{ share_title }}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {{ settings.pin_label | default: 'Pin it' | escape }}
+  </a>
+</nav>

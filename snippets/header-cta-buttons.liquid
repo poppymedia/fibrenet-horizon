@@ -1,0 +1,130 @@
+{%- doc -%}
+  Header CTA group (Chat / Call / Email). Suppresses sub-labels in the header by default.
+
+  @param {object} settings - Section or block settings with CTA fields
+  @param {boolean} [show_sub_label] - When true, renders sub-label text on applicable buttons
+  @param {boolean} [product_layout] - Product page: chat on top (split row), call + email equal width below
+{%- enddoc -%}
+
+{%- liquid
+  assign show_sub_label = show_sub_label | default: false
+  assign product_layout = product_layout | default: false
+
+  assign chat_label = settings.chat_text | default: 'Chat'
+  assign call_label = settings.call_text | default: 'Call'
+  assign email_label = settings.email_text | default: 'Email'
+
+  assign chat_url = settings.chat_link
+  if chat_url == blank
+    assign chat_url = '#'
+  endif
+
+  assign call_url = settings.call_link
+  if call_url == blank
+    assign phone_digits = settings.phone_number | default: shop.phone | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', ''
+    if phone_digits != blank
+      assign call_url = phone_digits | prepend: 'tel:'
+    endif
+  else
+    unless call_url contains 'tel:'
+      assign call_url = call_url | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', '' | prepend: 'tel:'
+    endunless
+  endif
+
+  assign email_url = settings.email_link
+  if email_url == blank and shop.email != blank
+    assign email_url = shop.email | prepend: 'mailto:'
+  elsif email_url != blank
+    unless email_url contains 'mailto:'
+      assign email_url = email_url | prepend: 'mailto:'
+    endunless
+  endif
+
+  assign show_chat = false
+  if settings.enable_chat_cta != false
+    assign show_chat = true
+  endif
+
+  assign show_call = false
+  if settings.enable_call_cta != false
+    assign show_call = true
+  endif
+
+  assign show_email = false
+  if settings.enable_email_cta != false
+    assign show_email = true
+  endif
+-%}
+
+<div class="header-cta-buttons{% if product_layout %} header-cta-buttons--product{% endif %}">
+  {%- if product_layout -%}
+    {%- if show_chat -%}
+      <div class="header-cta-buttons__chat">
+        {% render 'cta-button',
+          button_label: chat_label,
+          button_url: chat_url,
+          button_style: settings.chat_button_style,
+          sub_label: settings.chat_subtext,
+          show_sub_label: show_sub_label,
+          layout: 'split'
+        %}
+      </div>
+    {%- endif -%}
+
+    {%- if show_call or show_email -%}
+      <div class="header-cta-buttons__pair">
+        {%- if show_call -%}
+          {% render 'cta-button',
+            button_label: call_label,
+            button_url: call_url,
+            button_style: settings.call_button_style,
+            sub_label: settings.call_subtext,
+            show_sub_label: show_sub_label,
+            class: 'header-cta-buttons__pair-btn'
+          %}
+        {%- endif -%}
+
+        {%- if show_email -%}
+          {% render 'cta-button',
+            button_label: email_label,
+            button_url: email_url,
+            button_style: settings.email_button_style,
+            sub_label: settings.email_subtext,
+            show_sub_label: show_sub_label,
+            class: 'header-cta-buttons__pair-btn'
+          %}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- else -%}
+    {%- if show_chat -%}
+      {% render 'cta-button',
+        button_label: chat_label,
+        button_url: chat_url,
+        button_style: settings.chat_button_style,
+        sub_label: settings.chat_subtext,
+        show_sub_label: show_sub_label
+      %}
+    {%- endif -%}
+
+    {%- if show_call -%}
+      {% render 'cta-button',
+        button_label: call_label,
+        button_url: call_url,
+        button_style: settings.call_button_style,
+        sub_label: settings.call_subtext,
+        show_sub_label: show_sub_label
+      %}
+    {%- endif -%}
+
+    {%- if show_email -%}
+      {% render 'cta-button',
+        button_label: email_label,
+        button_url: email_url,
+        button_style: settings.email_button_style,
+        sub_label: settings.email_subtext,
+        show_sub_label: show_sub_label
+      %}
+    {%- endif -%}
+  {%- endif -%}
+</div>

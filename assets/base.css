@@ -592,7 +592,7 @@ p:empty {
   overflow: auto;
   width: auto;
   height: auto;
-  padding: var(--padding-lg) var(--padding-4xl);
+  padding: var(--padding-sm) var(--padding-lg);
   left: var(--margin-lg);
   top: var(--margin-lg);
   box-shadow: 0 0 0 var(--focus-outline-offset) var(--color-background);

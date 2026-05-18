@@ -3,7 +3,7 @@ import { debounce, onDocumentLoaded } from '@theme/utilities';
 import { MegaMenuHoverEvent } from '@theme/events';
 
 const ACTIVATE_DELAY = 0;
-const DEACTIVATE_DELAY = 350;
+const DEFAULT_DEACTIVATE_DELAY = 350;
 
 /**
  * A custom element that manages a header menu.
@@ -21,15 +21,27 @@ class HeaderMenu extends Component {
   requiredRefs = ['overflowMenu'];
 
   #abortController = new AbortController();
+  /** @type {ReturnType<typeof debounce<(item?: HTMLElement | null) => void>> | undefined} */
+  #debouncedDeactivate;
 
   connectedCallback() {
     super.connectedCallback();
+
+    this.#debouncedDeactivate = debounce(this.#deactivate, this.#deactivateDelay);
 
     this.overflowMenu?.addEventListener('pointerleave', () => this.#debouncedDeactivate(), {
       signal: this.#abortController.signal,
     });
 
     onDocumentLoaded(this.#preloadImages);
+  }
+
+  get #isFibrenetMenu() {
+    return this.dataset.menuMode === 'fibrenet';
+  }
+
+  get #deactivateDelay() {
+    return this.#isFibrenetMenu ? 0 : DEFAULT_DEACTIVATE_DELAY;
   }
 
   disconnectedCallback() {
@@ -73,7 +85,7 @@ class HeaderMenu extends Component {
    * @param {PointerEvent | FocusEvent} event
    */
   activate = (event) => {
-    this.#debouncedDeactivate.cancel();
+    this.#debouncedDeactivate?.cancel();
     this.#debouncedActivateHandler.cancel();
 
     this.#debouncedActivateHandler(event);
@@ -84,7 +96,7 @@ class HeaderMenu extends Component {
    * @param {PointerEvent | FocusEvent} event
    */
   #activateHandler = (event) => {
-    this.#debouncedDeactivate.cancel();
+    this.#debouncedDeactivate?.cancel();
 
     this.dispatchEvent(new MegaMenuHoverEvent());
 
@@ -117,10 +129,12 @@ class HeaderMenu extends Component {
       submenu = this.overflowMenu;
     }
 
-    const submenuHeight = submenu ? Math.max(submenu.offsetHeight, overflowMenuHeight) : 0;
+    if (!this.#isFibrenetMenu) {
+      const submenuHeight = submenu ? Math.max(submenu.offsetHeight, overflowMenuHeight) : 0;
 
-    this.style.setProperty('--submenu-height', `${submenuHeight}px`);
-    this.style.setProperty('--submenu-opacity', '1');
+      this.style.setProperty('--submenu-height', `${submenuHeight}px`);
+      this.style.setProperty('--submenu-opacity', '1');
+    }
   };
 
   #debouncedActivateHandler = debounce(this.#activateHandler, ACTIVATE_DELAY);
@@ -139,7 +153,7 @@ class HeaderMenu extends Component {
     // Make sure the item to be deactivated is still the active one. Ideally
     // we cancelled the debounce before the item was changed, but just in case.
     if (item === this.#state.activeItem) {
-      this.#debouncedDeactivate();
+      this.#debouncedDeactivate?.();
     }
   }
 
@@ -151,25 +165,25 @@ class HeaderMenu extends Component {
     if (!item || item != this.#state.activeItem) return;
     if (this.overflowHovered) return;
 
-    this.style.setProperty('--submenu-height', '0px');
-    this.style.setProperty('--submenu-opacity', '0');
     this.dataset.overflowExpanded = 'false';
-
     this.#state.activeItem = null;
     this.ariaExpanded = 'false';
     item.ariaExpanded = 'false';
+
+    if (this.#isFibrenetMenu) {
+      this.style.removeProperty('--submenu-height');
+      this.style.removeProperty('--submenu-opacity');
+      return;
+    }
+
+    this.style.setProperty('--submenu-height', '0px');
+    this.style.setProperty('--submenu-opacity', '0');
     item.setAttribute('data-animating', '');
 
     setTimeout(() => {
       item.removeAttribute('data-animating');
     }, Math.max(0, this.animationDelay - 150)); // Start header transition 150ms before submenu finishes
   };
-
-  /**
-   * Deactivate the active item after a delay
-   * @param {PointerEvent | FocusEvent} event
-   */
-  #debouncedDeactivate = debounce(this.#deactivate, DEACTIVATE_DELAY);
 
   /**
    * Preload images that are set to load lazily.

@@ -25,10 +25,11 @@
     </a>
   {% endif %}
 
-  {% comment %} Add phone number to header-actions when positioned right {% endcomment %}
-  {% if settings.show_phone_number and settings.phone_number_position == 'right' %}
-    {% render 'phone', settings: settings %}
-  {% endif %}
+  {% unless skip_phone %}
+    {% if settings.show_phone_number and settings.phone_number_position == 'right' %}
+      {% render 'phone', settings: settings %}
+    {% endif %}
+  {% endunless %}
 </header-actions>
 
 {% stylesheet %}

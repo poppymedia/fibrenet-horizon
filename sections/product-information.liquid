@@ -34,6 +34,11 @@
     when 'content-full-width'
       assign content_width = 'full-width'
   endcase
+
+  assign fibrenet_product_layout = false
+  if section.settings.layout_style == 'fibrenet'
+    assign fibrenet_product_layout = true
+  endif
 %}
 
 <script type="application/ld+json">
@@ -42,7 +47,7 @@
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="product-information section section--{{ content_width }} spacing-style color-{{ section.settings.color_scheme }} relative"
+  class="product-information section section--{{ content_width }} spacing-style color-{{ section.settings.color_scheme }} relative{% if fibrenet_product_layout %} product-information--fibrenet{% endif %}"
   style="{% render 'spacing-style', settings: section.settings %} --gap: {{ section.settings.gap }}px;"
 >
   {% if section.settings.desktop_media_position == 'left' and product_has_media %}
@@ -296,6 +301,22 @@
     {
       "type": "header",
       "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "fibrenet",
+          "label": "Fibrenet product"
+        }
+      ],
+      "default": "default"
     },
     {
       "type": "select",

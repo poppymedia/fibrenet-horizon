@@ -1,0 +1,39 @@
+{%- doc -%}
+  Knowledge Centre article footer navigation.
+
+  @param {object} blog - Blog object
+  @param {string} [back_label] - Left back control label
+  @param {string} [knowledge_centre_label] - Right CTA label
+{%- enddoc -%}
+
+{%- liquid
+  assign back_label = back_label | default: '← Back'
+  assign knowledge_centre_label = knowledge_centre_label | default: '→ Back to Knowledge Centre'
+-%}
+
+<nav class="fibrenet-article__nav" aria-label="Article navigation">
+  <button
+    type="button"
+    class="fibrenet-article__nav-back link"
+    data-fibrenet-article-back
+    data-fallback-url="{{ blog.url }}"
+  >
+    {{ back_label | escape }}
+  </button>
+  <a href="{{ blog.url }}" class="button button--pill button--primary fibrenet-article__nav-cta">
+    {{ knowledge_centre_label | escape }}
+  </a>
+</nav>
+
+{% javascript %}
+  document.querySelectorAll('[data-fibrenet-article-back]').forEach((backControl) => {
+    backControl.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+      const fallback = backControl.dataset.fallbackUrl;
+      if (fallback) window.location.assign(fallback);
+    });
+  });
+{% endjavascript %}

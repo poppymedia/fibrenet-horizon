@@ -1,0 +1,44 @@
+{%- liquid
+  assign product = closest.product
+  assign tags = product.metafields.custom.compatibility_tags.value
+  assign current_sku = product.selected_or_first_available_variant.sku | default: product.handle
+-%}
+
+{%- if tags != blank and tags.size > 0 -%}
+  <div class="fibrenet-product-compatibility" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h2 class="fibrenet-product-compatibility__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    <div class="fibrenet-product-compatibility__tags" role="list">
+      {%- for tag in tags -%}
+        {%- liquid
+          assign is_selected = false
+          if tag == current_sku or tag == product.title
+            assign is_selected = true
+          endif
+        -%}
+        <span
+          class="button--tag{% if is_selected %} button--tag--selected{% endif %}"
+          role="listitem"
+        >
+          {{ tag | escape }}
+        </span>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Compatibility tags",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Compatibility"
+    }
+  ]
+}
+{% endschema %}

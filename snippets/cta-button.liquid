@@ -1,0 +1,51 @@
+{%- doc -%}
+  Renders a pill CTA link for header and product contact zones.
+
+  @param {string} button_label - Visible button label
+  @param {string} button_url - Link href
+  @param {string} [button_style] - primary | secondary | outline
+  @param {string} [sub_label] - Optional second line of text
+  @param {boolean} [show_sub_label] - When true, renders sub_label below the main label
+  @param {string} [class] - Additional classes on the anchor
+  @param {string} [layout] - `stacked` (default) or `split` (label | divider | sub-label in one row)
+{%- enddoc -%}
+
+{%- liquid
+  assign button_style = button_style | default: 'primary'
+  assign show_sub_label = show_sub_label | default: false
+  assign layout = layout | default: 'stacked'
+  assign use_split_layout = false
+  if layout == 'split' and show_sub_label and sub_label != blank
+    assign use_split_layout = true
+  endif
+  assign style_class = 'button--primary'
+
+  case button_style
+    when 'secondary'
+      assign style_class = 'button--secondary'
+    when 'outline'
+      assign style_class = 'button--outline'
+    when 'inverted'
+      assign style_class = 'button--inverted'
+  endcase
+-%}
+
+{%- if button_label != blank and button_url != blank -%}
+  <a
+    href="{{ button_url }}"
+    class="button button--pill {{ style_class }}{% if use_split_layout %} cta-btn--split{% endif %}{% if class != blank %} {{ class }}{% endif %}"
+  >
+    {%- if use_split_layout -%}
+      <span class="cta-btn__heading">
+        <span class="cta-btn__label">{{ button_label | escape }}</span>
+      </span>
+      <span class="cta-btn__divider" aria-hidden="true"></span>
+      <span class="cta-btn__sublabel cta-btn__sublabel--aside">{{ sub_label | escape }}</span>
+    {%- else -%}
+      <span class="cta-btn__label">{{ button_label | escape }}</span>
+      {%- if show_sub_label and sub_label != blank -%}
+        <span class="cta-btn__sublabel">{{ sub_label | escape }}</span>
+      {%- endif -%}
+    {%- endif -%}
+  </a>
+{%- endif -%}

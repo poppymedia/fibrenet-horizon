@@ -1,0 +1,92 @@
+{%- doc -%}
+  Sticky toolbar for the Fibrenet mobile menu drawer: country, phone, close.
+
+  @param {object} header_section - Header section settings
+  @param {object} menu_block - Header menu block (for color scheme / block id)
+  @param {boolean} show_country - Whether country selector is available
+  @param {boolean} [show_search] - Whether to show the search icon
+  @param {string} [search_style] - Search modal style (`modal` or `none`)
+{%- enddoc -%}
+
+{%- liquid
+  assign phone_number = header_section.settings.phone_number | default: shop.phone
+  assign phone_href = phone_number | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', ''
+  if phone_href != blank
+    unless phone_href contains 'tel:'
+      assign phone_href = phone_href | prepend: 'tel:'
+    endunless
+  endif
+
+  assign background_brightness = menu_block.settings.color_scheme.settings.background | color_brightness
+  if background_brightness < 64
+    assign flag_shadow_size = 4
+  else
+    assign flag_shadow_size = 2
+  endif
+
+  assign localization_font = '--menu-localization-font: var(--font-[localization_font]--family); ' | replace: '[localization_font]', header_section.settings.localization_font
+  assign color_shadow = '--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));'
+  assign form_style = localization_font | append: color_shadow
+-%}
+
+<div class="fibrenet-drawer-toolbar">
+  <div class="fibrenet-drawer-toolbar__start">
+    {%- if show_country -%}
+      <details class="fibrenet-drawer-toolbar__country">
+        <summary
+          class="fibrenet-drawer-toolbar__icon-btn fibrenet-drawer-toolbar__country-btn"
+          aria-label="{{ 'accessibility.localization_region_and_language' | t }}"
+        >
+          {%- if header_section.settings.country_selector_style -%}
+            <span
+              class="icon-flag fibrenet-drawer-toolbar__flag"
+              style="
+                background-image: url({{- localization.country | image_url: width: 32 }});
+                --size-shadow: {{ flag_shadow_size }}px;
+                --color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-30-60));
+              "
+            ></span>
+          {%- else -%}
+            <span class="fibrenet-drawer-toolbar__country-code">{{ localization.country.iso_code }}</span>
+          {%- endif -%}
+        </summary>
+        <div class="fibrenet-drawer-toolbar__country-panel">
+          {% render 'localization-form',
+            show_country: true,
+            show_language: false,
+            localization_style: 'drawer',
+            form_style: form_style,
+            block_id: menu_block.id
+          %}
+        </div>
+      </details>
+    {%- endif -%}
+
+    {%- if phone_href != blank -%}
+      <a
+        href="{{ phone_href }}"
+        class="fibrenet-drawer-toolbar__icon-btn fibrenet-drawer-toolbar__phone-btn"
+        aria-label="{{ 'accessibility.phone' | t | default: 'Call' }}"
+      >
+        <svg class="fibrenet-drawer-toolbar__phone-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+      </a>
+    {%- endif -%}
+
+    {%- if show_search and search_style != 'none' -%}
+      {% render 'search', style: search_style, class: 'fibrenet-drawer-toolbar__search' %}
+    {%- endif -%}
+  </div>
+
+  <button
+    class="button button-unstyled fibrenet-drawer-toolbar__icon-btn fibrenet-drawer-toolbar__close-btn"
+    type="button"
+    aria-label="{{ 'actions.close' | t }}"
+    on:click="header-drawer/close"
+  >
+    <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
+      {{- 'icon-close.svg' | inline_asset_content -}}
+    </span>
+  </button>
+</div>

@@ -7,7 +7,12 @@
 
 {% liquid
   assign block_settings = block.settings
-  assign animation_speed = 200
+  assign fibrenet_header = section.settings.enable_fibrenet_header | default: true, allow_false: true
+  if fibrenet_header
+    assign animation_speed = 0
+  else
+    assign animation_speed = 200
+  endif
 %}
 
 {% case variant %}
@@ -20,7 +25,9 @@
       {% render 'header-drawer',
         class: 'header__drawer--mobile',
         linklist: block_settings.menu,
-        data_header_drawer_type: 'mobile-drawer'
+        data_header_drawer_type: 'mobile-drawer',
+        block: block,
+        section: section
       %}
     </div>
 
@@ -56,8 +63,11 @@
   {% else %}
     <header-menu
       ref="headerMenu"
-      class="header-menu mobile:hidden"
+      class="header-menu header__menu mobile:hidden"
       data-animation-delay="{{ animation_speed }}"
+      {% if fibrenet_header %}
+        data-menu-mode="fibrenet"
+      {% endif %}
       {{ block.shopify_attributes }}
       style="--submenu-animation-speed: {{ animation_speed }}ms;"
     >

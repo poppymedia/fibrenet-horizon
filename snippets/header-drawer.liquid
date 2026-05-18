@@ -12,7 +12,19 @@
 {%- enddoc -%}
 
 {% liquid
-  assign block_settings = block.settings
+  assign menu_block = block
+  assign header_section = section
+  assign block_settings = menu_block.settings
+  assign fibrenet_header = header_section.settings.enable_fibrenet_header | default: true, allow_false: true
+
+  assign drawer_accordion = block_settings.drawer_accordion
+  if fibrenet_header
+    assign drawer_accordion = true
+    assign drawer_dividers = true
+  else
+    assign drawer_dividers = block_settings.drawer_dividers
+  endif
+
   assign max_featured_items = 4
   assign image_border_radius = block_settings.image_border_radius
 
@@ -72,18 +84,41 @@
         menu-drawer
         motion-reduce
         color-{{ block_settings.color_scheme }}
+        {% if fibrenet_header %} menu-drawer--fibrenet{% endif %}
       "
     >
-      <button
-        class="button button-unstyled close-button menu-drawer__close-button"
-        type="button"
-        aria-label="{{ 'actions.close' | t }}"
-        on:click="/close"
-      >
-        <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
-          {{- 'icon-close.svg' | inline_asset_content -}}
-        </span>
-      </button>
+      {%- if fibrenet_header -%}
+        {% liquid
+          assign show_country = header_section.settings.show_country
+          if localization.available_countries.size <= 1
+            assign show_country = false
+          endif
+
+          assign drawer_show_search = header_section.settings.show_search
+          assign drawer_search_style = 'none'
+          if drawer_show_search
+            assign drawer_search_style = 'modal'
+          endif
+        %}
+        {% render 'fibrenet-drawer-toolbar',
+          header_section: header_section,
+          menu_block: menu_block,
+          show_country: show_country,
+          show_search: drawer_show_search,
+          search_style: drawer_search_style
+        %}
+      {%- else -%}
+        <button
+          class="button button-unstyled close-button menu-drawer__close-button"
+          type="button"
+          aria-label="{{ 'actions.close' | t }}"
+          on:click="/close"
+        >
+          <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      {%- endif -%}
       <nav
         class="menu-drawer__navigation"
         style="
@@ -98,16 +133,16 @@
           {%- comment -%}
             Handle menus with fewer than 3 levels of links
           {%- endcomment -%}
-          {% if linklist.levels < 3 %}
+          {% if linklist.levels < 3 or fibrenet_header %}
             {% assign first_accordion_open = false %}
             {% assign animation_index = 0 %}
             {%- for link in linklist.links -%}
               {% assign animation_index = animation_index | plus: 1 %}
               <li
                 style="--menu-drawer-animation-index: {{ animation_index }};"
-                class="{%- if block_settings.drawer_accordion -%}menu-drawer__list-item--deep{%- else -%}menu-drawer__list-item--flat{%- endif -%}{% if block_settings.drawer_dividers %} menu-drawer__list-item--divider{% endif %}"
+                class="{%- if drawer_accordion -%}menu-drawer__list-item--deep{%- else -%}menu-drawer__list-item--flat{%- endif -%}{% if drawer_dividers %} menu-drawer__list-item--divider{% endif %}"
               >
-                {% if block_settings.drawer_accordion and link.links != blank %}
+                {% if drawer_accordion and link.links != blank %}
                   {%- comment -%}
                     Accordion for links with children, in menus with fewer than 3 levels of links
                   {%- endcomment -%}
@@ -127,9 +162,13 @@
                         class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
                       >
                         <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
-                        <span class="svg-wrapper icon-plus">
-                          {{- 'icon-plus.svg' | inline_asset_content -}}
-                        </span>
+                        {%- if fibrenet_header -%}
+                          {% render 'fibrenet-drawer-menu-caret' %}
+                        {%- else -%}
+                          <span class="svg-wrapper icon-plus">
+                            {{- 'icon-plus.svg' | inline_asset_content -}}
+                          </span>
+                        {%- endif -%}
                       </summary>
                       {% liquid
                         assign render_link_image = false
@@ -174,7 +213,7 @@
                       </ul>
                     </details>
                   </accordion-custom>
-                {% elsif block_settings.drawer_accordion == false and link.links != blank %}
+                {% elsif drawer_accordion == false and link.links != blank %}
                   {%- comment -%}
                     Flat menus for links with children, in menus with fewer than 3 levels of links
                   {%- endcomment -%}
@@ -259,7 +298,7 @@
                   {%- endcomment -%}
                   <details
                     id="Details-menu-drawer-menu-item-{{ forloop.index }}"
-                    class="menu-drawer__menu-container{% if block_settings.drawer_dividers %} menu-drawer__menu-container--divider{% endif %}"
+                    class="menu-drawer__menu-container{% if drawer_dividers %} menu-drawer__menu-container--divider{% endif %}"
                   >
                     <summary
                       id="HeaderDrawer-{{ link.handle }}"
@@ -323,9 +362,9 @@
                               class="
                                 menu-drawer__list-item
                                 {% if childlink.links != blank -%}
-                                  {% if block_settings.drawer_accordion -%} menu-drawer__list-item--deep{% else -%} menu-drawer__list-item--flat{%- endif -%}
+                                  {% if drawer_accordion -%} menu-drawer__list-item--deep{% else -%} menu-drawer__list-item--flat{%- endif -%}
                                 {%- endif -%}
-                                {% if block_settings.drawer_dividers %} menu-drawer__list-item--divider{% endif %}
+                                {% if drawer_dividers %} menu-drawer__list-item--divider{% endif %}
                               "
                             >
                               {%- if childlink.links == blank -%}
@@ -355,12 +394,12 @@
                               {%- else -%}
                                 {% liquid
                                   assign accordion_state = ''
-                                  if first_accordion_open == false and block_settings.drawer_accordion and block_settings.drawer_accordion_expand_first
+                                  if first_accordion_open == false and drawer_accordion and block_settings.drawer_accordion_expand_first
                                     assign first_accordion_open = true
                                     assign accordion_state = 'open-by-default-on-mobile'
                                   endif
                                 %}
-                                {% if block_settings.drawer_accordion %}
+                                {% if drawer_accordion %}
                                   {%- comment -%}
                                     Accordion for links with children, in menus with 3 levels of links
                                   {%- endcomment -%}
@@ -375,9 +414,13 @@
                                         <span class="menu-drawer__menu-item-text wrap-text">
                                           {{- childlink.title | escape -}}
                                         </span>
-                                        <span class="svg-wrapper icon-plus">
-                                          {{- 'icon-plus.svg' | inline_asset_content -}}
-                                        </span>
+                                        {%- if fibrenet_header -%}
+                                          {% render 'fibrenet-drawer-menu-caret' %}
+                                        {%- else -%}
+                                          <span class="svg-wrapper icon-plus">
+                                            {{- 'icon-plus.svg' | inline_asset_content -}}
+                                          </span>
+                                        {%- endif -%}
                                       </summary>
                                       {% liquid
                                         assign render_link_image = false
@@ -564,21 +607,28 @@
         style="--menu-drawer-animation-index: {{ linklist.links.size }};"
       >
         {% liquid
-          assign show_language = section.settings.show_language
+          assign show_language = header_section.settings.show_language
           if localization.available_languages.size <= 1
             assign show_language = false
           endif
 
-          assign show_country = section.settings.show_country
+          assign show_country = header_section.settings.show_country
           if localization.available_countries.size <= 1
             assign show_country = false
           endif
+
+          assign show_drawer_localization = false
+          if fibrenet_header == false and data_header_drawer_type == 'mobile-drawer'
+            if show_country or show_language
+              assign show_drawer_localization = true
+            endif
+          endif
         %}
-        {% if data_header_drawer_type == 'mobile-drawer' and show_country or show_language %}
+        {% if show_drawer_localization %}
           {% render 'drawer-localization',
             show_country: show_country,
             show_language: show_language,
-            country_style: section.settings.country_selector_style
+            country_style: header_section.settings.country_selector_style
           %}
         {%- endif -%}
       </div>
@@ -601,7 +651,15 @@
           endfor
         endif
       -%}
-      {% if top_level_featured_collections.size > 0 or top_level_featured_products_collection.products_count > 0 %}
+      {%- liquid
+        assign show_drawer_featured = false
+        if fibrenet_header == false
+          if top_level_featured_collections.size > 0 or top_level_featured_products_collection.products_count > 0
+            assign show_drawer_featured = true
+          endif
+        endif
+      -%}
+      {% if show_drawer_featured %}
         <div
           class="menu-drawer__featured-content"
           style="--menu-drawer-animation-index: {{ linklist.links.size | plus: 1 }};"

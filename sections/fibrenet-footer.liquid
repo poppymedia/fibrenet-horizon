@@ -1,0 +1,271 @@
+{%- liquid
+  assign details_width = section.settings.details_column_width | default: 20
+  assign custom_width = section.settings.custom_column_width | default: 32
+  assign newsletter_width = section.settings.newsletter_column_width | default: 25
+
+  assign has_custom_column = false
+  if section.settings.custom_heading != blank or section.settings.custom_text != blank or section.settings.custom_image != blank
+    assign has_custom_column = true
+  endif
+-%}
+
+<div class="fibrenet-footer fibrenet-footer--content-{{ section.settings.content_width }}">
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+  <div class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}">
+    <div class="footer__content fibrenet-footer__inner spacing-style">
+      <div
+        class="footer__columns fibrenet-footer__grid{% unless has_custom_column %} fibrenet-footer__grid--no-custom{% endunless %}"
+        style="--fibrenet-footer-col-details: {{ details_width }}%; --fibrenet-footer-col-custom: {{ custom_width }}%; --fibrenet-footer-col-newsletter: {{ newsletter_width }}%;"
+      >
+        <div class="footer__column fibrenet-footer__column fibrenet-footer__column--details">
+          {%- if section.settings.details_heading != blank -%}
+            <h2 class="fibrenet-footer__heading">{{ section.settings.details_heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.details_menu != blank and section.settings.details_menu.links.size > 0 -%}
+            <ul class="footer__links fibrenet-footer__links list-unstyled" role="list">
+              {%- for link in section.settings.details_menu.links -%}
+                <li class="footer__links-item">
+                  <a class="footer__link fibrenet-footer__link" href="{{ link.url }}">
+                    {{- link.title | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+
+        {%- if has_custom_column -%}
+        <div class="footer__column fibrenet-footer__column fibrenet-footer__column--custom">
+          {%- if section.settings.custom_heading != blank -%}
+            <h2 class="fibrenet-footer__heading">{{ section.settings.custom_heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.custom_text != blank -%}
+            <div class="fibrenet-footer__body rte">
+              {{ section.settings.custom_text }}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.custom_image != blank -%}
+            {%- liquid
+              assign custom_image_alt = section.settings.custom_image.alt
+              if custom_image_alt == blank and section.settings.custom_heading != blank
+                assign custom_image_alt = section.settings.custom_heading
+              endif
+            -%}
+            <div class="fibrenet-footer__custom-image-wrap">
+              {{
+                section.settings.custom_image
+                | image_url: width: 560
+                | image_tag:
+                  class: 'fibrenet-footer__custom-image',
+                  widths: '280, 420, 560',
+                  sizes: '(min-width: 750px) 280px, 100vw',
+                  loading: 'lazy',
+                  alt: custom_image_alt
+              }}
+            </div>
+          {%- endif -%}
+        </div>
+        {%- endif -%}
+
+        <div class="footer__column fibrenet-footer__column fibrenet-footer__column--newsletter">
+          {%- if section.settings.newsletter_heading != blank -%}
+            <h2 class="fibrenet-footer__heading">{{ section.settings.newsletter_heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.newsletter_text != blank -%}
+            <div class="fibrenet-footer__body rte">
+              {{ section.settings.newsletter_text }}
+            </div>
+          {%- endif -%}
+
+          {% render 'fibrenet-footer-newsletter', section_id: section.id %}
+
+          {%- if section.settings.linkedin_url != blank -%}
+            <a
+              class="fibrenet-footer__linkedin"
+              href="{{ section.settings.linkedin_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <span class="svg-wrapper" aria-hidden="true">
+                {% render 'icon', icon: 'linkedin' %}
+              </span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="fibrenet-footer__payments" aria-label="{{ 'blocks.payment_methods' | t }}">
+        <ul class="fibrenet-footer__payment-list payment-icons__list list-unstyled" role="list">
+          {%- for type in shop.enabled_payment_types -%}
+            <li class="payment-icons__item fibrenet-footer__payment-item">
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <p class="fibrenet-footer__copyright footer-utilities__text">
+        <span>&copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_name | default: shop.name | escape }}</span>
+        {%- if section.settings.copyright_menu != blank -%}
+          {%- for link in section.settings.copyright_menu.links -%}
+            <span class="fibrenet-footer__copyright-sep" aria-hidden="true"> | </span>
+            <a href="{{ link.url }}" class="fibrenet-footer__copyright-link">
+              {{- link.title | escape -}}
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Fibrenet footer",
+  "tag": "footer",
+  "class": "fibrenet-footer-section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content max width",
+      "options": [
+        { "value": "standard", "label": "Standard (theme page width)" },
+        { "value": "wide", "label": "Wide (1400px)" },
+        { "value": "full", "label": "Full width" }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "header",
+      "content": "Further details"
+    },
+    {
+      "type": "text",
+      "id": "details_heading",
+      "label": "Heading",
+      "default": "Further Details"
+    },
+    {
+      "type": "link_list",
+      "id": "details_menu",
+      "label": "Menu"
+    },
+    {
+      "type": "range",
+      "id": "details_column_width",
+      "label": "Column width (desktop)",
+      "min": 15,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Custom column"
+    },
+    {
+      "type": "text",
+      "id": "custom_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "custom_text",
+      "label": "Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "custom_column_width",
+      "label": "Column width (desktop)",
+      "min": 20,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Heading",
+      "default": "Stay Ahead Of The Game"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_text",
+      "label": "Text",
+      "default": "<p>Sign up for exclusive offers, product news, and fibre networking tips.</p>"
+    },
+    {
+      "type": "range",
+      "id": "newsletter_column_width",
+      "label": "Column width (desktop)",
+      "min": 15,
+      "max": 45,
+      "step": 1,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "url",
+      "id": "linkedin_url",
+      "label": "LinkedIn URL"
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_name",
+      "label": "Copyright name",
+      "default": "Fibrenet"
+    },
+    {
+      "type": "link_list",
+      "id": "copyright_menu",
+      "label": "Legal links menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fibrenet footer",
+      "category": "t:categories.footer"
+    }
+  ]
+}
+{% endschema %}

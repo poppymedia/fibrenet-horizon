@@ -1,14 +1,9 @@
 {%- liquid
-  # DEBUG: Output received order for this row
-  comment
-    echo 'DEBUG header-row - Row: ' | append: row
-    echo 'DEBUG header-row - Order: ' | append: order
-  endcomment
-
   assign order = order | split: ','
   assign left = ''
   assign center = ''
   assign right = ''
+  assign fibrenet_header = fibrenet_header | default: false
 
   if first != blank
     assign left = 'first '
@@ -21,8 +16,20 @@
     assign item_column = settings[column_key] | default: 'left'
 
     case item
-      when 'actions':
+      when 'actions'
         assign item_column = 'right'
+      when 'contact', 'search', 'phone', 'localization'
+        if fibrenet_header
+          assign item_column = 'right'
+        endif
+      when 'menu'
+        if fibrenet_header
+          assign item_column = 'center'
+        endif
+      when 'logo'
+        if fibrenet_header
+          assign item_column = 'left'
+        endif
     endcase
 
     if item_row == row
@@ -40,51 +47,131 @@
   assign columns = 'left,center,right' | split: ','
 -%}
 
-  {%- for column in columns -%}
-  {%- capture items_for_column -%}
-    {% case column %}
-      {% when 'left' %}
-        {{ left }}
-      {% when 'center' %}
-        {{ center }}
-      {% else %}
-        {{ right }}
-    {% endcase %}
-  {%- endcapture -%}
-
-  {%- assign items_array = items_for_column | strip | split: ' ' | compact -%}
-  
-  <!-- # 7. DEBUG: Column {{ column }} items: {{ items_array | join: ',' }} -->
-
-  {%- if items_array.size > 0 -%}
-    <div
-      class="header__column header__column--{{ column }}"
-      data-testid="header-{{ row }}-{{ column }}"
-    >
-      {% for key in items_array %}
-        {% unless key == blank %}
-          {% case key %}
-            {% when 'first' %}
-              {{ first }}
-            {% when 'logo' %}
-              {{ logo }}
-            {% when 'menu' %}
-              {{ menu }}
-            {% when 'localization' %}
-              {{ localization }}
-            {% when 'search' %}
-              {{ search }}
-            {% when 'mobile_search' %}
-              {{ mobile_search }}
-            {% when 'actions' %}
-              {{ actions }}
-            {% when 'contact' %}
-              {{ contact }}
-            {% when 'phone' %}
-              {{ phone }}
-          {% endcase %}
-        {% endunless %}
-      {% endfor %}
+{%- if fibrenet_header and row == 'top' -%}
+  <div class="header__utility-cluster mobile:hidden">
+    {%- for item in order -%}
+      {%- case item -%}
+        {%- when 'localization' -%}
+          {%- if localization != blank -%}{{ localization }}{%- endif -%}
+        {%- when 'phone' -%}
+          {%- if phone != blank -%}{{ phone }}{%- endif -%}
+        {%- when 'actions' -%}
+          {%- if actions != blank -%}{{ actions }}{%- endif -%}
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+  <div class="header__mobile-cluster desktop:hidden">
+    <div class="header__mobile-cluster-start">
+      {%- if logo != blank -%}{{ logo }}{%- endif -%}
     </div>
-  {%- endif -%}
-{%- endfor -%}
+    <div class="header__mobile-cluster-end">
+      {%- if actions != blank -%}{{ actions }}{%- endif -%}
+      {%- if first != blank -%}{{ first }}{%- endif -%}
+    </div>
+  </div>
+{%- elsif fibrenet_header and row == 'bottom' -%}
+  {%- liquid
+    assign fn_left = ''
+    assign fn_center = ''
+    assign fn_right = ''
+    for item in order
+      case item
+        when 'logo'
+          assign fn_left = fn_left | append: 'logo '
+        when 'menu'
+          assign fn_center = fn_center | append: 'menu '
+        when 'search', 'contact'
+          assign fn_right = fn_right | append: item | append: ' '
+      endcase
+    endfor
+  -%}
+  {%- for column in columns -%}
+    {%- capture items_for_column -%}
+      {% case column %}
+        {% when 'left' %}
+          {{ fn_left }}
+        {% when 'center' %}
+          {{ fn_center }}
+        {% else %}
+          {{ fn_right }}
+      {% endcase %}
+    {%- endcapture -%}
+
+    {%- assign items_array = items_for_column | strip | split: ' ' | compact -%}
+
+    {%- if items_array.size > 0 -%}
+      <div
+        class="header__column header__column--{{ column }}"
+        data-testid="header-{{ row }}-{{ column }}"
+      >
+        {%- if column == 'right' -%}
+          <div class="header__main-cta-cluster">
+        {%- endif -%}
+        {% for key in items_array %}
+          {% unless key == blank %}
+            {% case key %}
+              {% when 'logo' %}
+                {{ logo }}
+              {% when 'menu' %}
+                {{ menu }}
+              {% when 'search' %}
+                {{ search }}
+              {% when 'contact' %}
+                {{ contact }}
+            {% endcase %}
+          {% endunless %}
+        {% endfor %}
+        {%- if column == 'right' -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- else -%}
+  {%- for column in columns -%}
+    {%- capture items_for_column -%}
+      {% case column %}
+        {% when 'left' %}
+          {{ left }}
+        {% when 'center' %}
+          {{ center }}
+        {% else %}
+          {{ right }}
+      {% endcase %}
+    {%- endcapture -%}
+
+    {%- assign items_array = items_for_column | strip | split: ' ' | compact -%}
+
+    {%- if items_array.size > 0 -%}
+      <div
+        class="header__column header__column--{{ column }}"
+        data-testid="header-{{ row }}-{{ column }}"
+      >
+        {% for key in items_array %}
+          {% unless key == blank %}
+            {% case key %}
+              {% when 'first' %}
+                {{ first }}
+              {% when 'logo' %}
+                {{ logo }}
+              {% when 'menu' %}
+                {{ menu }}
+              {% when 'localization' %}
+                {{ localization }}
+              {% when 'search' %}
+                {{ search }}
+              {% when 'mobile_search' %}
+                {{ mobile_search }}
+              {% when 'actions' %}
+                {{ actions }}
+              {% when 'contact' %}
+                {{ contact }}
+              {% when 'phone' %}
+                {{ phone }}
+            {% endcase %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

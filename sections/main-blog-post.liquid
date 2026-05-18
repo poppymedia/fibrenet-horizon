@@ -1,33 +1,80 @@
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div class="section color-{{ section.settings.color_scheme }}">
+{% liquid
+  assign is_knowledge_centre = false
+  if section.settings.layout_style == 'knowledge_centre'
+    assign is_knowledge_centre = true
+  endif
+%}
+
+{%- if section.settings.show_blog_tag_nav -%}
+  {% render 'blog-tag-filter', blog: blog, article: article, show_all_tab: true %}
+{%- endif -%}
+
+{%- if is_knowledge_centre -%}
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
   <div
-    class="
-      spacing-style
-      layout-panel-flex
-      layout-panel-flex--column
-      section-content-wrapper
-      mobile-column
-    "
-    style="
-      {% render 'layout-panel-style', settings: section.settings %}
-      {% render 'spacing-style', settings: section.settings %}
-    "
+    class="section blog-posts--knowledge-centre fibrenet-article color-{{ section.settings.color_scheme }} spacing-style"
+    style="{% render 'spacing-style', settings: section.settings %}"
   >
-    <header>
-      {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
-      {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
-    </header>
+    <div class="fibrenet-article__inner">
+      {%- content_for 'block', id: 'blog-post-title', type: 'text' -%}
 
-    {%- if article.image -%}
-      {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
-    {%- endif -%}
-    {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
+      {%- if article.tags.size > 0 -%}
+        <p class="fibrenet-article__tags">{{ article.tags | join: ' · ' | escape }}</p>
+      {%- endif -%}
 
-    {% comment %} Dynamic area for @app blocks only, at the bottom {% endcomment %}
-    {% content_for 'blocks' %}
+      {%- if article.image -%}
+        {%- liquid
+          assign hero_alt = article.image.alt | default: article.title
+        -%}
+        <div class="fibrenet-article__hero">
+          {{
+            article.image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'fibrenet-article__hero-img',
+              loading: 'eager',
+              widths: '400, 800, 1200, 1600',
+              sizes: '(min-width: 750px) 60vw, 100vw',
+              alt: hero_alt
+          }}
+        </div>
+      {%- endif -%}
 
-    {% if blog.comments_enabled? %}
-      <div class="blog-post-comments-container">
+      {%- liquid
+        assign article_body = article.content
+        assign article_lead = blank
+        assign lead_parts = article.content | split: '</p>'
+        if lead_parts.size > 1 and lead_parts[0] contains '<p'
+          assign article_lead = lead_parts[0] | append: '</p>'
+          assign article_body = lead_parts | slice: 1, lead_parts.size | join: '</p>'
+        endif
+      -%}
+
+      {%- if article_lead != blank -%}
+        <div class="fibrenet-article__lead rte">
+          {{ article_lead }}
+        </div>
+      {%- endif -%}
+
+      {% render 'fibrenet-article-metafields', article: article %}
+
+      <div class="fibrenet-article__content rte">
+        {%- if article_lead != blank -%}
+          {{ article_body }}
+        {%- else -%}
+          {{ article.content }}
+        {%- endif -%}
+      </div>
+
+      {% render 'fibrenet-article-navigation',
+        blog: blog,
+        back_label: section.settings.back_label,
+        knowledge_centre_label: section.settings.knowledge_centre_label
+      %}
+    </div>
+
+    {%- if blog.comments_enabled? -%}
+      <div class="fibrenet-article__comments blog-post-comments-container">
         <h2 class="h3">{{- 'blogs.article.comments_heading' | t: count: article.comments_count -}}</h2>
 
         <div class="blog-post-comments">
@@ -53,9 +100,67 @@
 
         {% render 'blog-comment-form', article: article, section_id: section.id %}
       </div>
-    {% endif %}
+    {%- endif -%}
   </div>
-</div>
+{%- else -%}
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+  <div class="section color-{{ section.settings.color_scheme }}">
+    <div
+      class="
+        spacing-style
+        layout-panel-flex
+        layout-panel-flex--column
+        section-content-wrapper
+        mobile-column
+      "
+      style="
+        {% render 'layout-panel-style', settings: section.settings %}
+        {% render 'spacing-style', settings: section.settings %}
+      "
+    >
+      <header>
+        {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
+        {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
+      </header>
+
+      {%- if article.image -%}
+        {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
+      {%- endif -%}
+      {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
+
+      {% if blog.comments_enabled? %}
+        <div class="blog-post-comments-container">
+          <h2 class="h3">{{- 'blogs.article.comments_heading' | t: count: article.comments_count -}}</h2>
+
+          <div class="blog-post-comments">
+            {% paginate article.comments by 10 %}
+              {% for comment in article.comments %}
+                <div class="blog-post-comment">
+                  {{ comment.content }}
+                  <div class="blog-post-comment__author">
+                    <span class="blog-post-comment__author-name">{{- comment.author -}}</span>
+                    <span>{{- 'blogs.article.comment_author_separator' | t -}}</span>
+                    <span class="blog-post-comment__date">
+                      {{- comment.created_at | time_tag: format: 'date' -}}
+                    </span>
+                  </div>
+                </div>
+              {% endfor %}
+
+              <div class="blog-post-comments-pagination">
+                {{- paginate | default_pagination -}}
+              </div>
+            {% endpaginate %}
+          </div>
+
+          {% render 'blog-comment-form', article: article, section_id: section.id %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{%- endif -%}
+
+{% content_for 'blocks' %}
 
 <script type="application/ld+json">
   {{ article | structured_data }}
@@ -64,9 +169,24 @@
 {% stylesheet %}
   .blog-post-comments-container {
     width: 100%;
-    max-width: var(--normal-content-width);
     margin: 0 auto;
   }
+
+  .fibrenet-article .blog-post-comments-container {
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: 40px;
+    padding-block-end: 48px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .fibrenet-article .blog-post-comments-container {
+      width: 100%;
+      max-width: var(--fibrenet-editorial-width, 60%);
+      margin-inline: auto;
+    }
+  }
+
 
   .blog-post-comments {
     display: flex;
@@ -123,6 +243,42 @@
   ],
   "class": "section-wrapper",
   "settings": [
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "editorial",
+          "label": "Editorial (default)"
+        },
+        {
+          "value": "knowledge_centre",
+          "label": "Knowledge Centre article"
+        }
+      ],
+      "default": "editorial"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_blog_tag_nav",
+      "label": "Show blog tag navigation",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back link label",
+      "default": "← Back",
+      "visible_if": "{{ section.settings.layout_style == 'knowledge_centre' }}"
+    },
+    {
+      "type": "text",
+      "id": "knowledge_centre_label",
+      "label": "Knowledge Centre button label",
+      "default": "→ Back to Knowledge Centre",
+      "visible_if": "{{ section.settings.layout_style == 'knowledge_centre' }}"
+    },
     {
       "type": "select",
       "id": "content_direction",

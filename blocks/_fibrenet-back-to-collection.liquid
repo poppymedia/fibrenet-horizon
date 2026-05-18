@@ -1,0 +1,31 @@
+{%- liquid
+  assign product = closest.product
+  assign collection = product.collections.first
+  assign label_prefix = block.settings.label_prefix | default: '← Back to'
+-%}
+
+{%- if collection != blank -%}
+  <div class="fibrenet-back-to-collection" {{ block.shopify_attributes }}>
+    <a
+      href="{{ collection.url }}"
+      class="button button--pill button--outline fibrenet-back-to-collection__button"
+    >
+      {{ label_prefix | escape }} {{ collection.title | escape }}
+    </a>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Back to collection",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label_prefix",
+      "label": "Button label prefix",
+      "default": "← Back to"
+    }
+  ]
+}
+{% endschema %}

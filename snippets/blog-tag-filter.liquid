@@ -1,0 +1,68 @@
+{%- doc -%}
+  Blog tag sub-navigation — tabs from blog.all_tags, native /tagged/ filtering.
+
+  @param {object} blog - Blog object
+  @param {object} [article] - Current article (article template) for active tab
+  @param {boolean} [show_all_tab] - Show "All" linking to the blog index
+{%- enddoc -%}
+
+{% liquid
+  assign show_all_tab = show_all_tab | default: true
+  assign active_tag = current_tags | first
+
+  if active_tag == blank and article != blank and article.tags.size > 0
+    assign active_tag = article.tags.first
+  endif
+%}
+
+{% if blog.all_tags.size > 0 or show_all_tab %}
+  {% capture tab_items %}
+    {%- if show_all_tab -%}
+      <li class="blog-tag-filter__item" role="presentation">
+        <a
+          class="blog-tag-filter__tab{% if current_tags.size == 0 and active_tag == blank %} blog-tag-filter__tab--active{% endif %}"
+          href="{{ blog.url }}"
+          {% if current_tags.size == 0 and active_tag == blank %}
+            aria-current="page"
+          {% endif %}
+        >
+          All
+        </a>
+      </li>
+    {%- endif -%}
+    {%- for tag in blog.all_tags -%}
+      {% liquid
+        assign tab_is_active = false
+        if active_tag == tag
+          assign tab_is_active = true
+        endif
+      %}
+      <li class="blog-tag-filter__item" role="presentation">
+        <a
+          class="blog-tag-filter__tab{% if tab_is_active %} blog-tag-filter__tab--active{% endif %}"
+          href="{{ blog.url }}/tagged/{{ tag | handleize }}"
+          {% if tab_is_active %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{- tag | escape -}}
+        </a>
+      </li>
+    {%- endfor -%}
+  {% endcapture %}
+
+  <div class="blog-tag-filter-bar">
+    <div class="blog-tag-filter-bar__inner">
+      <nav class="blog-tag-filter" aria-label="Filter articles by tag">
+        <div class="blog-tag-filter__scroll">
+          {% render 'overflow-list',
+            class: 'blog-tag-filter__list',
+            children: tab_items,
+            disabled: true,
+            minimum-items: 20
+          %}
+        </div>
+      </nav>
+    </div>
+  </div>
+{% endif %}

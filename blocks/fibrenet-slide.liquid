@@ -1,0 +1,83 @@
+{% liquid
+  assign block_settings = block.settings
+  assign block_index = section.blocks | find_index: 'id', block.id
+
+  assign bg_image = blank
+  if block_settings.image != blank
+    assign bg_image = block_settings.image | image_url: width: 1400
+  elsif block_settings.image_url_fallback != blank
+    assign bg_image = block_settings.image_url_fallback
+  endif
+%}
+
+{% capture children %}
+  <div
+    class="slide__image-container fibrenet-slide__media"
+    {% if bg_image != blank %}
+      style="background-image: url('{{ bg_image | escape }}');"
+    {% endif %}
+  >
+    {%- if bg_image == blank -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'slide__image' }}
+    {%- endif -%}
+  </div>
+  <div
+    class="slide__content background-transparent fibrenet-slide__content"
+    {{ block.shopify_attributes }}
+  >
+    <div
+      class="layout-panel-flex layout-panel-flex--column fibrenet-slide__text"
+      style="--horizontal-alignment: center; --vertical-alignment: center;"
+    >
+      {%- if block_settings.heading != blank -%}
+        <h2 class="fibrenet-slide__heading">{{ block_settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if block_settings.subheading != blank -%}
+        <p class="fibrenet-slide__subheading">{{ block_settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'slideshow-slide',
+  index: block_index,
+  class: 'fibrenet-slide',
+  children: children,
+  attributes: block.shopify_attributes
+%}
+
+{% schema %}
+{
+  "name": "Fibrenet slide",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Tested, evaluated, approved"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "and used by the largest service providers in the world"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "url",
+      "id": "image_url_fallback",
+      "label": "Background image URL (fallback)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fibrenet slide"
+    }
+  ]
+}
+{% endschema %}

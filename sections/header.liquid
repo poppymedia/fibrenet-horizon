@@ -50,9 +50,15 @@
     content_for 'block', type: '_header-menu', id: 'header-menu', variant: 'mobile'
   endcapture
 
-  # 2. CAPTURE CONTACT BUTTONS - Rendered from snippets/product-contact.liquid
+  assign fibrenet_header = section.settings.enable_fibrenet_header | default: true, allow_false: true
+
+  # 2. CAPTURE CONTACT BUTTONS
   capture contact
-    render 'product-contact', settings: section.settings
+    if fibrenet_header
+      render 'header-cta-buttons', settings: section.settings, show_sub_label: false
+    else
+      render 'product-contact', settings: section.settings, show_sub_label: false
+    endif
   endcapture
 
   capture navigation_bar
@@ -60,7 +66,7 @@
   endcapture
 
   capture actions
-    render 'header-actions', settings: section.settings
+    render 'header-actions', settings: section.settings, skip_phone: fibrenet_header
   endcapture
 
   if shop.customer_accounts_enabled
@@ -134,18 +140,21 @@
     assign skip_mobile_search = true
   endif
 
-  if section.settings.show_phone_number and section.settings.phone_number_position == 'left'
-    capture phone
-      render 'phone', settings: section.settings
-    endcapture
+  if section.settings.show_phone_number
+    if fibrenet_header or section.settings.phone_number_position == 'left'
+      capture phone
+        render 'phone', settings: section.settings
+      endcapture
+    endif
   endif
 
-  if section.settings.search_row == 'bottom' or search_style != 'none' and skip_mobile_search == false
-    # Mobile search duplicate for when search is not in the right order for mobile layout
-    capture mobile_search
-      render 'search', class: 'desktop:hidden', style: search_style
-    endcapture
-  endif
+  unless fibrenet_header
+    if section.settings.search_row == 'bottom' or search_style != 'none' and skip_mobile_search == false
+      capture mobile_search
+        render 'search', class: 'desktop:hidden', style: search_style
+      endcapture
+    endif
+  endunless
 
   assign show_language = section.settings.show_language
   if localization.available_languages.size <= 1
@@ -165,10 +174,18 @@
 
   # 4. INITIALIZE BOTTOM ROW BLOCKS ARRAY - For two-row header system
   assign bottom_row_blocks = ''
+  assign fibrenet_order_top = ''
+  assign fibrenet_order_bottom = ''
+
+  if fibrenet_header
+    assign bottom_row_blocks = 'logo,menu,search,contact' | split: ','
+    assign fibrenet_order_top = 'localization,phone,actions,first,logo'
+    assign fibrenet_order_bottom = 'logo,menu,search,contact'
+  endif
 
   # 5. BUILD BOTTOM ROW BLOCKS - Determine which elements go to bottom row
   # Handle two-row header system
-  if section.settings.enable_two_row_header
+  if fibrenet_header == false and section.settings.enable_two_row_header
 
     # Actions row positioning
     if section.settings.actions_row == 'bottom'
@@ -205,7 +222,7 @@
         assign bottom_row_blocks = bottom_row_blocks | append: 'localization,'
       endif
     endif
-  else
+  elsif fibrenet_header == false
     # Original single-row logic
     if section.settings.menu_row == 'bottom'
       assign bottom_row_blocks = bottom_row_blocks | append: 'menu,'
@@ -253,6 +270,10 @@
   endif
 
   assign class = 'header'
+
+  if fibrenet_header
+    assign class = class | append: ' header--fibrenet'
+  endif
 
   if transparent_color_scheme
     assign class = class | append: ' ' | append: transparent_color_scheme
@@ -333,14 +354,26 @@
 
     {% capture content %}
       {%- liquid
-        # Use different order for top vs bottom row
         assign row_order = order
-        if row == 'bottom' and bottom_row_blocks.size > 0
+        if fibrenet_header
+          if row == 'top'
+            assign row_order = fibrenet_order_top
+          elsif row == 'bottom'
+            assign row_order = fibrenet_order_bottom
+          endif
+        elsif row == 'bottom' and bottom_row_blocks.size > 0
           assign row_order = bottom_row_blocks | join: ','
         endif
+
+        if fibrenet_header
+          if row == 'top'
+            assign class = class | append: ' header__row--utility'
+          elsif row == 'bottom'
+            assign class = class | append: ' header__row--main'
+          endif
+        endif
       -%}
-      
-      <!-- # 1. RENDER HEADER ROW - Order: {{ row_order }} for {{ row }} row -->
+
       {% render 'header-row',
         row: row,
         order: row_order,
@@ -353,7 +386,8 @@
         actions: actions,
         localization: localization_markup,
         phone: phone,
-        mobile_search: mobile_search
+        mobile_search: mobile_search,
+        fibrenet_header: fibrenet_header
       %}
     {% endcapture %}
 
@@ -373,7 +407,7 @@
     {% endif %}
   {% endfor %}
 
-  {% if navigation_bar != blank %}
+  {% if navigation_bar != blank and fibrenet_header == false %}
     <div class="header__row header__row--mobile desktop:hidden color-{{ section.settings.color_scheme_bottom }}">
       {{ navigation_bar }}
     </div>
@@ -836,7 +870,35 @@
     },
     {
       "type": "header",
+      "content": "Fibrenet header layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fibrenet_header",
+      "label": "Enable Fibrenet three-zone header",
+      "default": true
+    },
+    {
+      "type": "header",
       "content": "t:content.contact_buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_chat_cta",
+      "label": "Show Chat button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_call_cta",
+      "label": "Show Call button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_email_cta",
+      "label": "Show Email button",
+      "default": true
     },
     {
       "type": "select",
@@ -961,6 +1023,17 @@
       "visible_if": "{{ section.settings.enable_two_row_header }}"
     },
     {
+      "type": "select",
+      "id": "chat_button_style",
+      "label": "Chat button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
       "type": "text",
       "id": "chat_text",
       "label": "Chat Text",
@@ -983,6 +1056,17 @@
       "default": "scheme-3"
     },
     {
+      "type": "select",
+      "id": "call_button_style",
+      "label": "Call button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "secondary"
+    },
+    {
       "type": "text",
       "id": "call_text",
       "label": "Call Text",
@@ -998,6 +1082,17 @@
       "id": "call_color_scheme",
       "label": "Call Colour Scheme",
       "default": "scheme-4"
+    },
+    {
+      "type": "select",
+      "id": "email_button_style",
+      "label": "Email button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "outline"
     },
     {
       "type": "text",
@@ -1072,7 +1167,7 @@
       "type": "checkbox",
       "id": "show_phone_number",
       "label": "t:settings.phone_number",
-      "default": false
+      "default": true
     },
     {
       "type": "text",
@@ -1111,6 +1206,7 @@
       "id": "show_phone_desktop",
       "label": "Show on Desktop",
       "default": true,
+      "info": "Utility bar on Fibrenet layout",
       "visible_if": "{{ section.settings.show_phone_number }}"
     },
     {
@@ -1118,6 +1214,7 @@
       "id": "show_phone_mobile",
       "label": "Show on Mobile",
       "default": false,
+      "info": "Hidden on mobile for Fibrenet layout",
       "visible_if": "{{ section.settings.show_phone_number }}"
     },
     {

@@ -1,0 +1,31 @@
+{%- liquid
+  assign product = closest.product
+  assign subtitle = product.metafields.custom.subtitle.value | default: product.metafields.custom.descriptor.value
+  if subtitle == blank and block.settings.fallback != blank
+    assign subtitle = block.settings.fallback
+  endif
+-%}
+
+{%- if subtitle != blank -%}
+  <p class="fibrenet-product-subtitle" {{ block.shopify_attributes }}>
+    {{ subtitle | escape }}
+  </p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product subtitle",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Uses product metafield custom.subtitle, or custom.descriptor if subtitle is empty."
+    },
+    {
+      "type": "text",
+      "id": "fallback",
+      "label": "Fallback text (optional)"
+    }
+  ]
+}
+{% endschema %}

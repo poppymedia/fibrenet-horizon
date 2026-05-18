@@ -1,0 +1,171 @@
+{%- liquid
+  assign product = closest.product
+  assign mf = product.metafields.custom
+  assign datasheet_url = mf.datasheet_url.value
+-%}
+
+{%- capture spec_rows -%}
+  {%- if block.settings.show_vendor and product.vendor != blank -%}
+    <tr><th scope="row">{{ block.settings.label_vendor | escape }}</th><td>{{ product.vendor | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_part_number and mf.corresponding_part_number.value != blank -%}
+    <tr><th scope="row">{{ block.settings.label_part_number | escape }}</th><td>{{ mf.corresponding_part_number.value | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_format and mf.format.value != blank -%}
+    <tr><th scope="row">{{ block.settings.label_format | escape }}</th><td>{{ mf.format.value | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_connector and mf.connector.value != blank -%}
+    <tr><th scope="row">{{ block.settings.label_connector | escape }}</th><td>{{ mf.connector.value | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_wavelength and mf.wavelength.value != blank -%}
+    <tr><th scope="row">{{ block.settings.label_wavelength | escape }}</th><td>{{ mf.wavelength.value | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_distance and mf.distance.value != blank -%}
+    <tr><th scope="row">{{ block.settings.label_distance | escape }}</th><td>{{ mf.distance.value | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_datarate and mf.datarate.value != blank -%}
+    <tr><th scope="row">{{ block.settings.label_datarate | escape }}</th><td>{{ mf.datarate.value | escape }}</td></tr>
+  {%- endif -%}
+  {%- if block.settings.show_datasheet and datasheet_url != blank -%}
+    <tr>
+      <th scope="row">{{ block.settings.label_datasheet | escape }}</th>
+      <td>
+        <a href="{{ datasheet_url }}" class="link" target="_blank" rel="noopener noreferrer">
+          {{ block.settings.datasheet_link_text | escape }}
+        </a>
+      </td>
+    </tr>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- liquid
+  assign spec_rows_stripped = spec_rows | strip
+-%}
+{%- if spec_rows_stripped != blank -%}
+  <div class="fibrenet-product-specs" {{ block.shopify_attributes }}>
+    <table class="fibrenet-product-specs__table">
+      <tbody>
+        {{ spec_rows }}
+      </tbody>
+    </table>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Specification table",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Row labels"
+    },
+    {
+      "type": "text",
+      "id": "label_vendor",
+      "label": "Vendor label",
+      "default": "Vendor"
+    },
+    {
+      "type": "text",
+      "id": "label_part_number",
+      "label": "Part number label",
+      "default": "Corresponding Part Number"
+    },
+    {
+      "type": "text",
+      "id": "label_format",
+      "label": "Format label",
+      "default": "Format"
+    },
+    {
+      "type": "text",
+      "id": "label_connector",
+      "label": "Connector label",
+      "default": "Connector"
+    },
+    {
+      "type": "text",
+      "id": "label_wavelength",
+      "label": "Wavelength label",
+      "default": "Wavelength"
+    },
+    {
+      "type": "text",
+      "id": "label_distance",
+      "label": "Distance label",
+      "default": "Distance"
+    },
+    {
+      "type": "text",
+      "id": "label_datarate",
+      "label": "Datarate label",
+      "default": "Datarate"
+    },
+    {
+      "type": "text",
+      "id": "label_datasheet",
+      "label": "Datasheet label",
+      "default": "Datasheet"
+    },
+    {
+      "type": "text",
+      "id": "datasheet_link_text",
+      "label": "Datasheet link text",
+      "default": "View datasheet"
+    },
+    {
+      "type": "header",
+      "content": "Visible rows"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_part_number",
+      "label": "Corresponding part number",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_format",
+      "label": "Format",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_connector",
+      "label": "Connector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wavelength",
+      "label": "Wavelength",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_distance",
+      "label": "Distance",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_datarate",
+      "label": "Datarate",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_datasheet",
+      "label": "Datasheet",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
