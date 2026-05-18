@@ -66,7 +66,7 @@
   endcapture
 
   capture actions
-    render 'header-actions', settings: section.settings, skip_phone: fibrenet_header
+    render 'header-actions', settings: section.settings, skip_phone: fibrenet_header, cart_first: fibrenet_header
   endcapture
 
   if shop.customer_accounts_enabled
@@ -179,7 +179,7 @@
 
   if fibrenet_header
     assign bottom_row_blocks = 'logo,menu,search,contact' | split: ','
-    assign fibrenet_order_top = 'localization,phone,actions,first,logo'
+    assign fibrenet_order_top = 'actions,localization,phone,first,logo'
     assign fibrenet_order_bottom = 'logo,menu,search,contact'
   endif
 
