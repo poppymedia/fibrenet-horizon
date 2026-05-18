@@ -323,7 +323,24 @@
       "sold_out_fibrenet_html": "Sold Out (1 week lead time from order)",
       "lead_time_label": "Lead time is ",
       "download_datasheet": "View datasheet",
-      "no_download_datasheet": "No datasheet available"
+      "no_download_datasheet": "No datasheet available",
+      "spec_fibre_type": "Fibre Type",
+      "spec_fibre_count": "Fibre Count",
+      "spec_glass_fibre": "Glass Fibre",
+      "spec_insertion_loss": "Insertion Loss",
+      "spec_cable_diameter": "Cable Diameter",
+      "spec_fibre_grade": "Fibre Grade",
+      "spec_cable_jacket": "Cable Jacket",
+      "spec_fibre_color": "Fibre Color",
+      "spec_minimum_bend_radius": "Minimum Bend Radius",
+      "spec_polarity": "Polarity",
+      "spec_format": "Format",
+      "spec_connector": "Connector",
+      "spec_wavelength": "Wavelength",
+      "spec_distance": "Distance",
+      "spec_datarate": "Datarate",
+      "spec_fn_sku": "FN SKU",
+      "spec_datasheet": "Datasheet"
     }
   }
 }

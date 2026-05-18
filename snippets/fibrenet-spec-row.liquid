@@ -1,0 +1,14 @@
+{%- doc -%}
+  Single row for the Fibrenet product specification table.
+
+  @param {string} label_key - Translation key for the row heading
+  @param {string} value - Cell value (row omitted when blank)
+{%- enddoc -%}
+
+{%- if value != blank -%}
+  <div class="fibrenet-product-specs__row" role="row">
+    <span class="fibrenet-product-specs__label" role="rowheader">{{ label_key | t }}</span>
+    <span class="fibrenet-product-specs__leaders" aria-hidden="true"></span>
+    <span class="fibrenet-product-specs__value" role="cell">{{ value | escape }}</span>
+  </div>
+{%- endif -%}
