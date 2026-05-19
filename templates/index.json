@@ -1,4 +1,13 @@
-{
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+ {
   "sections": {
     "fibrenet_slideshow": {
       "type": "fibrenet-slideshow",
@@ -9,7 +18,8 @@
             "heading": "Tested, evaluated, approved",
             "subheading": "and used by the largest service providers in the world",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_1_resized_1000x355_JPG.jpg?v=1777381124"
-          }
+          },
+          "blocks": {}
         },
         "slide_2": {
           "type": "fibrenet-slide",
@@ -17,7 +27,8 @@
             "heading": "95% of orders shipped same day from UK stock",
             "subheading": "with tracked UPS overnight delivery",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_2_resized_and_flipped_1000x355_PNG.png?v=1777381144"
-          }
+          },
+          "blocks": {}
         },
         "slide_3": {
           "type": "fibrenet-slide",
@@ -25,7 +36,8 @@
             "heading": "Guaranteed compatibility for all network vendors",
             "subheading": "We constantly research and provide the latest vendor coding",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_3_resized_1000x355_JPG.jpg?v=1777381162"
-          }
+          },
+          "blocks": {}
         },
         "slide_4": {
           "type": "fibrenet-slide",
@@ -33,14 +45,20 @@
             "heading": "Minimum 5 year warranty on all Fibrenet products",
             "subheading": "with advance replacement as standard",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_4_resized_1000x355_JPG.jpg?v=1777381165"
-          }
+          },
+          "blocks": {}
         }
       },
-      "block_order": ["slide_1", "slide_2", "slide_3", "slide_4"],
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
+      ],
       "settings": {
         "auto_rotate": true,
         "change_slides_speed": 5,
-        "show_arrows": true,
+        "show_arrows": false,
         "icons_style": "arrows_large",
         "slideshow_controls_style": "dots",
         "slide_height_desktop": 250,
@@ -54,18 +72,102 @@
     "partner_bar": {
       "type": "partner-bar",
       "blocks": {
-        "logo_cisco": { "type": "logo", "settings": { "alt_text": "Cisco" } },
-        "logo_juniper": { "type": "logo", "settings": { "alt_text": "Juniper" } },
-        "logo_ciena": { "type": "logo", "settings": { "alt_text": "Ciena" } },
-        "logo_huawei": { "type": "logo", "settings": { "alt_text": "Huawei" } },
-        "logo_hp": { "type": "logo", "settings": { "alt_text": "HP" } },
-        "logo_aruba": { "type": "logo", "settings": { "alt_text": "Aruba" } },
-        "logo_h3c": { "type": "logo", "settings": { "alt_text": "H3C" } },
-        "logo_extreme": { "type": "logo", "settings": { "alt_text": "Extreme" } },
-        "logo_brocade": { "type": "logo", "settings": { "alt_text": "Brocade" } },
-        "logo_nokia": { "type": "logo", "settings": { "alt_text": "Nokia" } },
-        "logo_calix": { "type": "logo", "settings": { "alt_text": "Calix" } },
-        "logo_arista": { "type": "logo", "settings": { "alt_text": "Arista" } }
+        "logo_cisco": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/1._cisco-logo-white.png",
+            "alt_text": "Cisco",
+            "link_url": ""
+          }
+        },
+        "logo_juniper": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/2._Juniper_Networks_logo.White.png",
+            "alt_text": "Juniper",
+            "link_url": ""
+          }
+        },
+        "logo_ciena": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/3._Ciena_logo_white.png",
+            "alt_text": "Ciena",
+            "link_url": ""
+          }
+        },
+        "logo_huawei": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/4._Huawei_logo_white.png",
+            "alt_text": "Huawei",
+            "link_url": ""
+          }
+        },
+        "logo_hp": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/5._HP_logo_White.png",
+            "alt_text": "HP",
+            "link_url": ""
+          }
+        },
+        "logo_aruba": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/6._aruba-networks-logo-white.png",
+            "alt_text": "Aruba",
+            "link_url": ""
+          }
+        },
+        "logo_h3c": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/8._H3C_logo_white.png",
+            "alt_text": "H3C",
+            "link_url": ""
+          }
+        },
+        "logo_extreme": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/7._Extreme_Logo_White.png",
+            "alt_text": "Extreme",
+            "link_url": ""
+          }
+        },
+        "logo_brocade": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/8._brocade-logo_small_White.png",
+            "alt_text": "Brocade",
+            "link_url": ""
+          }
+        },
+        "logo_nokia": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/9._Nokia_Logo_White.png",
+            "alt_text": "Nokia",
+            "link_url": ""
+          }
+        },
+        "logo_calix": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/11._Palo_Alto_Logo_White.png",
+            "alt_text": "Paloalto",
+            "link_url": ""
+          }
+        },
+        "logo_arista": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/12._Arista.png",
+            "alt_text": "Arista",
+            "link_url": ""
+          }
+        }
       },
       "block_order": [
         "logo_cisco",
@@ -90,16 +192,89 @@
     "category_navigator": {
       "type": "category-navigator",
       "blocks": {
-        "cat_1g": { "type": "category", "settings": { "label_line_1": "1G", "label_line_2": "SFP" } },
-        "cat_10g": { "type": "category", "settings": { "label_line_1": "10G", "label_line_2": "SFP+" } },
-        "cat_25g": { "type": "category", "settings": { "label_line_1": "25G", "label_line_2": "SFP28" } },
-        "cat_40g": { "type": "category", "settings": { "label_line_1": "40G", "label_line_2": "QSFP+" } },
-        "cat_100g": { "type": "category", "settings": { "label_line_1": "100G", "label_line_2": "QSFP28" } },
-        "cat_400g": { "type": "category", "settings": { "label_line_1": "400G", "label_line_2": "QSFP-DD" } },
-        "cat_gpon": { "type": "category", "settings": { "label_line_1": "GPON &", "label_line_2": "XGS-PON" } },
-        "cat_dac": { "type": "category", "settings": { "label_line_1": "DAC &", "label_line_2": "AOC" } }
+        "cat_1g": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/8.png",
+            "label_line_1": "1G",
+            "label_line_2": "SFP",
+            "collection_url": ""
+          }
+        },
+        "cat_10g": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/4.png",
+            "label_line_1": "10G",
+            "label_line_2": "SFP+",
+            "collection_url": ""
+          }
+        },
+        "cat_25g": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/4.png",
+            "label_line_1": "25G",
+            "label_line_2": "SFP28",
+            "collection_url": ""
+          }
+        },
+        "cat_40g": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/QSFP.png",
+            "label_line_1": "40G",
+            "label_line_2": "QSFP+",
+            "collection_url": ""
+          }
+        },
+        "cat_100g": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/QSFP.png",
+            "label_line_1": "100G",
+            "label_line_2": "QSFP28",
+            "collection_url": ""
+          }
+        },
+        "cat_400g": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/QSFP.png",
+            "label_line_1": "400G",
+            "label_line_2": "QSFP-DD",
+            "collection_url": ""
+          }
+        },
+        "cat_gpon": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/XGS-PON_1.png",
+            "label_line_1": "GPON &",
+            "label_line_2": "XGS-PON",
+            "collection_url": ""
+          }
+        },
+        "cat_dac": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/1.png",
+            "label_line_1": "DAC &",
+            "label_line_2": "AOC",
+            "collection_url": ""
+          }
+        }
       },
-      "block_order": ["cat_1g", "cat_10g", "cat_25g", "cat_40g", "cat_100g", "cat_400g", "cat_gpon", "cat_dac"],
+      "block_order": [
+        "cat_1g",
+        "cat_10g",
+        "cat_25g",
+        "cat_40g",
+        "cat_100g",
+        "cat_400g",
+        "cat_gpon",
+        "cat_dac"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
@@ -168,7 +343,9 @@
               "blocks": {}
             }
           },
-          "block_order": ["product_list_text"]
+          "block_order": [
+            "product_list_text"
+          ]
         },
         "static-product-card": {
           "type": "_product-card",
@@ -249,7 +426,11 @@
               "blocks": {}
             }
           },
-          "block_order": ["product_card_gallery", "product_title", "price"]
+          "block_order": [
+            "product_card_gallery",
+            "product_title",
+            "price"
+          ]
         }
       },
       "settings": {

@@ -658,9 +658,9 @@
 
   .header__columns {
     /* Three column layout */
-    --header-left: 1fr;
-    --header-center: auto;
-    --header-right: 1fr;
+    --header-left: auto;
+    --header-center: 1fr;
+    --header-right: auto;
     --header-template-columns: var(--header-left) var(--header-center) var(--header-right);
 
     /* Mobile layout */
@@ -673,9 +673,9 @@
 
     /* If menu is in center column */
     &:has(.header__column--center header-menu) {
-      --header-center: auto;
-      --header-left: minmax(max-content, 1fr);
-      --header-right: minmax(max-content, 1fr);
+      --header-left: auto;
+      --header-center: 1fr;
+      --header-right: auto;
     }
 
     /* If there is no center column, make the column the menu is in grow eagerly */

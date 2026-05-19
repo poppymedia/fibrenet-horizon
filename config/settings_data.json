@@ -9,10 +9,10 @@
  */
  {
   "current": {
-    "logo_height": 60,
-    "logo_height_mobile": 48,
     "logo": "shopify://shop_images/fibrenet_logo_1586x396.png",
     "logo_inverse": "shopify://shop_images/fibrenet-logo-white.png",
+    "logo_height": 60,
+    "logo_height_mobile": 48,
     "favicon": "shopify://shop_images/Fibrenet_Favicon.jpg",
     "type_body_font": "futura_n3",
     "type_subheading_font": "futura_n4",
@@ -57,7 +57,6 @@
     "button_border_radius_primary": 100,
     "secondary_button_border_width": 1,
     "button_border_radius_secondary": 100,
-    "button_font_weight_secondary": "default",
     "cart_type": "drawer",
     "cart_price_font": "subheading",
     "show_cart_note": false,
@@ -80,6 +79,7 @@
     "variant_button_border_width": 1,
     "variant_button_radius": 100,
     "variant_button_width": "equal-width-buttons",
+    "button_font_weight_secondary": "default",
     "content_for_index": [],
     "color_schemes": {
       "scheme-1": {
@@ -201,7 +201,7 @@
       },
       "scheme-4": {
         "settings": {
-          "background": "#525bff",
+          "background": "#111efa",
           "foreground_heading": "#ffffff",
           "foreground": "#ffffff",
           "primary": "#ffffff",
@@ -209,7 +209,7 @@
           "border": "#ffffff40",
           "shadow": "#00000033",
           "primary_button_background": "#ffffff",
-          "primary_button_text": "#525bff",
+          "primary_button_text": "#111efa",
           "primary_button_border": "#ffffff",
           "primary_button_hover_background": "#e8ecff",
           "primary_button_hover_text": "#2f36cc",
