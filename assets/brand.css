@@ -843,8 +843,11 @@ body.template-product .product-details .text-block h1 {
   transform: rotate(180deg);
 }
 
-/* Keep nav labels white when another item is hovered */
-.header--fibrenet .menu-list:where(:has(.menu-list__list-item:hover)) .menu-list__link {
+/* Keep top-bar nav labels white when another visible item is hovered (not overflow panel rows) */
+.header--fibrenet
+  .menu-list:where(:has(.menu-list__list-item:not([slot='overflow']):hover))
+  .menu-list__list-item:not([slot='overflow'])
+  > .menu-list__link {
   color: var(--menu-top-level-font-color);
 }
 
@@ -919,6 +922,135 @@ body.template-product .product-details .text-block h1 {
 .header--fibrenet .fibrenet-submenu__link--active {
   color: var(--fibrenet-brand-purple);
   font-weight: var(--fibrenet-type-header-weight);
+}
+
+/* "More" overflow panel — vertical stack (matches compact Fibrenet dropdown, not Horizon mega menu) */
+@media screen and (min-width: 750px) {
+  .header--fibrenet header-menu .overflow-menu.overflow-menu--fibrenet {
+    position: relative;
+  }
+
+  .header--fibrenet header-menu .overflow-menu.overflow-menu--fibrenet::part(overflow) {
+    --submenu-padding-block-start: 0;
+    --submenu-padding-block-end: 0;
+    --submenu-content-opacity: 1;
+    --submenu-content-animation: none;
+
+    display: none;
+    width: auto;
+    min-width: 14rem;
+    max-width: 22rem;
+    left: auto;
+    right: 0;
+    top: calc(100% + 4px);
+    padding-inline: 0;
+    clip-path: none;
+    border-radius: 4px;
+    background-color: var(--fibrenet-submenu-background);
+    box-shadow: var(--fibrenet-submenu-shadow);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: none;
+  }
+
+  .header--fibrenet header-menu:has([data-overflow-expanded='true'])
+    .overflow-menu.overflow-menu--fibrenet::part(overflow),
+  .header--fibrenet
+    header-menu
+    .overflow-menu.overflow-menu--fibrenet:has([slot='overflow'] [aria-expanded='true'])::part(overflow),
+  .header--fibrenet header-menu .overflow-menu.overflow-menu--fibrenet::part(overflow):hover {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .header--fibrenet header-menu .overflow-menu.overflow-menu--fibrenet::part(overflow-list) {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding: var(--spacing-xs) 0;
+    max-height: calc(80vh - var(--header-height));
+    overflow-y: auto;
+    overflow-x: hidden;
+    grid-template-columns: unset;
+    grid-template-areas: unset;
+    opacity: 1;
+    transition: none;
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] {
+    display: block;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] > .menu-list__link {
+    --submenu-content-opacity: 1;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    grid-area: unset;
+    padding: 0.625rem 1.25rem;
+    font-family: var(--fibrenet-font-stack);
+    font-size: var(--fibrenet-body-font-size);
+    font-weight: var(--fibrenet-type-base-weight);
+    line-height: 1.4;
+    letter-spacing: var(--fibrenet-letter-spacing);
+    color: var(--fibrenet-submenu-text);
+    opacity: 1;
+    transition: color var(--animation-speed) var(--animation-easing);
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] > .menu-list__link:hover,
+  .header--fibrenet .menu-list__list-item[slot='overflow'] > .menu-list__link:focus-visible,
+  .header--fibrenet .menu-list__list-item[slot='overflow']:has([aria-expanded='true']) > .menu-list__link {
+    color: var(--fibrenet-brand-purple);
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] > .menu-list__link--active {
+    color: var(--fibrenet-brand-purple);
+    font-weight: var(--fibrenet-type-header-weight);
+  }
+
+  /* Always show child links indented — no accordion / reserved empty rows */
+  .header--fibrenet .menu-list__list-item[slot='overflow'] > .menu-list__submenu--fibrenet {
+    position: static;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    clip-path: none;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    grid-row-end: auto;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] .menu-list__submenu--fibrenet .menu-list__submenu-inner {
+    --submenu-content-opacity: 1;
+
+    padding-block: 0;
+    opacity: 1;
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] .fibrenet-submenu__link {
+    padding-inline-start: 2rem;
+  }
+
+  .header--fibrenet .menu-list__list-item[slot='overflow'] .menu-list__link-caret {
+    display: none;
+  }
 }
 
 .header--fibrenet .header__main-cta-cluster {
