@@ -2433,57 +2433,12 @@ html body.template-product .product-details :is(rte-formatter, .text-block).text
   font-size: var(--fibrenet-body-font-size);
 }
 
-#shopify-pc__banner .shopify-pc__banner__btns {
-  display: flex !important;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--spacing-xs) !important;
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-#shopify-pc__banner .shopify-pc__banner__btns-primary {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: stretch;
-  gap: var(--spacing-xs);
-  width: 100%;
-}
-
-#shopify-pc__banner .shopify-pc__banner__btns-granular {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-#shopify-pc__banner .shopify-pc__banner__btns-primary [id^='shopify-pc__banner__btn-']:not(#shopify-pc__banner__btn-manage-prefs) {
-  flex: 1 1 0;
-  min-width: 0;
-  width: auto !important;
-  margin: 0 !important;
+#shopify-pc__banner #shopify-pc__banner__btn-accept,
+#shopify-pc__banner #shopify-pc__banner__btn-decline {
   font-size: var(--fibrenet-button-font-size);
-}
-
-#shopify-pc__banner #shopify-pc__banner__btn-manage-prefs {
-  flex: 1 1 100% !important;
-  order: 10;
-  width: 100% !important;
-  margin: 0 !important;
-  font-size: var(--fibrenet-body-font-size);
-}
-
-@media screen and (max-width: 749px) {
-  #shopify-pc__banner {
-    width: 100% !important;
-    max-width: 100% !important;
-    inset-inline: 0 !important;
-  }
-
-  #shopify-pc__banner .shopify-pc__banner__dialog {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    border-radius: 0;
-  }
+  font-family: var(--fibrenet-font-stack);
+  font-weight: var(--fibrenet-type-bold-weight);
+  letter-spacing: var(--fibrenet-letter-spacing);
+  border-radius: var(--fibrenet-radius-pill);
+  border-color: var(--color-border);
 }
