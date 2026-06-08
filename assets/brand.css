@@ -195,6 +195,14 @@ h2, .h2 {
 .quantity-selector,
 button.shopify-payment-button__button--unbranded {
   border-radius: var(--fibrenet-radius-pill);
+  text-decoration: none;
+}
+/* Pill controls — buttons, variants, quantity (theme radius 100px + token) */
+.fibrenet-article__nav-back.button {
+  border: 1px solid var(--color-border);
+}
+.fibrenet-article__nav-back.button a {
+  text-decoration: none;
 }
 
 .variant-picker .variant-option__button-label,
@@ -445,9 +453,8 @@ body.template-product .product-details .text-block h1 {
 .blog-tag-filter-bar {
   --fibrenet-subnav-background: #ffffff;
   --blog-tag-filter-edge-padding: var(--page-margin);
-  --blog-tag-filter-block-padding: var(--spacing-sm);
   --blog-tag-filter-tab-gap: var(--spacing-md);
-  --blog-tag-filter-tab-padding-block: var(--padding-2xs);
+  --blog-tag-filter-tab-padding-block: 1em 0;
   width: 100%;
   max-width: none;
   padding-inline: 0;
@@ -458,15 +465,16 @@ body.template-product .product-details .text-block h1 {
 @media screen and (min-width: 750px) {
   .blog-tag-filter-bar {
     --blog-tag-filter-block-padding: var(--spacing-md);
-    --blog-tag-filter-tab-gap: var(--spacing-xl);
-    --blog-tag-filter-tab-padding-block: var(--spacing-sm);
+    --blog-tag-filter-tab-gap: var(--spacing-lg);
+    --blog-tag-filter-tab-padding-block: 1.5em 0.5em;
   }
 }
 
 .blog-tag-filter-bar__inner {
   width: 100%;
+  height: auto;
   max-width: none;
-  padding-block: var(--blog-tag-filter-block-padding);
+  padding-block: 0;
   padding-inline: 0;
 }
 
@@ -519,13 +527,18 @@ body.template-product .product-details .text-block h1 {
 
 .blog-tag-filter__tab {
   display: inline-block;
-  padding-block: var(--blog-tag-filter-tab-padding-block);
+  padding: 0.75em 0 0.75em 0 !important;
   font-weight: 400;
   line-height: 1.4;
   color: var(--color-text-subdued);
   text-decoration: none;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
+}
+@media screen and (min-width: 750px) {
+  .blog-tag-filter__tab {
+    padding: 1.25em 0 1.25em 0 !important;
+  }
 }
 
 .blog-tag-filter__tab--active {
@@ -1393,6 +1406,7 @@ body.template-product .product-details .text-block h1 {
 }
 
 /* CTA pill buttons — header + product contact (snippets/cta-button.liquid) */
+.fibrenet-article__nav-back.button,
 .button--pill {
   border-radius: var(--fibrenet-radius-pill);
   min-height: var(--fibrenet-cta-height);
@@ -1441,6 +1455,7 @@ body.template-product .product-details .text-block h1 {
   color: #ffffff;
 }
 
+.button--outline,
 .button--pill.button--outline {
   background-color: transparent;
   color: var(--color-foreground);
