@@ -1969,6 +1969,7 @@ p b, p strong, .site-footer .h4, body .variant__label, body label, .btn, button,
   font-weight: var(--type-bold-weight) !important;
 }
 
+
 /*
 .fibrenet-article__content.rte :is(h2, h3) {
   margin-block: 32px var(--spacing-md);
@@ -2479,4 +2480,18 @@ html body.template-product .product-details :is(rte-formatter, .text-block).text
   letter-spacing: var(--fibrenet-letter-spacing);
   border-radius: var(--fibrenet-radius-pill);
   border-color: var(--color-border);
+}
+
+
+/* Reset paragraph margins in all RTE content */
+.rte p {
+  margin-block: 0;
+  padding-block: 0;
+  margin-block-start: 0;
+  padding-block-start: 0;
+}
+.rte h2 {
+  margin-block: 0.5em;
+  margin-block-end: 0;
+  padding-block-end: 0;
 }
