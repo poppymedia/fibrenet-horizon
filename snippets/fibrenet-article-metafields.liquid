@@ -13,21 +13,21 @@
 -%}
 
 {%- if sector != blank or location != blank or network_type != blank or speed != blank or solution != blank -%}
-  <div class="fibrenet-article__metadata">
+  <div class="article-editorial__metadata">
     {%- if sector != blank -%}
-      <p class="fibrenet-article__meta-line">Sector: {{ sector | escape }}</p>
+      <p class="article-editorial__meta-line">Sector: {{ sector | escape }}</p>
     {%- endif -%}
     {%- if location != blank -%}
-      <p class="fibrenet-article__meta-line">Location: {{ location | escape }}</p>
+      <p class="article-editorial__meta-line">Location: {{ location | escape }}</p>
     {%- endif -%}
     {%- if network_type != blank -%}
-      <p class="fibrenet-article__meta-line">Network type: {{ network_type | escape }}</p>
+      <p class="article-editorial__meta-line">Network type: {{ network_type | escape }}</p>
     {%- endif -%}
     {%- if speed != blank -%}
-      <p class="fibrenet-article__meta-line">Speed: {{ speed | escape }}</p>
+      <p class="article-editorial__meta-line">Speed: {{ speed | escape }}</p>
     {%- endif -%}
     {%- if solution != blank -%}
-      <p class="fibrenet-article__meta-line">Solution: {{ solution | escape }}</p>
+      <p class="article-editorial__meta-line">Solution: {{ solution | escape }}</p>
     {%- endif -%}
   </div>
 {%- endif -%}

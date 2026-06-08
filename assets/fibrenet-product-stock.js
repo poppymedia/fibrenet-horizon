@@ -88,7 +88,7 @@ class FibrenetProductStock extends HTMLElement {
     };
 
     const leadTime = this.dataset.leadTime || '';
-    const textEl = this.querySelector('[data-fibrenet-stock-text]');
+    const textEl = this.querySelector('[data-product-stock-text]');
     if (!textEl) return;
 
     textEl.innerHTML = this.#buildMessage(inventory, leadTime);
@@ -104,8 +104,8 @@ class FibrenetProductStock extends HTMLElement {
     const productId = this.dataset.productId;
     const newStock = html.querySelector(
       productId
-        ? `fibrenet-product-stock[data-product-id="${productId}"]`
-        : 'fibrenet-product-stock'
+        ? `product-stock-status[data-product-id="${productId}"]`
+        : 'product-stock-status'
     );
 
     if (newStock?.dataset.leadTime !== undefined) {
@@ -123,14 +123,14 @@ class FibrenetProductStock extends HTMLElement {
     const productId = this.dataset.productId;
     const newStock = html.querySelector(
       productId
-        ? `fibrenet-product-stock[data-product-id="${productId}"]`
-        : 'fibrenet-product-stock'
+        ? `product-stock-status[data-product-id="${productId}"]`
+        : 'product-stock-status'
     );
 
     if (!newStock) return false;
 
-    const newText = newStock.querySelector('[data-fibrenet-stock-text]');
-    const textEl = this.querySelector('[data-fibrenet-stock-text]');
+    const newText = newStock.querySelector('[data-product-stock-text]');
+    const textEl = this.querySelector('[data-product-stock-text]');
 
     if (!newText || !textEl) return false;
 
@@ -214,6 +214,6 @@ class FibrenetProductStock extends HTMLElement {
   }
 }
 
-if (!customElements.get('fibrenet-product-stock')) {
-  customElements.define('fibrenet-product-stock', FibrenetProductStock);
+if (!customElements.get('product-stock-status')) {
+  customElements.define('product-stock-status', FibrenetProductStock);
 }

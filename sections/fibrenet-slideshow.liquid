@@ -45,7 +45,7 @@
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="fibrenet-slideshow spacing-style section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} disable-section-top-offset"
+  class="hero-slideshow spacing-style section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} disable-section-top-offset"
   style="
     {% render 'spacing-padding', settings: section.settings %}
     --slideshow-height-desktop: {{ section.settings.slide_height_desktop }}px;
@@ -68,7 +68,7 @@
 {% javascript %}
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const pauseFibrenetSlideshows = () => {
-    document.querySelectorAll('.fibrenet-slideshow slideshow-component[autoplay]').forEach((slideshow) => {
+    document.querySelectorAll('.hero-slideshow slideshow-component[autoplay]').forEach((slideshow) => {
       if (typeof slideshow.pause === 'function') slideshow.pause();
     });
   };

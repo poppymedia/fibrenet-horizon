@@ -84,7 +84,7 @@
         menu-drawer
         motion-reduce
         color-{{ block_settings.color_scheme }}
-        {% if fibrenet_header %} menu-drawer--fibrenet{% endif %}
+        {% if fibrenet_header %} menu-drawer--end{% endif %}
       "
     >
       {%- if fibrenet_header -%}
@@ -100,7 +100,7 @@
             assign drawer_search_style = 'modal'
           endif
         %}
-        {% render 'fibrenet-drawer-toolbar',
+        {% render 'drawer-toolbar',
           header_section: header_section,
           menu_block: menu_block,
           show_country: show_country,

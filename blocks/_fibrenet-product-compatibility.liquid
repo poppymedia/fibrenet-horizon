@@ -5,11 +5,11 @@
 -%}
 
 {%- if tags != blank and tags.size > 0 -%}
-  <div class="fibrenet-product-compatibility" {{ block.shopify_attributes }}>
+  <div class="product-compatibility" {{ block.shopify_attributes }}>
     {%- if block.settings.heading != blank -%}
-      <h2 class="fibrenet-product-compatibility__heading">{{ block.settings.heading | escape }}</h2>
+      <h2 class="product-compatibility__heading">{{ block.settings.heading | escape }}</h2>
     {%- endif -%}
-    <div class="fibrenet-product-compatibility__tags" role="list">
+    <div class="product-compatibility__tags" role="list">
       {%- for tag in tags -%}
         {%- liquid
           assign is_selected = false

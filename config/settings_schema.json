@@ -2287,5 +2287,36 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "Contact CTA buttons",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Colours"
+      },
+      {
+        "type": "paragraph",
+        "content": "Shared by header and product page CTAs. Button fill and text use each scheme’s primary button settings."
+      },
+      {
+        "type": "color_scheme",
+        "id": "fibrenet_cta_chat_color_scheme",
+        "label": "Chat colour scheme",
+        "default": "scheme-3"
+      },
+      {
+        "type": "color_scheme",
+        "id": "fibrenet_cta_call_color_scheme",
+        "label": "Call colour scheme",
+        "default": "scheme-4"
+      },
+      {
+        "type": "color_scheme",
+        "id": "fibrenet_cta_email_color_scheme",
+        "label": "Email colour scheme",
+        "default": "scheme-5"
+      }
+    ]
   }
 ]

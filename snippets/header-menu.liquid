@@ -54,7 +54,7 @@
       </a>
       {%- if link.links != blank -%}
         <div
-          class="menu-list__submenu{% if fibrenet_header %} menu-list__submenu--fibrenet{% else %}{{ color_scheme_classes }}{% endif %}"
+          class="menu-list__submenu{% if fibrenet_header %} menu-list__submenu--compact{% else %}{{ color_scheme_classes }}{% endif %}"
           ref="submenu[]"
         >
           <div
@@ -105,7 +105,7 @@
   >
     {% assign class = 'overflow-menu' | append: color_scheme_classes %}
     {% if fibrenet_header %}
-      {% assign class = class | append: ' overflow-menu--fibrenet' %}
+      {% assign class = class | append: ' overflow-menu--compact' %}
     {% endif %}
     {% render 'overflow-list', class: class, ref: 'overflowMenu', children: children, minimum-items: 2, defer: true %}
   </div>

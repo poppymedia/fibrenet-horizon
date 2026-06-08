@@ -136,10 +136,10 @@
         assign back_label_prefix = section.settings.back_label_prefix | default: '← Back to'
       -%}
       {%- if back_collection != blank -%}
-        <div class="fibrenet-back-to-collection">
+        <div class="back-to-collection">
           <a
             href="{{ back_collection.url }}"
-            class="button button--pill button--outline fibrenet-back-to-collection__button"
+            class="button button--pill button--outline back-to-collection__button"
           >
             {{ back_label_prefix | escape }} {{ back_collection.title | escape }}
           </a>

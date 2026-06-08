@@ -7,7 +7,7 @@
 |---|---|---|
 | `--page-width` | `1200px` | Max content width for all standard pages |
 | `--page-width-narrow` | `800px` | Legacy narrow reference (prefer editorial width below) |
-| `--fibrenet-editorial-width` | `60%` | Article body, Page body — left-aligned on desktop |
+| `--editorial-width` | `60%` | Article body, Page body — left-aligned on desktop |
 | `--page-width-full` | `100%` | Hero sections, announcement bar |
 
 ### Outer Content Padding
@@ -40,7 +40,7 @@
 | `--spacing-md` | `16px` | Section element separation |
 | `--spacing-lg` | `24px` | Grid gaps, card internal padding |
 | `--spacing-xl` | `40px` | Section vertical rhythm |
-| `--spacing-2xl` | `48px` | Head/tag bar to page H1 (`--fibrenet-head-to-title-gap`) |
+| `--spacing-2xl` | `48px` | Head/tag bar to page H1 (`--head-to-title-gap`) |
 | `--spacing-3xl` | `80px` | Major section separation |
 
 ### Flexbox Alignment Norms

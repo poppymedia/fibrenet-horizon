@@ -11,22 +11,22 @@
   assign knowledge_centre_label = knowledge_centre_label | default: '→ Back to Knowledge Centre'
 -%}
 
-<nav class="fibrenet-article__nav" aria-label="Article navigation">
+<nav class="article-editorial__nav" aria-label="Article navigation">
   <button
     type="button"
-    class="fibrenet-article__nav-back button button--outline"
-    data-fibrenet-article-back
+    class="article-editorial__nav-back button button--outline"
+    data-article-editorial-back
     data-fallback-url="{{ blog.url }}"
   >
     {{ back_label | escape }}
   </button>
-  <a href="{{ blog.url }}" class="button button--pill button--primary fibrenet-article__nav-cta">
+  <a href="{{ blog.url }}" class="button button--pill button--primary article-editorial__nav-cta">
     {{ knowledge_centre_label | escape }}
   </a>
 </nav>
 
 {% javascript %}
-  document.querySelectorAll('[data-fibrenet-article-back]').forEach((backControl) => {
+  document.querySelectorAll('[data-article-editorial-back]').forEach((backControl) => {
     backControl.addEventListener('click', () => {
       if (window.history.length > 1) {
         window.history.back();

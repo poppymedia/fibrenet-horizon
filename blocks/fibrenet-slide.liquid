@@ -12,7 +12,7 @@
 
 {% capture children %}
   <div
-    class="slide__image-container fibrenet-slide__media"
+    class="slide__image-container hero-slide__media"
     {% if bg_image != blank %}
       style="background-image: url('{{ bg_image | escape }}');"
     {% endif %}
@@ -22,18 +22,18 @@
     {%- endif -%}
   </div>
   <div
-    class="slide__content background-transparent fibrenet-slide__content"
+    class="slide__content background-transparent hero-slide__content"
     {{ block.shopify_attributes }}
   >
     <div
-      class="layout-panel-flex layout-panel-flex--column fibrenet-slide__text"
+      class="layout-panel-flex layout-panel-flex--column hero-slide__text"
       style="--horizontal-alignment: center; --vertical-alignment: center;"
     >
       {%- if block_settings.heading != blank -%}
-        <h2 class="fibrenet-slide__heading">{{ block_settings.heading | escape }}</h2>
+        <h2 class="hero-slide__heading">{{ block_settings.heading | escape }}</h2>
       {%- endif -%}
       {%- if block_settings.subheading != blank -%}
-        <p class="fibrenet-slide__subheading">{{ block_settings.subheading | escape }}</p>
+        <p class="hero-slide__subheading">{{ block_settings.subheading | escape }}</p>
       {%- endif -%}
     </div>
   </div>
@@ -41,7 +41,7 @@
 
 {% render 'slideshow-slide',
   index: block_index,
-  class: 'fibrenet-slide',
+  class: 'hero-slide',
   children: children,
   attributes: block.shopify_attributes
 %}

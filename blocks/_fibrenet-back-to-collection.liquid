@@ -5,10 +5,10 @@
 -%}
 
 {%- if collection != blank -%}
-  <div class="fibrenet-back-to-collection" {{ block.shopify_attributes }}>
+  <div class="back-to-collection" {{ block.shopify_attributes }}>
     <a
       href="{{ collection.url }}"
-      class="button button--pill button--outline fibrenet-back-to-collection__button"
+      class="button button--pill button--outline back-to-collection__button"
     >
       {{ label_prefix | escape }} {{ collection.title | escape }}
     </a>

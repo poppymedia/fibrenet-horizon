@@ -3,37 +3,44 @@
 
   @param {string} button_label - Visible button label
   @param {string} button_url - Link href
-  @param {string} [button_style] - primary | secondary | outline
   @param {string} [sub_label] - Optional second line of text
   @param {boolean} [show_sub_label] - When true, renders sub_label below the main label
   @param {string} [class] - Additional classes on the anchor
   @param {string} [layout] - `stacked` (default) or `split` (label | divider | sub-label in one row)
+  @param {string} [color_scheme] - Theme colour scheme id (e.g. scheme-3) for primary button tokens
+  @param {string} [border_color] - Optional product-page border override
+  @param {string} [border_hover_color] - Optional product-page hover border override
 {%- enddoc -%}
 
 {%- liquid
-  assign button_style = button_style | default: 'primary'
   assign show_sub_label = show_sub_label | default: false
   assign layout = layout | default: 'stacked'
   assign use_split_layout = false
   if layout == 'split' and show_sub_label and sub_label != blank
     assign use_split_layout = true
   endif
-  assign style_class = 'button--primary'
 
-  case button_style
-    when 'secondary'
-      assign style_class = 'button--secondary'
-    when 'outline'
-      assign style_class = 'button--outline'
-    when 'inverted'
-      assign style_class = 'button--inverted'
-  endcase
+  assign cta_scheme_style = ''
+  if border_color != blank
+    assign cta_scheme_style = cta_scheme_style | append: '--color-primary-button-border: ' | append: border_color | append: ';'
+  endif
+  if border_hover_color != blank
+    assign cta_scheme_style = cta_scheme_style | append: '--color-primary-button-hover-border: ' | append: border_hover_color | append: ';'
+  endif
 -%}
 
 {%- if button_label != blank and button_url != blank -%}
+  {%- if color_scheme != blank -%}
+    <span
+      class="cta-btn-scheme cta-btn-scheme--{{ color_scheme }}"
+      {% if cta_scheme_style != blank %}
+        style="{{ cta_scheme_style }}"
+      {% endif %}
+    >
+  {%- endif -%}
   <a
     href="{{ button_url }}"
-    class="button button--pill {{ style_class }}{% if use_split_layout %} cta-btn--split{% endif %}{% if class != blank %} {{ class }}{% endif %}"
+    class="button button--pill button--primary{% if use_split_layout %} cta-btn--split{% endif %}{% if class != blank %} {{ class }}{% endif %}"
   >
     {%- if use_split_layout -%}
       <span class="cta-btn__heading">
@@ -48,4 +55,7 @@
       {%- endif -%}
     {%- endif -%}
   </a>
+  {%- if color_scheme != blank -%}
+    </span>
+  {%- endif -%}
 {%- endif -%}

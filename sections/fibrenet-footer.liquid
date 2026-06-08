@@ -9,23 +9,23 @@
   endif
 -%}
 
-<div class="fibrenet-footer fibrenet-footer--content-{{ section.settings.content_width }}">
+<div class="site-footer-ext site-footer-ext--content-{{ section.settings.content_width }}">
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
   <div class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}">
-    <div class="footer__content fibrenet-footer__inner spacing-style">
+    <div class="footer__content site-footer__inner spacing-style">
       <div
-        class="footer__columns fibrenet-footer__grid{% unless has_custom_column %} fibrenet-footer__grid--no-custom{% endunless %}"
-        style="--fibrenet-footer-col-details: {{ details_width }}%; --fibrenet-footer-col-custom: {{ custom_width }}%; --fibrenet-footer-col-newsletter: {{ newsletter_width }}%;"
+        class="footer__columns site-footer__grid{% unless has_custom_column %} site-footer__grid--no-custom{% endunless %}"
+        style="--site-footer-ext-col-details: {{ details_width }}%; --site-footer-ext-col-custom: {{ custom_width }}%; --site-footer-ext-col-newsletter: {{ newsletter_width }}%;"
       >
-        <div class="footer__column fibrenet-footer__column fibrenet-footer__column--details">
+        <div class="footer__column site-footer__column site-footer__column--details">
           {%- if section.settings.details_heading != blank -%}
-            <h2 class="fibrenet-footer__heading">{{ section.settings.details_heading | escape }}</h2>
+            <h2 class="site-footer__heading">{{ section.settings.details_heading | escape }}</h2>
           {%- endif -%}
           {%- if section.settings.details_menu != blank and section.settings.details_menu.links.size > 0 -%}
-            <ul class="footer__links fibrenet-footer__links list-unstyled" role="list">
+            <ul class="footer__links site-footer__links list-unstyled" role="list">
               {%- for link in section.settings.details_menu.links -%}
                 <li class="footer__links-item">
-                  <a class="footer__link fibrenet-footer__link" href="{{ link.url }}">
+                  <a class="footer__link site-footer__link" href="{{ link.url }}">
                     {{- link.title | escape -}}
                   </a>
                 </li>
@@ -35,12 +35,12 @@
         </div>
 
         {%- if has_custom_column -%}
-        <div class="footer__column fibrenet-footer__column fibrenet-footer__column--custom">
+        <div class="footer__column site-footer__column site-footer__column--custom">
           {%- if section.settings.custom_heading != blank -%}
-            <h2 class="fibrenet-footer__heading">{{ section.settings.custom_heading | escape }}</h2>
+            <h2 class="site-footer__heading">{{ section.settings.custom_heading | escape }}</h2>
           {%- endif -%}
           {%- if section.settings.custom_text != blank -%}
-            <div class="fibrenet-footer__body rte">
+            <div class="site-footer__body rte">
               {{ section.settings.custom_text }}
             </div>
           {%- endif -%}
@@ -51,12 +51,12 @@
                 assign custom_image_alt = section.settings.custom_heading
               endif
             -%}
-            <div class="fibrenet-footer__custom-image-wrap">
+            <div class="site-footer__custom-image-wrap">
               {{
                 section.settings.custom_image
                 | image_url: width: 560
                 | image_tag:
-                  class: 'fibrenet-footer__custom-image',
+                  class: 'site-footer__custom-image',
                   widths: '280, 420, 560',
                   sizes: '(min-width: 750px) 280px, 100vw',
                   loading: 'lazy',
@@ -67,12 +67,12 @@
         </div>
         {%- endif -%}
 
-        <div class="footer__column fibrenet-footer__column fibrenet-footer__column--newsletter">
+        <div class="footer__column site-footer__column site-footer__column--newsletter">
           {%- if section.settings.newsletter_heading != blank -%}
-            <h2 class="fibrenet-footer__heading">{{ section.settings.newsletter_heading | escape }}</h2>
+            <h2 class="site-footer__heading">{{ section.settings.newsletter_heading | escape }}</h2>
           {%- endif -%}
           {%- if section.settings.newsletter_text != blank -%}
-            <div class="fibrenet-footer__body rte">
+            <div class="site-footer__body rte">
               {{ section.settings.newsletter_text }}
             </div>
           {%- endif -%}
@@ -81,7 +81,7 @@
 
           {%- if section.settings.linkedin_url != blank -%}
             <a
-              class="fibrenet-footer__linkedin"
+              class="site-footer__linkedin"
               href="{{ section.settings.linkedin_url }}"
               target="_blank"
               rel="noopener noreferrer"
@@ -95,22 +95,22 @@
         </div>
       </div>
 
-      <div class="fibrenet-footer__payments" aria-label="{{ 'blocks.payment_methods' | t }}">
-        <ul class="fibrenet-footer__payment-list payment-icons__list list-unstyled" role="list">
+      <div class="site-footer__payments" aria-label="{{ 'blocks.payment_methods' | t }}">
+        <ul class="site-footer__payment-list payment-icons__list list-unstyled" role="list">
           {%- for type in shop.enabled_payment_types -%}
-            <li class="payment-icons__item fibrenet-footer__payment-item">
+            <li class="payment-icons__item site-footer__payment-item">
               {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
             </li>
           {%- endfor -%}
         </ul>
       </div>
 
-      <p class="fibrenet-footer__copyright footer-utilities__text">
+      <p class="site-footer__copyright footer-utilities__text">
         <span>&copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_name | default: shop.name | escape }}</span>
         {%- if section.settings.copyright_menu != blank -%}
           {%- for link in section.settings.copyright_menu.links -%}
-            <span class="fibrenet-footer__copyright-sep" aria-hidden="true"> | </span>
-            <a href="{{ link.url }}" class="fibrenet-footer__copyright-link">
+            <span class="site-footer__copyright-sep" aria-hidden="true"> | </span>
+            <a href="{{ link.url }}" class="site-footer__copyright-link">
               {{- link.title | escape -}}
             </a>
           {%- endfor -%}
@@ -124,7 +124,7 @@
 {
   "name": "Fibrenet footer",
   "tag": "footer",
-  "class": "fibrenet-footer-section",
+  "class": "site-footer-ext-section",
   "enabled_on": {
     "groups": ["footer"]
   },

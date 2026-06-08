@@ -123,3 +123,11 @@ git checkout HEAD~1 -- snippets/header-row.liquid
 3. **Document any changes made to core Horizon files**
 4. **Use feature flags for conditional customizations**
 5. **Maintain a changelog of customizations**
+
+## Refactor pitfalls (class vs Shopify type)
+
+When renaming custom CSS classes, **do not** bulk-replace `fibrenet-*` inside theme JSON `"type"` fields or `{% render %}` snippet paths — those must match liquid **filenames** (`sections/fibrenet-footer.liquid` → `"type": "fibrenet-footer"`; `blocks/fibrenet-slide.liquid` → `"type": "fibrenet-slide"`, not `hero-slide`). CSS/layout classes use shorter names (`site-footer-ext`, `product-information--split`, `hero-slideshow`, `hero-slide__heading`).
+
+Prefer Horizon tokens in `brand.css`: `--page-margin`, `--padding-*`, `--font-h1--*` instead of legacy `--spacing-*` or hard-coded px. Map brand aliases in `:root` only where needed (`--head-to-title-gap`, `--content-padding-inline`).
+
+Avoid `body.template-*` selectors — scope with section/layout classes. Cookie banner: `#shopify-pc__banner.shopify-pc__banner__dialog` (same element; descendant selector never matches).

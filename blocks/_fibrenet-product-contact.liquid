@@ -1,4 +1,4 @@
-{% render 'product-contact', settings: block.settings, show_sub_label: true, layout: 'fibrenet' %}
+{% render 'product-contact', cta_settings: block.settings, show_sub_label: true, layout: 'fibrenet' %}
 
 {% schema %}
 {
@@ -33,17 +33,6 @@
       "label": "Chat URL"
     },
     {
-      "type": "select",
-      "id": "chat_button_style",
-      "label": "Chat button style",
-      "options": [
-        { "value": "primary", "label": "Primary (orange)" },
-        { "value": "secondary", "label": "Secondary (blue)" },
-        { "value": "outline", "label": "Outline" }
-      ],
-      "default": "primary"
-    },
-    {
       "type": "header",
       "content": "Call"
     },
@@ -68,17 +57,6 @@
       "type": "url",
       "id": "call_link",
       "label": "Call URL"
-    },
-    {
-      "type": "select",
-      "id": "call_button_style",
-      "label": "Call button style",
-      "options": [
-        { "value": "primary", "label": "Primary (orange)" },
-        { "value": "secondary", "label": "Secondary (blue)" },
-        { "value": "outline", "label": "Outline" }
-      ],
-      "default": "secondary"
     },
     {
       "type": "header",
@@ -107,16 +85,48 @@
       "label": "Email URL"
     },
     {
-      "type": "select",
-      "id": "email_button_style",
-      "label": "Email button style",
-      "options": [
-        { "value": "primary", "label": "Primary (orange)" },
-        { "value": "secondary", "label": "Secondary (blue)" },
-        { "value": "outline", "label": "Outline" },
-        { "value": "inverted", "label": "Inverted (navy)" }
-      ],
-      "default": "inverted"
+      "type": "header",
+      "content": "Button borders (product page)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional. Leave blank to use the same primary button borders as the header. Button fill and text colours are set under Theme settings → Contact CTA buttons."
+    },
+    {
+      "type": "color",
+      "id": "chat_border_color",
+      "label": "Chat border",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "chat_border_hover_color",
+      "label": "Chat border (hover)",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "call_border_color",
+      "label": "Call border",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "call_border_hover_color",
+      "label": "Call border (hover)",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "email_border_color",
+      "label": "Email border",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "email_border_hover_color",
+      "label": "Email border (hover)",
+      "alpha": true
     },
     {
       "type": "header",

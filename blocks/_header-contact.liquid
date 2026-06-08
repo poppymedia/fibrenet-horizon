@@ -3,7 +3,7 @@
 -%}
 
 <div class="header-contact {% if settings.position %}position-{{ settings.position }}{% endif %} {% if settings.row %}row-{{ settings.row }}{% endif %}" {{ block.shopify_attributes }}>
-  {% render 'product-contact', settings: settings %}
+  {% render 'product-contact', cta_settings: settings %}
 </div>
 
 {% schema %}

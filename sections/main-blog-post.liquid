@@ -12,26 +12,26 @@
 {%- if is_knowledge_centre -%}
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
   <div
-    class="section blog-posts--knowledge-centre fibrenet-article color-{{ section.settings.color_scheme }} spacing-style"
+    class="section blog-posts--knowledge-centre article-editorial color-{{ section.settings.color_scheme }} spacing-style"
     style="{% render 'spacing-style', settings: section.settings %}"
   >
-    <div class="fibrenet-article__inner">
+    <div class="article-editorial__inner">
       {%- content_for 'block', id: 'blog-post-title', type: 'text' -%}
 
       {%- if article.tags.size > 0 -%}
-        <p class="fibrenet-article__tags">{{ article.tags | join: ' · ' | escape }}</p>
+        <p class="article-editorial__tags">{{ article.tags | join: ' · ' | escape }}</p>
       {%- endif -%}
 
       {%- if article.image -%}
         {%- liquid
           assign hero_alt = article.image.alt | default: article.title
         -%}
-        <div class="fibrenet-article__hero">
+        <div class="article-editorial__hero">
           {{
             article.image
             | image_url: width: 1600
             | image_tag:
-              class: 'fibrenet-article__hero-img',
+              class: 'article-editorial__hero-img',
               loading: 'eager',
               widths: '400, 800, 1200, 1600',
               sizes: '(min-width: 750px) 60vw, 100vw',
@@ -51,14 +51,14 @@
       -%}
 
       {%- if article_lead != blank -%}
-        <div class="fibrenet-article__lead rte">
+        <div class="article-editorial__lead rte">
           {{ article_lead }}
         </div>
       {%- endif -%}
 
-      {% render 'fibrenet-article-metafields', article: article %}
+      {% render 'article-editorial-metafields', article: article %}
 
-      <div class="fibrenet-article__content rte">
+      <div class="article-editorial__content rte">
         {%- if article_lead != blank -%}
           {{ article_body }}
         {%- else -%}
@@ -66,7 +66,7 @@
         {%- endif -%}
       </div>
 
-      {% render 'fibrenet-article-navigation',
+      {% render 'article-editorial-navigation',
         blog: blog,
         back_label: section.settings.back_label,
         knowledge_centre_label: section.settings.knowledge_centre_label
@@ -74,7 +74,7 @@
     </div>
 
     {%- if blog.comments_enabled? -%}
-      <div class="fibrenet-article__comments blog-post-comments-container">
+      <div class="article-editorial__comments blog-post-comments-container">
         <h2 class="h3">{{- 'blogs.article.comments_heading' | t: count: article.comments_count -}}</h2>
 
         <div class="blog-post-comments">
@@ -172,7 +172,7 @@
     margin: 0 auto;
   }
 
-  .fibrenet-article .blog-post-comments-container {
+  .article-editorial .blog-post-comments-container {
     max-width: none;
     margin-inline: 0;
     padding-inline: 40px;
@@ -180,9 +180,9 @@
   }
 
   @media screen and (min-width: 750px) {
-    .fibrenet-article .blog-post-comments-container {
+    .article-editorial .blog-post-comments-container {
       width: 100%;
-      max-width: var(--fibrenet-editorial-width, 60%);
+      max-width: var(--editorial-width, 60%);
       margin-inline: auto;
     }
   }

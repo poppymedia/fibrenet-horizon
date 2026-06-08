@@ -17,7 +17,7 @@ class FibrenetProductTitle extends HTMLElement {
   #onVariantUpdateBound = (event) => this.#onVariantUpdate(event);
 
   connectedCallback() {
-    const configEl = this.querySelector('[data-fibrenet-title-config]');
+    const configEl = this.querySelector('[data-product-title-part-config]');
     if (configEl?.textContent) {
       try {
         this.#config = JSON.parse(configEl.textContent);
@@ -91,14 +91,14 @@ class FibrenetProductTitle extends HTMLElement {
     const productId = this.dataset.productId;
     const newTitle = html.querySelector(
       productId
-        ? `fibrenet-product-title[data-product-id="${productId}"]`
-        : 'fibrenet-product-title'
+        ? `product-title-split[data-product-id="${productId}"]`
+        : 'product-title-split'
     );
 
     if (!newTitle) return false;
 
-    const newHeading = newTitle.querySelector('.fibrenet-product-title__heading');
-    const heading = this.querySelector('.fibrenet-product-title__heading');
+    const newHeading = newTitle.querySelector('.product-title-split__heading');
+    const heading = this.querySelector('.product-title-split__heading');
 
     if (!newHeading || !heading) return false;
 
@@ -291,14 +291,14 @@ class FibrenetProductTitle extends HTMLElement {
    * @param {string} key
    */
   #ensureSegment(key) {
-    if (this.querySelector(`[data-fibrenet-title="${key}"]`)) return;
+    if (this.querySelector(`[data-product-title-part="${key}"]`)) return;
 
-    const heading = this.querySelector('.fibrenet-product-title__heading');
+    const heading = this.querySelector('.product-title-split__heading');
     if (!heading) return;
 
     const span = document.createElement('span');
     span.dataset.fibrenetTitle = key;
-    span.className = `fibrenet-product-title__${key}`;
+    span.className = `product-title-split__${key}`;
     heading.appendChild(span);
   }
 
@@ -307,7 +307,7 @@ class FibrenetProductTitle extends HTMLElement {
    * @param {string} value
    */
   #setSegment(key, value) {
-    const el = this.querySelector(`[data-fibrenet-title="${key}"]`);
+    const el = this.querySelector(`[data-product-title-part="${key}"]`);
     if (!el) return;
     const text = value ? String(value).trim() : '';
     el.textContent = text;
@@ -319,6 +319,6 @@ class FibrenetProductTitle extends HTMLElement {
   }
 }
 
-if (!customElements.get('fibrenet-product-title')) {
-  customElements.define('fibrenet-product-title', FibrenetProductTitle);
+if (!customElements.get('product-title-split')) {
+  customElements.define('product-title-split', FibrenetProductTitle);
 }

@@ -5,12 +5,12 @@
   @param {string} id - Unique id for the list element
 {%- enddoc -%}
 
-<ul id="{{ id }}" class="fibrenet-submenu list-unstyled" role="list">
+<ul id="{{ id }}" class="submenu list-unstyled" role="list">
   {%- for child_link in parent_link.links -%}
-    <li class="fibrenet-submenu__item">
+    <li class="submenu__item">
       <a
         href="{{ child_link.url }}"
-        class="fibrenet-submenu__link{% if child_link.active %} fibrenet-submenu__link--active{% endif %}"
+        class="submenu__link{% if child_link.active %} submenu__link--active{% endif %}"
         {% if child_link.current %}
           aria-current="page"
         {% endif %}

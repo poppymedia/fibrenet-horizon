@@ -28,9 +28,9 @@
   assign spec_rows_stripped = spec_rows | strip
 -%}
 {%- if spec_rows_stripped != blank -%}
-  <div class="fibrenet-product-specs" {{ block.shopify_attributes }}>
-    <div class="fibrenet-product-specs__table" role="table">
-      <div class="fibrenet-product-specs__body" role="rowgroup">
+  <div class="product-specs-table" {{ block.shopify_attributes }}>
+    <div class="product-specs-table__table" role="table">
+      <div class="product-specs-table__body" role="rowgroup">
         {{ spec_rows }}
       </div>
     </div>

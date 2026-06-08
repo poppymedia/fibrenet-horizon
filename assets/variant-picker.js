@@ -73,7 +73,7 @@ export default class VariantPicker extends Component {
     const useSectionRenderer =
       isOnProductPage &&
       !loadsNewProduct &&
-      Boolean(this.closest('.product-information--fibrenet')) &&
+      Boolean(this.closest('.product-information--split')) &&
       Boolean(this.dataset.sectionId);
 
     if (useSectionRenderer) {
@@ -220,7 +220,7 @@ export default class VariantPicker extends Component {
 
   /**
    * Re-renders the product-information section via the Section Rendering API (Fibrenet product pages).
-   * Morphs the full section so blocks such as fibrenet-product-title update from Liquid.
+   * Morphs the full section so blocks such as product-title-split update from Liquid.
    * @param {string} requestUrl - The request URL (with option_values).
    */
   #renderProductSection(requestUrl) {

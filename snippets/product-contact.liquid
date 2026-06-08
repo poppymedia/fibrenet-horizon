@@ -1,7 +1,7 @@
 {%- doc -%}
   Contact CTA group for product pages and legacy block usage.
 
-  @param {object} settings - Settings object with CTA fields
+  @param {object} cta_settings - Settings object with CTA fields
   @param {boolean} [show_sub_label] - Show sub-labels on buttons (default true for product)
   @param {string} [layout] - When 'fibrenet', applies full-width stacked product layout
 {%- enddoc -%}
@@ -12,13 +12,14 @@
   endif
 -%}
 
-<div class="product-contact{% if layout == 'fibrenet' %} product-contact--fibrenet{% endif %}">
+<div class="product-contact{% if layout == 'fibrenet' %} product-contact--stacked{% endif %}">
   {% render 'header-cta-buttons',
-    settings: settings,
+    cta_settings: cta_settings,
     show_sub_label: show_sub_label,
-    product_layout: layout == 'fibrenet'
+    product_layout: layout == 'fibrenet',
+    product_page: layout == 'fibrenet'
   %}
-  {%- if layout == 'fibrenet' and settings.product_cta_helper != blank -%}
-    <p class="product-contact__helper">{{ settings.product_cta_helper | escape }}</p>
+  {%- if layout == 'fibrenet' and cta_settings.product_cta_helper != blank -%}
+    <p class="product-contact__helper">{{ cta_settings.product_cta_helper | escape }}</p>
   {%- endif -%}
 </div>

@@ -48,8 +48,8 @@
   }
 {%- endcapture -%}
 
-<fibrenet-product-stock
-  class="fibrenet-product-stock product-inventory spacing-style"
+<product-stock-status
+  class="product-stock-status product-inventory spacing-style"
   {{ block.shopify_attributes }}
   data-stock-protect="{{ stock_protect }}"
   data-product-id="{{ product.id }}"
@@ -59,8 +59,8 @@
   data-sold-out-html="{{ 'products.product.sold_out_fibrenet_html' | t | escape }}"
   data-stock-label-template="{{ stock_label_html_template | escape }}"
 >
-  <span class="fibrenet-product-stock__status product-inventory__status" role="status">
-    <span class="fibrenet-product-stock__text product-inventory__text" data-fibrenet-stock-text>
+  <span class="product-stock-status__status product-inventory__status" role="status">
+    <span class="product-stock-status__text product-inventory__text" data-product-stock-text>
       {%- case stock_message_type -%}
         {%- when 'quantity' -%}
           {{ 'products.product.stock_label_fibrenet_html' | t: count: stock_count }}
@@ -77,19 +77,19 @@
   <script type="application/json" data-fibrenet-stock-variants>
     {{ variants_inventory }}
   </script>
-</fibrenet-product-stock>
+</product-stock-status>
 
 {% stylesheet %}
-  .fibrenet-product-stock__status {
+  .product-stock-status__status {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    font-size: var(--fibrenet-type-min-size, 0.875rem);
+    font-size: var(--brand-type-min, 0.875rem);
     line-height: var(--font-paragraph--line-height);
   }
 
-  .fibrenet-product-stock__text {
+  .product-stock-status__text {
     text-align: center;
   }
 {% endstylesheet %}

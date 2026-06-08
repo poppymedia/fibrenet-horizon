@@ -6,9 +6,9 @@
 {%- enddoc -%}
 
 {%- if value != blank -%}
-  <div class="fibrenet-product-specs__row" role="row">
-    <span class="fibrenet-product-specs__label" role="rowheader">{{ label_key | t }}</span>
-    <span class="fibrenet-product-specs__leaders" aria-hidden="true"></span>
-    <span class="fibrenet-product-specs__value" role="cell">{{ value | escape }}</span>
+  <div class="product-specs-table__row" role="row">
+    <span class="product-specs-table__label" role="rowheader">{{ label_key | t }}</span>
+    <span class="product-specs-table__leaders" aria-hidden="true"></span>
+    <span class="product-specs-table__value" role="cell">{{ value | escape }}</span>
   </div>
 {%- endif -%}

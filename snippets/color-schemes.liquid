@@ -93,12 +93,26 @@
   {% endfor %}
 
   {%- comment -%}
+    CTA wrappers use only primary button tokens — not full .color-* (which applies section background).
+  {%- endcomment -%}
+  {% for scheme in settings.color_schemes -%}
+    .cta-btn-scheme--{{ scheme.id }} {
+      --color-primary-button-text: rgb({{ scheme.settings.primary_button_text.rgba }});
+      --color-primary-button-background: rgb({{ scheme.settings.primary_button_background.rgba }});
+      --color-primary-button-border: rgb({{ scheme.settings.primary_button_border.rgba }});
+      --color-primary-button-hover-text: rgb({{ scheme.settings.primary_button_hover_text.rgba }});
+      --color-primary-button-hover-background: rgb({{ scheme.settings.primary_button_hover_background.rgba }});
+      --color-primary-button-hover-border: rgb({{ scheme.settings.primary_button_hover_border.rgba }});
+    }
+  {% endfor %}
+
+  {%- comment -%}
     Fibrenet: expose scheme-5 background on :root for cross-scheme use (e.g. product variant selected border).
   {%- endcomment -%}
   {% for scheme in settings.color_schemes %}
     {% if scheme.id == 'scheme-5' %}
       :root {
-        --fibrenet-scheme-5-background: rgb({{ scheme.settings.background.rgba }});
+        --scheme-accent-background: rgb({{ scheme.settings.background.rgba }});
       }
     {% endif %}
   {% endfor %}

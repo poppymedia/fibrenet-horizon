@@ -55,9 +55,9 @@
   # 2. CAPTURE CONTACT BUTTONS
   capture contact
     if fibrenet_header
-      render 'header-cta-buttons', settings: section.settings, show_sub_label: false
+      render 'header-cta-buttons', cta_settings: section.settings, show_sub_label: false
     else
-      render 'product-contact', settings: section.settings, show_sub_label: false
+      render 'product-contact', cta_settings: section.settings, show_sub_label: false
     endif
   endcapture
 
@@ -272,7 +272,7 @@
   assign class = 'header'
 
   if fibrenet_header
-    assign class = class | append: ' header--fibrenet'
+    assign class = class | append: ' header--utility'
   endif
 
   if transparent_color_scheme
@@ -883,6 +883,10 @@
       "content": "t:content.contact_buttons"
     },
     {
+      "type": "paragraph",
+      "content": "Button fill and text colours are set under Theme settings → Contact CTA buttons (shared with product page CTAs)."
+    },
+    {
       "type": "checkbox",
       "id": "enable_chat_cta",
       "label": "Show Chat button",
@@ -1023,17 +1027,6 @@
       "visible_if": "{{ section.settings.enable_two_row_header }}"
     },
     {
-      "type": "select",
-      "id": "chat_button_style",
-      "label": "Chat button style",
-      "options": [
-        { "value": "primary", "label": "Primary" },
-        { "value": "secondary", "label": "Secondary" },
-        { "value": "outline", "label": "Outline" }
-      ],
-      "default": "primary"
-    },
-    {
       "type": "text",
       "id": "chat_text",
       "label": "Chat Text",
@@ -1050,23 +1043,6 @@
       "label": "Chat Link URL"
     },
     {
-      "type": "color_scheme",
-      "id": "chat_color_scheme",
-      "label": "Chat Colour Scheme",
-      "default": "scheme-3"
-    },
-    {
-      "type": "select",
-      "id": "call_button_style",
-      "label": "Call button style",
-      "options": [
-        { "value": "primary", "label": "Primary" },
-        { "value": "secondary", "label": "Secondary" },
-        { "value": "outline", "label": "Outline" }
-      ],
-      "default": "secondary"
-    },
-    {
       "type": "text",
       "id": "call_text",
       "label": "Call Text",
@@ -1078,23 +1054,6 @@
       "label": "Call Link URL"
     },
     {
-      "type": "color_scheme",
-      "id": "call_color_scheme",
-      "label": "Call Colour Scheme",
-      "default": "scheme-4"
-    },
-    {
-      "type": "select",
-      "id": "email_button_style",
-      "label": "Email button style",
-      "options": [
-        { "value": "primary", "label": "Primary" },
-        { "value": "secondary", "label": "Secondary" },
-        { "value": "outline", "label": "Outline" }
-      ],
-      "default": "outline"
-    },
-    {
       "type": "text",
       "id": "email_text",
       "label": "Email Text",
@@ -1104,12 +1063,6 @@
       "type": "url",
       "id": "email_link",
       "label": "Email Link URL"
-    },
-    {
-      "type": "color_scheme",
-      "id": "email_color_scheme",
-      "label": "Email Colour Scheme",
-      "default": "scheme-5"
     },
     {
       "type": "header",

@@ -136,17 +136,14 @@
                 "chat_text": "Chat",
                 "chat_subtext": "For bulk orders chat with UK team now for savings",
                 "chat_link": "",
-                "chat_button_style": "primary",
                 "enable_call_cta": true,
                 "call_text": "Call",
                 "call_subtext": "",
                 "call_link": "",
-                "call_button_style": "secondary",
                 "enable_email_cta": true,
                 "email_text": "Email",
                 "email_subtext": "",
                 "email_link": "",
-                "email_button_style": "inverted",
                 "product_cta_helper": "For even better potential pricing, contact UK office now"
               },
               "blocks": {}
