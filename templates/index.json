@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "fibrenet_slideshow": {
       "type": "fibrenet-slideshow",
@@ -277,6 +277,9 @@
       ],
       "settings": {
         "color_scheme": "scheme-1",
+        "label_position": "above",
+        "label_font_size": 16,
+        "image_size": 120,
         "padding-block-start": 48,
         "padding-block-end": 48
       }

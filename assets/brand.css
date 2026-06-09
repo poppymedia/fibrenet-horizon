@@ -275,6 +275,7 @@ button.shopify-payment-button__button--unbranded {
 .hero-slide__content {
   height: 100%;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -1913,6 +1914,11 @@ button.shopify-payment-button__button--unbranded {
 .editorial .section-content-wrapper.layout-panel-flex {
   --horizontal-alignment: flex-start;
 }
+
+.layout-panel-flex {
+  flex-direction: column;
+}
+
 
 .editorial .text-block,
 .editorial rte-formatter,
