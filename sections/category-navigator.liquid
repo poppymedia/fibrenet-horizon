@@ -1,13 +1,17 @@
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="category-navigator section section--page-width color-{{ section.settings.color_scheme }} spacing-style"
-  style="{% render 'spacing-style', settings: section.settings %}"
+  class="category-navigator category-navigator--labels-{{ section.settings.label_position }} section section--page-width color-{{ section.settings.color_scheme }} spacing-style"
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --category-label-size: {{ section.settings.label_font_size }}px;
+    --category-image-size: {{ section.settings.image_size }}px;
+  "
 >
   <div class="category-navigator__desktop hidden--mobile">
     <ul class="category-navigator__grid list-unstyled" role="list">
       {%- for block in section.blocks -%}
         <li class="category-navigator__item" {{ block.shopify_attributes }}>
-          {% render 'category-navigator-item', block: block %}
+          {% render 'category-navigator-item', block: block, image_size: section.settings.image_size %}
         </li>
       {%- endfor -%}
     </ul>
@@ -16,7 +20,7 @@
     {% capture category_items %}
       {%- for block in section.blocks -%}
         <li class="category-navigator__item">
-          {% render 'category-navigator-item', block: block %}
+          {% render 'category-navigator-item', block: block, image_size: section.settings.image_size %}
         </li>
       {%- endfor -%}
     {% endcapture %}
@@ -70,6 +74,42 @@
       "id": "color_scheme",
       "label": "Color scheme",
       "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "label_position",
+      "label": "Label position",
+      "options": [
+        {
+          "value": "below",
+          "label": "Below image"
+        },
+        {
+          "value": "above",
+          "label": "Above image"
+        }
+      ],
+      "default": "below"
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "label": "Label font size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "Image size",
+      "min": 80,
+      "max": 200,
+      "step": 20,
+      "unit": "px",
+      "default": 80
     },
     {
       "type": "range",

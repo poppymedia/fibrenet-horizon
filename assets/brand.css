@@ -367,10 +367,14 @@ button.shopify-payment-button__button--unbranded {
   color: var(--color-text-body);
 }
 
+.category-navigator--labels-above .category-navigator__link {
+  flex-direction: column-reverse;
+}
+
 .category-navigator__image,
 .category-navigator__image-placeholder {
   width: 100%;
-  max-width: 5rem;
+  max-width: var(--category-image-size, 5rem);
   height: auto;
   object-fit: contain;
 }

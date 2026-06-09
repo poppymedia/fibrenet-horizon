@@ -2,7 +2,15 @@
   Single category cell for category-navigator section.
 
   @param {object} block - Section block with image, labels, and collection_url settings.
+  @param {number} image_size - Display width in px from section settings (default 80).
 {%- enddoc -%}
+
+{%- liquid
+  assign image_width = image_size | default: 80
+  assign image_width_retina = image_width | times: 2
+  assign image_widths = image_width | append: ', ' | append: image_width_retina
+  assign image_sizes = image_width | append: 'px'
+-%}
 
 <a
   class="category-navigator__link"
@@ -16,13 +24,13 @@
   {%- if block.settings.image != blank -%}
     {{
       block.settings.image
-      | image_url: width: 160
+      | image_url: width: image_width_retina
       | image_tag:
         class: 'category-navigator__image',
         alt: block.settings.label_line_1,
         loading: 'lazy',
-        widths: '80, 120, 160',
-        sizes: '80px'
+        widths: image_widths,
+        sizes: image_sizes
     }}
   {%- else -%}
     <span class="category-navigator__image-placeholder" aria-hidden="true"></span>
