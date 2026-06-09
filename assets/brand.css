@@ -157,6 +157,8 @@ h6,
 .h4,
 .h5,
 .h6,
+.variant-picker .variant-option--buttons legend, 
+.product-quantity-label, .product-compatibility__heading,
 :is(h2, h3, h4, h5, h6) :is(b, strong) {
   font-family: var(--brand-font-stack);
   font-weight: var(--brand-weight-base);
@@ -171,11 +173,11 @@ h2, .h2 {
 /* Accent labels — variant names, quantity, section subheads */
 .variant-picker .variant-option--buttons legend,
 .product-quantity-label,
-.product-compatibility__heading {
-  font-family: var(--brand-font-stack);
-  font-weight: var(--brand-weight-bold);
+.product-compatibility__heading,
+#shopify-pc__banner.shopify-pc__banner__dialog h2 {
   color: var(--brand-accent);
   letter-spacing: var(--brand-letter-spacing);
+  font-weight: var(--font-h1--weight, var(--brand-weight-bold));
 }
 
 /* Pill controls — buttons, variants, quantity */
@@ -2295,9 +2297,6 @@ label:not(.variant-option__button-label) {
 .product-information--split .product-compatibility__heading,
 .product-information--split .product-quantity-label {
   margin: 0 0 var(--padding-xs);
-  font-weight: var(--brand-weight-bold);
-  color: var(--brand-accent);
-  text-align: center;
 }
 .product-information--split .product-quantity-label {
   padding-top: var(--padding-xl);
