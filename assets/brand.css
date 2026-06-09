@@ -1500,21 +1500,27 @@ button.shopify-payment-button__button--unbranded {
   letter-spacing: var(--brand-letter-spacing);
 }
 
-/* Product chat CTA — label | divider | larger sub-label */
+/* Product chat CTA — content-width columns, equal padding-inline on label + sub-label */
 .cta-btn--split {
+  --cta-split-gap: var(--padding-sm);
+  display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: var(--padding-xs);
+  gap: var(--cta-split-gap);
   width: 100%;
   min-height: var(--cta-height);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem var(--cta-split-gap);
   white-space: normal;
   text-align: center;
 }
 
 .cta-btn--split .cta-btn__heading {
   flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline: var(--cta-split-gap);
+  text-align: center;
 }
 
 .cta-btn--split .cta-btn__label {
@@ -1532,25 +1538,30 @@ button.shopify-payment-button__button--unbranded {
 }
 
 .cta-btn--split .cta-btn__sublabel--aside {
-  flex: 0 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
   margin: 0;
+  padding-inline: var(--cta-split-gap);
   font-size: 0.8125rem;
   font-weight: var(--brand-weight-base);
   line-height: 1.35;
   letter-spacing: var(--brand-letter-spacing);
-  opacity: 1;
   text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+  opacity: 1;
 }
 
-/* Product page — stacked CTAs (~400px), chat then call + email */
+/* Product page — stacked CTAs; max width on .product-contact--stacked (--product-cta-max-width) */
 .product-contact--stacked .header-cta-buttons--product {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--padding-xs);
   width: 100%;
-  max-width: 25rem;
-  margin-inline: auto;
 }
 
 .product-contact--stacked .header-cta-buttons__chat,
@@ -1575,6 +1586,10 @@ button.shopify-payment-button__button--unbranded {
   min-width: 0;
   justify-content: center;
   white-space: nowrap;
+}
+
+.product-contact--stacked .cta-btn-scheme .button--pill.cta-btn--split {
+  white-space: normal;
 }
 
 .product-contact--stacked .header-cta-buttons__pair-btn:only-child {
@@ -2251,8 +2266,9 @@ label:not(.variant-option__button-label) {
 }
 
 .product-information--split .product-contact--stacked {
+  --product-cta-max-width: 26rem;
   width: 100%;
-  max-width: 25rem;
+  max-width: var(--product-cta-max-width);
   margin-block: var(--padding-2xl);
   margin-inline: auto;
 }
@@ -2263,8 +2279,7 @@ label:not(.variant-option__button-label) {
 
 .product-information--split .product-contact__helper {
   margin: var(--padding-xs) 0 0;
-  max-width: 25rem;
-  margin-inline: auto;
+  max-width: 100%;
   font-size: 0.75rem;
   line-height: 1.4;
   color: var(--color-text-subdued, var(--color-foreground-muted));
