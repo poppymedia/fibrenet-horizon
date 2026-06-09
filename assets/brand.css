@@ -64,6 +64,11 @@
   --partner-logo-height: 70px;
   --partner-logo-width: 70px;
   --hero-slide-text-shadow: 0 1px 4px rgb(0 0 0 / 40%);
+
+  --product-heading-size: 1.5rem;
+  --product-subtitle-size: 1rem;
+  --product-price-size: 1.125rem;
+  --product-section-heading-size: 1.25rem;
 }
 
 /* Store-wide typography (DM Sans) */
@@ -166,11 +171,17 @@ h6,
   line-height: 1.3;
 }
 
-h2, .h2 {
+h2, .h2,
+.section-resource-list__header h2,
+.section-resource-list__content h2,
+.product-recommendations .section-resource-list__content .text-block h2 {
   font-size: 1.72em;
 }
 
 /* Accent labels — variant names, quantity, section subheads */
+.section-resource-list__header h2,
+.section-resource-list__content h2,
+.product-recommendations .section-resource-list__content .text-block h2,
 .variant-picker .variant-option--buttons legend,
 .product-quantity-label,
 .product-compatibility__heading,
@@ -2182,10 +2193,7 @@ label:not(.variant-option__button-label) {
 
 /* Fibrenet product page — column ratio via product-information desktop_media_width (default 40/60) */
 .product-information--split {
-  --product-heading-size: 1.5rem;
-  --product-subtitle-size: 1rem;
-  --product-price-size: 1.125rem;
-  --product-section-heading-size: 1.25rem;
+
 }
 
 .product-information--split .sticky-content--desktop,
