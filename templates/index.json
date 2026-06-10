@@ -58,9 +58,9 @@
       "settings": {
         "auto_rotate": true,
         "change_slides_speed": 5,
-        "show_arrows": false,
+        "show_arrows": true,
         "icons_style": "arrows_large",
-        "slideshow_controls_style": "dots",
+        "slideshow_controls_style": "hidden",
         "slide_height_desktop": 250,
         "slide_height_mobile": "auto",
         "color_scheme": "scheme-6",
