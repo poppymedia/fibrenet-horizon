@@ -2499,3 +2499,15 @@ shopify-forms-embed#app-embed-container-723526[data-fibrenet-forms-ready] {
   margin-top: -0.25em;
   margin-bottom: -1.75em;
 }
+.product-inventory__text {
+  color: var(--color-accent-1);
+  font-size: 0.96em;
+}
+.product-inventory__text strong {
+  color: var(--color-accent-2);
+}
+
+.product-information--split .product-contact__helper {
+  font-size: 0.96em;
+  color: inherit;
+}
