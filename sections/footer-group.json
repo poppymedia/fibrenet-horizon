@@ -15,10 +15,10 @@
       "type": "fibrenet-footer",
       "settings": {
         "section_width": "page-width",
-        "content_width": "standard",
+        "content_width": "standard centre-aligned",
         "color_scheme": "scheme-5",
         "details_heading": "Further Details",
-        "details_menu": "",
+        "details_menu": "footer",
         "details_column_width": 20,
         "custom_heading": "",
         "custom_text": "",

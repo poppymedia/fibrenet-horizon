@@ -57,7 +57,7 @@
       ],
       "settings": {
         "auto_rotate": true,
-        "change_slides_speed": 5,
+        "change_slides_speed": 3,
         "show_arrows": true,
         "icons_style": "arrows_large",
         "slideshow_controls_style": "hidden",
@@ -185,8 +185,8 @@
       ],
       "settings": {
         "color_scheme": "scheme-4",
-        "padding-block-start": 16,
-        "padding-block-end": 16
+        "padding-block-start": 4,
+        "padding-block-end": 4
       }
     },
     "category_navigator": {

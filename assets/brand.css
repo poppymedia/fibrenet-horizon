@@ -2475,3 +2475,8 @@ label:not(.variant-option__button-label) {
   font-weight: var(--brand-weight-base) !important;
   font-size: 90%;
 }
+
+
+.site-footer-ext--content-standard.centre-aligned .site-footer__grid {
+  justify-content: center;
+}
