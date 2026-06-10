@@ -185,8 +185,7 @@ h2, .h2,
 /* Accent labels — variant names, quantity, section subheads */
 .variant-picker .variant-option--buttons legend,
 .product-quantity-label,
-.product-compatibility__heading,
-#shopify-pc__banner.shopify-pc__banner__dialog h2 {
+.product-compatibility__heading {
   color: var(--brand-accent);
   letter-spacing: var(--brand-letter-spacing);
   font-weight: var(--font-h1--weight, var(--brand-weight-bold));
