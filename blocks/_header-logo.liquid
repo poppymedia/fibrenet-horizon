@@ -34,7 +34,7 @@
     {% render 'spacing-style', settings: block_settings %}
     --font-family: var(--font-body--family);
     --font-style: var(--font-body--style);
-    --font-weight: 600;
+    --font-weight: var(--brand-weight-semibold);
   "
   {{ block.shopify_attributes }}
 >
@@ -176,6 +176,34 @@
     display: var(--header-logo-inverse-display, none);
   }
 {% endstylesheet %}
+
+{% javascript %}
+  const enableLogoAnimation = () => {
+    document.querySelectorAll('.header-logo__svg').forEach((logo) => {
+      logo.classList.add('header-logo__svg--animated');
+    });
+  };
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (!reducedMotion.matches) {
+    if (document.readyState === 'complete') {
+      enableLogoAnimation();
+    } else {
+      window.addEventListener('load', enableLogoAnimation, { once: true });
+    }
+  }
+
+  reducedMotion.addEventListener('change', (event) => {
+    if (event.matches) {
+      document.querySelectorAll('.header-logo__svg--animated').forEach((logo) => {
+        logo.classList.remove('header-logo__svg--animated');
+      });
+    } else if (document.readyState === 'complete') {
+      enableLogoAnimation();
+    }
+  });
+{% endjavascript %}
 
 {% schema %}
 {

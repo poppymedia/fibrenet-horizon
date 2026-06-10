@@ -1,48 +1,42 @@
 {%- doc -%}
   Datasheet row for Fibrenet spec table.
-  Uses spec.datasheet_pdf when URL is a PDF; otherwise no_download_datasheet.
-  Fallback CDN URL from FN SKU in product description when no .pdf in description.
+  On product templates that use spec.datasheet_pdf, always show this row:
+  PDF link if set, else no_download_datasheet.
 
   @param {object} product - Product object
 {%- enddoc -%}
 
 {%- liquid
   assign spec = product.metafields.spec
-  assign datasheet_file = spec.datasheet_pdf.value
+  assign datasheet_metafield = spec.datasheet_pdf
+  assign uses_datasheet_metafield = false
   assign datasheet_url = blank
   assign show_no_download_message = false
 
-  if datasheet_file != blank and datasheet_file.url != blank
-    assign file_url = datasheet_file.url | downcase
-    if file_url contains '.pdf'
-      assign datasheet_url = datasheet_file.url
+  if datasheet_metafield.type == 'file_reference' or datasheet_metafield.value != blank
+    assign uses_datasheet_metafield = true
+  endif
+
+  if uses_datasheet_metafield == false and template.name == 'product'
+    case template.suffix
+      when 'cables', 'compatibles', 'cwdm', 'aocdac', 'dwdm'
+        assign uses_datasheet_metafield = true
+    endcase
+  endif
+
+  if uses_datasheet_metafield
+    assign datasheet_file = datasheet_metafield.value
+
+    if datasheet_file != blank and datasheet_file.url != blank
+      assign file_url = datasheet_file.url | downcase
+      if file_url contains '.pdf'
+        assign datasheet_url = datasheet_file.url
+      else
+        assign show_no_download_message = true
+      endif
     else
       assign show_no_download_message = true
     endif
-  endif
-
-  if datasheet_url == blank and show_no_download_message == false
-    assign description = product.description
-    assign description_has_pdf = false
-    if description contains '.pdf'
-      assign description_has_pdf = true
-    endif
-
-    unless description_has_pdf
-      assign fn_sku_value = blank
-      if description contains 'FN SKU'
-        assign fn_parts = description | split: 'FN SKU'
-        if fn_parts.size > 1
-          assign fn_tail = fn_parts[1] | strip_html | strip
-          assign fn_tail = fn_tail | remove: ':' | remove: '：' | strip
-          assign fn_sku_value = fn_tail | split: ' ' | first | strip
-        endif
-      endif
-
-      if fn_sku_value != blank
-        assign datasheet_url = 'https://cdn.shopify.com/s/files/1/0263/6110/2422/files/' | append: fn_sku_value | append: '.pdf'
-      endif
-    endunless
   endif
 -%}
 

@@ -17,6 +17,7 @@
           "settings": {
             "heading": "Tested, evaluated, approved",
             "subheading": "and used by the largest service providers in the world",
+            "image": "shopify://shop_images/Flare_5_resized_1000x355_JPG.jpg",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_1_resized_1000x355_JPG.jpg?v=1777381124"
           },
           "blocks": {}
@@ -26,6 +27,7 @@
           "settings": {
             "heading": "95% of orders shipped same day from UK stock",
             "subheading": "with tracked UPS overnight delivery",
+            "image": "shopify://shop_images/Flare_4_resized_1000x355_JPG.jpg",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_2_resized_and_flipped_1000x355_PNG.png?v=1777381144"
           },
           "blocks": {}
@@ -35,6 +37,7 @@
           "settings": {
             "heading": "Guaranteed compatibility for all network vendors",
             "subheading": "We constantly research and provide the latest vendor coding",
+            "image": "shopify://shop_images/Flare_3_resized_1000x355_JPG.jpg",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_3_resized_1000x355_JPG.jpg?v=1777381162"
           },
           "blocks": {}
@@ -44,6 +47,7 @@
           "settings": {
             "heading": "Minimum 5 year warranty on all Fibrenet products",
             "subheading": "with advance replacement as standard",
+            "image": "shopify://shop_images/Flare_2_resized_and_flipped_1000x355_PNG.png",
             "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_4_resized_1000x355_JPG.jpg?v=1777381165"
           },
           "blocks": {}
@@ -63,6 +67,7 @@
         "slideshow_controls_style": "hidden",
         "slide_height_desktop": 250,
         "slide_height_mobile": "auto",
+        "background_image_style": "responsive_image",
         "color_scheme": "scheme-6",
         "section_width": "full-width",
         "padding-block-start": 0,

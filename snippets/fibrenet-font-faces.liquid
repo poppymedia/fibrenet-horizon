@@ -1,0 +1,13 @@
+{% comment %}
+  Supplemental @font-face rules for weights used in brand.css but not covered by
+  Horizon's default font_modify set (regular, bold, italic). DM Sans is loaded via
+  theme Typography settings (type_*_font); do not add Google Fonts here.
+{% endcomment %}
+{% style %}
+  {%- unless settings.type_body_font.system? -%}
+    {%- liquid
+      assign fibrenet_font_semibold = settings.type_body_font | font_modify: 'weight', '600'
+    -%}
+    {{ fibrenet_font_semibold | font_face: font_display: 'swap' }}
+  {%- endunless -%}
+{% endstyle %}

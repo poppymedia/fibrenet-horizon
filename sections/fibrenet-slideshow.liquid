@@ -1,3 +1,30 @@
+{%- assign first_block = section.blocks.first -%}
+{%- if section.settings.background_image_style == 'responsive_image' and section.index == 1 and first_block != blank -%}
+  {%- if first_block.settings.image != blank -%}
+    {%- assign lcp_image = first_block.settings.image -%}
+    <link
+      rel="preload"
+      as="image"
+      href="{{ lcp_image | image_url: width: 1000 }}"
+      imagesrcset="
+        {{ lcp_image | image_url: width: 750 }} 750w,
+        {{ lcp_image | image_url: width: 1000 }} 1000w,
+        {{ lcp_image | image_url: width: 1200 }} 1200w,
+        {{ lcp_image | image_url: width: 1400 }} 1400w
+      "
+      imagesizes="100vw"
+      fetchpriority="high"
+    >
+  {%- elsif first_block.settings.image_url_fallback != blank -%}
+    <link
+      rel="preload"
+      as="image"
+      href="{{ first_block.settings.image_url_fallback | escape }}"
+      fetchpriority="high"
+    >
+  {%- endif -%}
+{%- endif -%}
+
 {% liquid
   assign autoplay_seconds = section.settings.change_slides_speed
   if autoplay_seconds == blank or autoplay_seconds < 1
@@ -41,15 +68,36 @@
   if section.settings.icons_style == 'none' or section.blocks.size <= 1
     assign show_arrows = false
   endif
+
+  assign hero_slideshow_classes = 'hero-slideshow spacing-style section section--' | append: section.settings.section_width | append: ' color-' | append: section.settings.color_scheme | append: ' disable-section-top-offset'
+
+  if section.settings.background_image_style == 'responsive_image'
+    assign hero_slideshow_classes = hero_slideshow_classes | append: ' hero-slideshow--responsive-images'
+  endif
+
+  if slide_height_mobile != 'auto'
+    assign hero_slideshow_classes = hero_slideshow_classes | append: ' hero-slideshow--mobile-height-fixed'
+  endif
+
+  assign hero_aspect_ratio = blank
+  if section.settings.background_image_style == 'responsive_image' and slide_height_mobile == 'auto'
+    assign hero_first_block = section.blocks.first
+    if hero_first_block.settings.image != blank
+      assign hero_aspect_ratio = hero_first_block.settings.image.aspect_ratio
+    endif
+  endif
 %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="hero-slideshow spacing-style section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} disable-section-top-offset"
+  class="{{ hero_slideshow_classes }}"
   style="
     {% render 'spacing-padding', settings: section.settings %}
     --slideshow-height-desktop: {{ section.settings.slide_height_desktop }}px;
     --slideshow-height-mobile: {{ slide_height_mobile_value }};
+    {%- if hero_aspect_ratio != blank -%}
+      --hero-slide-aspect-ratio: {{ hero_aspect_ratio }};
+    {%- endif -%}
   "
 >
   {% render 'slideshow',
@@ -196,6 +244,23 @@
         }
       ],
       "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "background_image_style",
+      "label": "Background image delivery",
+      "options": [
+        {
+          "value": "css_background",
+          "label": "CSS background"
+        },
+        {
+          "value": "responsive_image",
+          "label": "Responsive image (performance)"
+        }
+      ],
+      "default": "css_background",
+      "info": "Responsive image uses an <img> tag so browsers can prioritise the first slide for faster loading (LCP). Upload images via the image picker for best results."
     },
     {
       "type": "color_scheme",

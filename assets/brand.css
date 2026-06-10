@@ -1,4 +1,4 @@
-/* Fibrenet design system — typography & colour tokens (DM Sans via snippets/fibrenet-fonts.liquid) */
+/* Fibrenet design system — typography & colour tokens (DM Sans via theme Typography settings) */
 
 /* Overrides — stack buy-buttons row; do not style quantity +/- like full-width CTAs */
 .product-information--split .buy-buttons-block .quantity-selector {
@@ -20,7 +20,7 @@
 
 /* Fibrenet brand tokens (scheme colours from theme editor; brand accents as CSS vars) */
 :root {
-  --brand-font-stack: 'DM Sans', sans-serif;
+  --brand-font-stack: var(--font-body--family);
   --brand-accent: #525bff;
   --brand-cta-orange: #ff6610;
   --brand-cta-blue: #111efa;
@@ -32,8 +32,9 @@
   --content-padding-inline: var(--page-margin);
   --content-padding-block-end: var(--padding-5xl);
   --brand-weight-bold: 700;
-  --brand-weight-heading: 500;
-  --brand-weight-base: 400;
+  --brand-weight-semibold: 600;
+  --brand-weight-heading: var(--font-heading--weight);
+  --brand-weight-base: var(--font-body--weight);
   --brand-letter-spacing: -0.02em;
   --color-accent-1: var(--color-primary);
   --color-accent-2: var(--color-primary-hover);
@@ -261,6 +262,7 @@ button.shopify-payment-button__button--unbranded {
 /* Homepage — Fibrenet slideshow (native slideshow-component) */
 .hero-slideshow slideshow-slides {
   min-height: var(--slideshow-height-mobile, auto);
+  align-items: stretch;
 }
 
 @media screen and (min-width: 750px) {
@@ -269,9 +271,80 @@ button.shopify-payment-button__button--unbranded {
   }
 }
 
+/* Keep off-screen hero slides renderable so eager/lazy images load (Horizon defaults to content-visibility: hidden) */
+.hero-slideshow slideshow-slide.hero-slide {
+  content-visibility: visible;
+  align-self: stretch;
+}
+
+/* Responsive <img> delivery — section height settings must win over intrinsic image dimensions */
+@media screen and (min-width: 750px) {
+  .hero-slideshow--responsive-images slideshow-slides {
+    height: var(--slideshow-height-desktop);
+    min-height: var(--slideshow-height-desktop);
+    max-height: var(--slideshow-height-desktop);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .hero-slideshow--responsive-images.hero-slideshow--mobile-height-fixed slideshow-slides {
+    height: var(--slideshow-height-mobile);
+    min-height: var(--slideshow-height-mobile);
+    max-height: var(--slideshow-height-mobile);
+  }
+
+  .hero-slideshow--responsive-images:not(.hero-slideshow--mobile-height-fixed) slideshow-slides {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: var(--hero-slide-aspect-ratio, 1000 / 355);
+  }
+}
+
+.hero-slideshow--responsive-images slideshow-slide.hero-slide {
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .hero-slide__media {
   background-size: cover;
   background-position: center center;
+}
+
+.hero-slide--responsive-image {
+  display: grid;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.hero-slide--responsive-image > .slide__image-container {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-slide--responsive-image > .slide__image-container > .slide__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.hero-slide--responsive-image > .slide__content {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: var(--layer-flat);
+  height: 100%;
+  min-height: 0;
 }
 
 .hero-slide__content {
@@ -293,7 +366,7 @@ button.shopify-payment-button__button--unbranded {
 .hero-slide__heading {
   margin: 0;
   font-size: var(--hero-heading-size);
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.2;
   color: var(--color-foreground);
   text-shadow: var(--hero-slide-text-shadow);
@@ -302,7 +375,7 @@ button.shopify-payment-button__button--unbranded {
 .hero-slide__subheading {
   margin: var(--padding-xs) 0 0;
   font-size: var(--hero-subheading-size);
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.4;
   color: var(--color-foreground);
   opacity: 0.9;
@@ -555,7 +628,7 @@ button.shopify-payment-button__button--unbranded {
   display: inline-block;
   padding-block: 0.75em;
   padding-inline: 0;
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.4;
   color: var(--color-text-subdued);
   text-decoration: none;
@@ -631,7 +704,7 @@ button.shopify-payment-button__button--unbranded {
 .blog-post-card--knowledge-centre .blog-post-card__title,
 .blog-post-card--knowledge-centre .blog-post-card__title * {
   font-size: 0.9375rem;
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.4;
   color: var(--color-foreground);
   text-decoration: none;
@@ -762,20 +835,34 @@ button.shopify-payment-button__button--unbranded {
   fill: var(--brand-accent);
 }
 
-.header-logo__svg .drop {
+/* Static settled pose until window load enables animation (see _header-logo.liquid) */
+.header-logo__svg:not(.header-logo__svg--animated) .drop {
+  animation: none;
+  will-change: auto;
+}
+
+.header-logo__svg:not(.header-logo__svg--animated) .drop.large {
+  transform: translate(var(--ax), var(--ay)) scale(0.9) translate(calc(var(--ax) * -1), calc(var(--ay) * -1));
+}
+
+.header-logo__svg:not(.header-logo__svg--animated) .drop.small {
+  transform: translate(var(--ax), var(--ay)) scale(1.1) translate(calc(var(--ax) * -1), calc(var(--ay) * -1));
+}
+
+.header-logo__svg--animated .drop {
   will-change: transform;
   animation-timing-function: ease-in-out, cubic-bezier(0.42, 0, 0.28, 1);
   animation-fill-mode: both, none;
 }
 
-.header-logo__svg .drop.large {
+.header-logo__svg--animated .drop.large {
   animation-name: logo-pulse-large-intro, logo-pulse-large-settle;
   animation-duration: 2.4s, 2.1s;
   animation-delay: 0s, 2.4s;
   animation-iteration-count: 1, infinite;
 }
 
-.header-logo__svg .drop.small {
+.header-logo__svg--animated .drop.small {
   animation-name: logo-pulse-small-intro, logo-pulse-small-settle;
   animation-duration: 2.4s, 2.1s;
   animation-delay: 0s, 2.4s;
@@ -1734,7 +1821,7 @@ button.shopify-payment-button__button--unbranded {
   color: var(--color-foreground);
   font-family: inherit;
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.25;
 }
 
@@ -1912,7 +1999,7 @@ button.shopify-payment-button__button--unbranded {
 .editorial rte-formatter,
 .editorial .rte {
   font-size: var(--brand-body-size);
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.75;
   color: var(--color-text-body);
 }
@@ -1970,7 +2057,7 @@ button.shopify-payment-button__button--unbranded {
 .article-editorial__meta-line {
   margin: 0;
   font-size: 0.8125rem;
-  font-weight: 400;
+  font-weight: var(--brand-weight-base);
   line-height: 1.5;
   color: var(--color-accent-2);
 }
@@ -1999,7 +2086,7 @@ label:not(.variant-option__button-label) {
 
 .article-highlight {
   color: var(--color-foreground-accent);
-  font-weight: 500;
+  font-weight: var(--brand-weight-heading);
 }
 
 .article-editorial__nav {
@@ -2343,7 +2430,7 @@ label:not(.variant-option__button-label) {
 
 .product-information--split .product-specs-table__label {
   flex: 0 1 auto;
-  font-weight: 500;
+  font-weight: var(--brand-weight-heading);
   text-align: left;
 }
 
@@ -2374,7 +2461,7 @@ label:not(.variant-option__button-label) {
 
 .product-information--split .product-specs-table__value {
   flex: 0 1 auto;
-  max-width: 55%;
+  max-width: 80%;
   text-align: right;
 }
 
@@ -2402,7 +2489,7 @@ label:not(.variant-option__button-label) {
 .section-resource-list .product-list-heading h3 {
   margin: 0 0 var(--padding-2xl);
   font-size: var(--product-section-heading-size);
-  font-weight: 500;
+  font-weight: var(--brand-weight-heading);
   text-align: left;
 }
 

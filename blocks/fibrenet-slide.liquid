@@ -1,6 +1,11 @@
 {% liquid
   assign block_settings = block.settings
   assign block_index = section.blocks | find_index: 'id', block.id
+  assign section_index = section.index
+  assign use_responsive_image = false
+  if section.settings.background_image_style == 'responsive_image'
+    assign use_responsive_image = true
+  endif
 
   assign bg_image = blank
   if block_settings.image != blank
@@ -10,15 +15,72 @@
   endif
 %}
 
+{% liquid
+  assign slide_class = 'hero-slide'
+  if use_responsive_image
+    assign slide_class = slide_class | append: ' hero-slide--responsive-image'
+  endif
+%}
+
 {% capture children %}
   <div
-    class="slide__image-container hero-slide__media"
-    {% if bg_image != blank %}
-      style="background-image: url('{{ bg_image | escape }}');"
-    {% endif %}
+    class="slide__image-container hero-slide__media{% if use_responsive_image %} hero-slide__media--img{% endif %}"
+    {%- unless use_responsive_image -%}
+      {%- if bg_image != blank -%}
+        style="background-image: url('{{ bg_image | escape }}');"
+      {%- endif -%}
+    {%- endunless -%}
   >
-    {%- if bg_image == blank -%}
-      {{ 'hero-apparel-1' | placeholder_svg_tag: 'slide__image' }}
+    {%- if use_responsive_image -%}
+      {%- if block_settings.image != blank -%}
+        {%- liquid
+          assign height = block_settings.image.width | divided_by: block_settings.image.aspect_ratio | round
+          assign sizes = '100vw'
+          assign widths = '750, 1000, 1200, 1400, 1600, 1920'
+          assign loading = 'eager'
+          assign fetchpriority = 'low'
+
+          if block_index == 0 and section_index == 1
+            assign fetchpriority = 'high'
+          endif
+        -%}
+        {{
+          block_settings.image
+          | image_url: width: 1920
+          | image_tag:
+            height: height,
+            sizes: sizes,
+            widths: widths,
+            class: 'slide__image',
+            loading: loading,
+            fetchpriority: fetchpriority,
+            alt: ''
+        }}
+      {%- elsif block_settings.image_url_fallback != blank -%}
+        {%- liquid
+          assign loading = 'eager'
+          assign fetchpriority = 'low'
+
+          if block_index == 0 and section_index == 1
+            assign fetchpriority = 'high'
+          endif
+        -%}
+        <img
+          src="{{ block_settings.image_url_fallback | escape }}"
+          class="slide__image"
+          alt=""
+          loading="{{ loading }}"
+          fetchpriority="{{ fetchpriority }}"
+          width="1000"
+          height="355"
+        >
+      {%- else -%}
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'slide__image' }}
+      {%- endif -%}
+    {%- else -%}
+      {%- if bg_image == blank -%}
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'slide__image' }}
+      {%- endif -%}
     {%- endif -%}
   </div>
   <div
@@ -41,7 +103,7 @@
 
 {% render 'slideshow-slide',
   index: block_index,
-  class: 'hero-slide',
+  class: slide_class,
   children: children,
   attributes: block.shopify_attributes
 %}
