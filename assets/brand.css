@@ -2212,11 +2212,14 @@ label:not(.variant-option__button-label) {
   align-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 0.35em;
+  gap: 0;
+  line-height: var(--font-h1--line-height, 1.2);
 }
-.product-information--split .product-title-split__heading span {
+
+.product-information--split .product-title-split__heading > span {
   font-weight: var(--font-h1--weight, var(--brand-weight-bold));
   text-align: center;
+  line-height: inherit;
 }
 
 .product-information--split .product-title-split__leading {
@@ -2446,6 +2449,7 @@ label:not(.variant-option__button-label) {
   color: var(--color-text-body);
   font-weight: var(--brand-weight-base) !important;
   font-size: 90%;
+  line-height: inherit;
 }
 
 
