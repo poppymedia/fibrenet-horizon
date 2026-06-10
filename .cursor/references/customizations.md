@@ -200,6 +200,7 @@ Donor checkout branding (`checkout_*`) belongs under **Shopify Admin → Setting
 - **Variant pills:** Option name (`legend`) stays bold/accent; pill values are `<label class="variant-option__button-label">` — exclude from global `label { font-weight: bold }` via `:not(.variant-option__button-label)`.
 
 After pulling Futura values into JSON, confirm fonts resolve in the theme editor (slugs must exist on the shop).
+- **App embeds:** `snippets/app-custom.liquid` (end of `layout/theme.liquid`) injects DM Sans + pill radius into Shopify Inbox (`inbox-online-store-chat#ShopifyChat`) and Forms (`shopify-forms-embed#app-embed-container-723526`) shadow roots. `brand.css` hides both hosts until `data-fibrenet-chat-ready` / `data-fibrenet-forms-ready` is set after styles inject; `MutationObserver` + 250ms poll; 15s fallback reveals anyway. Button size uses `var(--brand-button-size)` (not `--button-type-size`).
 
 ## Fibrenet three-zone header (Horizon)
 

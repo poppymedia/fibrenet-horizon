@@ -164,7 +164,10 @@ h6,
 .h6,
 .variant-picker .variant-option--buttons legend, 
 .product-quantity-label, .product-compatibility__heading,
-:is(h2, h3, h4, h5, h6) :is(b, strong) {
+:is(h2, h3, h4, h5, h6) :is(b, strong),
+#shopify-chat,
+#app-embed-container-723526,
+.chat-app button {
   font-family: var(--brand-font-stack);
   font-weight: var(--brand-weight-base);
   letter-spacing: var(--brand-letter-spacing);
@@ -2459,4 +2462,20 @@ label:not(.variant-option__button-label) {
 
 button.shopify-payment-button__button.shopify-payment-button__button--unbranded {
   background-color: #525BFF !important;
+}
+
+/* Shopify Inbox chat + Forms embed — hidden until app-custom.liquid applies brand fonts */
+inbox-online-store-chat#ShopifyChat:not([data-fibrenet-chat-ready]),
+shopify-forms-embed#app-embed-container-723526:not([data-fibrenet-forms-ready]) {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+inbox-online-store-chat#ShopifyChat[data-fibrenet-chat-ready],
+shopify-forms-embed#app-embed-container-723526[data-fibrenet-forms-ready] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.15s ease;
 }

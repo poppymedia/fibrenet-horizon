@@ -1,0 +1,96 @@
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const POLL_MS = 250;
+    const TIMEOUT_MS = 15000;
+
+    function applyInboxFont() {
+      const host = document.querySelector('inbox-online-store-chat#ShopifyChat');
+      if (!host || !host.shadowRoot) return false;
+
+      if (!host.shadowRoot.getElementById('inbox-font-style')) {
+        const style = document.createElement('style');
+        style.id = 'inbox-font-style';
+        style.textContent = `
+          .chat-toggle,
+          .chat-title,
+          [data-spec="button-text"] {
+            font-size: var(--brand-button-size) !important;
+          }
+
+          .chat-title,
+          .chat-toggle,
+          [data-spec="button-text"],
+          button,
+          span,
+          input,
+          textarea {
+            font-family: "DM Sans", sans-serif !important;
+            font-weight: 400 !important;
+            border-radius: 2em !important;
+          }
+        `;
+        host.shadowRoot.appendChild(style);
+      }
+
+      host.setAttribute('data-fibrenet-chat-ready', '');
+      return true;
+    }
+
+    function applyFormsFont() {
+      const host = document.querySelector('shopify-forms-embed#app-embed-container-723526');
+      if (!host || !host.shadowRoot) return false;
+
+      if (!host.shadowRoot.getElementById('forms-style')) {
+        const style = document.createElement('style');
+        style.id = 'forms-style';
+        style.textContent = `
+          :host {
+            --forms-body-font: normal 400 14px "DM Sans", sans-serif !important;
+            --forms-heading-font: normal 400 14px "DM Sans", sans-serif !important;
+            --button-border-radius: 2em !important;
+            --button-background-color-order: #FF6610 !important;
+          }
+          ._teaserContainer_trejf_5,
+          button {
+            border-radius: 2em !important;
+            background-color: #FF6610 !important;
+          }
+          button h3 {
+            font-size: var(--brand-button-size) !important;
+          }
+        `;
+        host.shadowRoot.appendChild(style);
+      }
+
+      host.setAttribute('data-fibrenet-forms-ready', '');
+      return true;
+    }
+
+    function tryApplyAppStyles() {
+      applyInboxFont();
+      applyFormsFont();
+    }
+
+    function revealAppEmbeds() {
+      const chat = document.querySelector('inbox-online-store-chat#ShopifyChat');
+      const forms = document.querySelector('shopify-forms-embed#app-embed-container-723526');
+      if (chat) chat.setAttribute('data-fibrenet-chat-ready', '');
+      if (forms) forms.setAttribute('data-fibrenet-forms-ready', '');
+    }
+
+    tryApplyAppStyles();
+
+    const observer = new MutationObserver(() => {
+      tryApplyAppStyles();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    const timer = setInterval(tryApplyAppStyles, POLL_MS);
+
+    setTimeout(() => {
+      clearInterval(timer);
+      observer.disconnect();
+      revealAppEmbeds();
+    }, TIMEOUT_MS);
+  });
+</script>
