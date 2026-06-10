@@ -2252,9 +2252,11 @@ label:not(.variant-option__button-label) {
 .product-information--split .product-details product-price,
 .product-information--split .product-details .price {
   font-size: var(--product-price-size);
-  font-weight: 500;
+  font-family: var(--brand-font-stack);
+  font-weight: var(--brand-weight-bold);
   justify-content: center;
   text-align: center;
+  color: #000;
 }
 
 .product-information--split .product-inventory,
@@ -2485,4 +2487,15 @@ shopify-forms-embed#app-embed-container-723526[data-fibrenet-forms-ready] {
 }
 .submenu li:last-of-type.submenu__item {
   margin-bottom: 0;
+}
+
+
+.product-information--split .product-details .price,
+.product-inventory {
+  position: relative;
+  top: -1em;
+}
+.product-inventory {
+  margin-top: -0.25em;
+  margin-bottom: -1.75em;
 }

@@ -96,7 +96,7 @@
     {%- if title_mode == 'aocdac' -%}
       <span class="product-title-split__barcode" data-product-title-part="barcode"{% if h1_barcode == blank %} hidden{% endif %}>{{ h1_barcode | escape }}</span>
     {%- endif -%}
-    {%- if h1_suffix != blank -%}
+    {%- if h1_suffix != blank and template != 'product.cables' -%}
       <span class="product-title-split__suffix" data-product-title-part="suffix">{{ h1_suffix | escape }}</span>
     {%- endif -%}
   </h1>
