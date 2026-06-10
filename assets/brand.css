@@ -2479,3 +2479,10 @@ shopify-forms-embed#app-embed-container-723526[data-fibrenet-forms-ready] {
   pointer-events: auto;
   transition: opacity 0.15s ease;
 }
+
+.submenu li.submenu__item {
+  margin-bottom: -0.5em;
+}
+.submenu li:last-of-type.submenu__item {
+  margin-bottom: 0;
+}
