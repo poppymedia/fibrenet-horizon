@@ -19,22 +19,17 @@
   if layout == 'split' and show_sub_label and sub_label != blank
     assign use_split_layout = true
   endif
-
-  assign cta_scheme_style = ''
-  if border_color != blank
-    assign cta_scheme_style = cta_scheme_style | append: '--color-primary-button-border: ' | append: border_color | append: ';'
-  endif
-  if border_hover_color != blank
-    assign cta_scheme_style = cta_scheme_style | append: '--color-primary-button-hover-border: ' | append: border_hover_color | append: ';'
-  endif
 -%}
 
 {%- if button_label != blank and button_url != blank -%}
   {%- if color_scheme != blank -%}
     <span
       class="cta-btn-scheme cta-btn-scheme--{{ color_scheme }}"
-      {% if cta_scheme_style != blank %}
-        style="{{ cta_scheme_style }}"
+      {% if border_color != blank or border_hover_color != blank %}
+        style="
+          {%- if border_color != blank -%}--color-primary-button-border: {{ border_color }};{%- endif -%}
+          {%- if border_hover_color != blank -%}--color-primary-button-hover-border: {{ border_hover_color }};{%- endif -%}
+        "
       {% endif %}
     >
   {%- endif -%}

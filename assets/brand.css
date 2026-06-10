@@ -1465,39 +1465,13 @@ button.shopify-payment-button__button--unbranded {
   color: inherit;
 }
 
+/* Pill uses physical border (not Horizon box-shadow); tokens inherit from wrapper incl. product overrides */
 .cta-btn-scheme .button--pill {
-  background-color: var(--color-primary-button-background);
-  color: var(--color-primary-button-text);
   border-color: var(--color-primary-button-border);
 }
 
 .cta-btn-scheme .button--pill:hover {
-  background-color: var(--color-primary-button-hover-background);
-  color: var(--color-primary-button-hover-text);
   border-color: var(--color-primary-button-hover-border);
-}
-
-.article-editorial__nav-cta.button--pill {
-  background-color: var(--color-primary-button-background);
-  color: var(--color-primary-button-text);
-  border-color: var(--color-primary-button-border);
-}
-
-.article-editorial__nav-cta.button--pill:hover {
-  background-color: var(--color-primary-button-hover-background);
-  color: var(--color-primary-button-hover-text);
-  border-color: var(--color-primary-button-hover-border);
-}
-
-.button--outline,
-.button--pill.button--outline {
-  background-color: transparent;
-  color: var(--color-foreground);
-  border-color: var(--color-border);
-}
-
-.button--pill.button--outline:hover {
-  background-color: var(--color-input-hover-background);
 }
 
 .cta-btn__label {
@@ -2479,4 +2453,8 @@ label:not(.variant-option__button-label) {
 
 .site-footer-ext--content-standard.centre-aligned .site-footer__grid {
   justify-content: center;
+}
+
+button.shopify-payment-button__button.shopify-payment-button__button--unbranded {
+  background-color: #525BFF !important;
 }
