@@ -1,3 +1,67 @@
+{%- comment -%}
+  Fibrenet performance: template-guarded script loading.
+  Import map stays complete so section-level dynamic imports still resolve.
+  When merging Horizon upgrades, preserve this block and re-apply guards to new scripts.
+{%- endcomment -%}
+{%- liquid
+  assign fn_is_product = false
+  if template.name == 'product'
+    assign fn_is_product = true
+  endif
+
+  assign fn_has_product_cards = false
+  if fn_is_product
+    assign fn_has_product_cards = true
+  elsif template.name == 'index' or template.name == 'collection' or template.name == 'search' or template.name == '404'
+    assign fn_has_product_cards = true
+  endif
+
+  assign fn_needs_paginated_list = false
+  if template.name == 'collection' or template.name == 'search' or template.name == 'blog'
+    assign fn_needs_paginated_list = true
+  endif
+
+  assign fn_has_quick_add = false
+  if settings.quick_add or settings.mobile_quick_add
+    assign fn_has_quick_add = true
+  endif
+
+  assign fn_needs_product_interaction = false
+  if fn_is_product or fn_has_product_cards
+    assign fn_needs_product_interaction = true
+  endif
+
+  assign fn_needs_quick_add_bundle = false
+  if fn_has_quick_add and fn_has_product_cards
+    assign fn_needs_quick_add_bundle = true
+  endif
+
+  assign fn_needs_product_media = false
+  if fn_is_product or fn_needs_quick_add_bundle
+    assign fn_needs_product_media = true
+  endif
+
+  assign fn_needs_collection_filters = false
+  if template.name == 'collection' or template.name == 'search'
+    assign fn_needs_collection_filters = true
+  endif
+
+  assign fn_needs_cart_quantity = false
+  if template.name == 'cart' or fn_is_product
+    assign fn_needs_cart_quantity = true
+  endif
+
+  assign fn_needs_quick_add = false
+  if fn_has_quick_add and fn_has_product_cards
+    assign fn_needs_quick_add = true
+  endif
+
+  assign fn_needs_video_background = true
+  if template.name == 'page' or template.name == 'article' or template.name == 'blog' or template.name == 'cart' or template.name == 'list-collections' or template.name == 'password'
+    assign fn_needs_video_background = false
+  endif
+-%}
+
 <script type="importmap">
   {
     "imports": {
@@ -68,7 +132,7 @@
   fetchpriority="low"
 >
 
-{% if template.name == 'collection' or template.name == 'search' %}
+{% if fn_needs_paginated_list %}
   <link
     rel="modulepreload"
     href="{{ 'paginated-list-aspect-ratio.js' | asset_url }}"
@@ -79,7 +143,9 @@
     href="{{ 'paginated-list.js' | asset_url }}"
     fetchpriority="low"
   >
+{% endif %}
 
+{% if fn_has_product_cards %}
   <link
     rel="modulepreload"
     href="{{ 'product-title-truncation.js' | asset_url }}"
@@ -112,11 +178,13 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'quick-add.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if fn_needs_quick_add %}
+  <script
+    src="{{ 'quick-add.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 {% if settings.show_add_discount_code %}
   <script
     src="{{ 'cart-discount.js' | asset_url }}"
@@ -129,21 +197,27 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'variant-picker.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'product-card.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'product-form.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if fn_needs_product_interaction %}
+  <script
+    src="{{ 'variant-picker.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_has_product_cards %}
+  <script
+    src="{{ 'product-card.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_needs_product_interaction %}
+  <script
+    src="{{ 'product-form.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 <script
   src="{{ 'accordion-custom.js' | asset_url }}"
   type="module"
@@ -154,31 +228,39 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'media.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'product-price.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'product-title-truncation.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'product-inventory.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'show-more.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if fn_needs_product_media %}
+  <script
+    src="{{ 'media.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_has_product_cards %}
+  <script
+    src="{{ 'product-price.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+  <script
+    src="{{ 'product-title-truncation.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_is_product or fn_needs_quick_add_bundle %}
+  <script
+    src="{{ 'product-inventory.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_needs_collection_filters %}
+  <script
+    src="{{ 'show-more.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 <script
   src="{{ 'slideshow.js' | asset_url }}"
   type="module"
@@ -194,31 +276,39 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'video-background.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'component-quantity-selector.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'media-gallery.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if fn_needs_video_background %}
+  <script
+    src="{{ 'video-background.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_needs_cart_quantity %}
+  <script
+    src="{{ 'component-quantity-selector.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+{% if fn_needs_product_media %}
+  <script
+    src="{{ 'media-gallery.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 <script
   src="{{ 'rte-formatter.js' | asset_url }}"
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'gift-card-recipient-form.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if fn_is_product %}
+  <script
+    src="{{ 'gift-card-recipient-form.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 
 {% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}
   <script
@@ -228,7 +318,7 @@
   ></script>
 {% endif %}
 
-{% if template == 'product' %}
+{% if fn_is_product %}
   <script type="module">
     import { RecentlyViewed } from '@theme/recently-viewed-products';
     RecentlyViewed.addProduct('{{ product.id }}');
@@ -245,7 +335,7 @@
   ></script>
 {% endif %}
 
-{% if settings.transition_to_main_product %}
+{% if settings.transition_to_main_product and fn_has_product_cards %}
   <script
     src="{{ 'product-card-link.js' | asset_url }}"
     type="module"

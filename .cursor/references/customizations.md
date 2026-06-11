@@ -287,6 +287,31 @@ Five assignable templates share `product-information` + Fibrenet blocks; section
 - Headings: 14px / 500, `--color-accent-heading` (brand purple). Body links 14px / 400.
 - Color scheme: `scheme-5` (navy). Assign Shopify menus for **Further details** and **Legal links** in the theme editor after schema change (old per-link settings are removed).
 
+## Performance: conditional script loading
+
+**File:** `snippets/scripts.liquid`
+
+Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` preload) with template-aware `fn_*` flags at the top of the file. The **import map stays complete** so section-level scripts (e.g. `blog-posts-list.js`, `results-list.js`) can still dynamic-import `@theme/*` modules.
+
+| Flag | When true |
+|------|-----------|
+| `fn_is_product` | `template.name == 'product'` (all `product.*` JSON templates) |
+| `fn_has_product_cards` | product, index, collection, search, 404 |
+| `fn_needs_paginated_list` | collection, search, blog |
+| `fn_needs_product_interaction` | product or product-card pages → `variant-picker.js`, `product-form.js` |
+| `fn_needs_quick_add_bundle` | quick add enabled + product cards → extra `media.js`, `media-gallery.js`, `product-inventory.js` for modal morph |
+| `fn_needs_quick_add` | quick add enabled + product cards → `quick-add.js` |
+| `fn_needs_product_media` | product page or quick-add bundle |
+| `fn_needs_collection_filters` | collection, search → `show-more.js` |
+| `fn_needs_cart_quantity` | cart, product → `component-quantity-selector.js` |
+| `fn_needs_video_background` | false on page, article, blog, cart, list-collections, password |
+
+**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.).
+
+**Product-only:** `product-title-split.js`, `product-stock-status.js`, `gift-card-recipient-form.js`, `RecentlyViewed.addProduct` inline script.
+
+**Upgrade merge:** preserve the `fn_*` liquid block and re-apply guards to any new `<script>` tags Horizon adds upstream.
+
 ## Maintenance Notes
 
 ### Files to Monitor During Updates
