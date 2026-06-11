@@ -1,0 +1,47 @@
+{%- comment -%}
+  Template-level LCP preloads in <head>. Section-level heroes (e.g. slideshow) use fibrenet-lcp-preload in the section.
+{%- endcomment -%}
+{%- if template.name == 'product' and product.featured_media.preview_image != blank -%}
+  {%- render 'fibrenet-lcp-preload',
+    context: 'product',
+    image: product.featured_media.preview_image,
+    sizes: '(min-width: 750px) 50vw, 100vw',
+    widths: '400, 600, 800, 1000, 1200, 1600',
+    href_width: 800
+  -%}
+{%- elsif template.name == 'article' and article.image != blank -%}
+  {%- render 'fibrenet-lcp-preload',
+    context: 'article',
+    image: article.image,
+    sizes: '(min-width: 750px) 60vw, 100vw',
+    widths: '400, 800, 1200, 1600',
+    href_width: 800
+  -%}
+{%- elsif template.name == 'blog' and blog.articles.first.image != blank -%}
+  {%- render 'fibrenet-lcp-preload',
+    context: 'blog',
+    image: blog.articles.first.image,
+    sizes: '(min-width: 750px) 33vw, 100vw',
+    widths: '350, 750, 1100',
+    href_width: 750
+  -%}
+{%- elsif template.name == 'collection' -%}
+  {%- liquid
+    assign collection_lcp_image = collection.featured_image
+    if collection_lcp_image == blank and collection.products.first != blank
+      assign collection_lcp_image = collection.products.first.featured_media.preview_image
+      if collection_lcp_image == blank
+        assign collection_lcp_image = collection.products.first.featured_image
+      endif
+    endif
+  -%}
+  {%- if collection_lcp_image != blank -%}
+    {%- render 'fibrenet-lcp-preload',
+      context: 'collection',
+      image: collection_lcp_image,
+      sizes: '(min-width: 750px) 50vw, 100vw',
+      widths: '240, 352, 832, 1200',
+      href_width: 832
+    -%}
+  {%- endif -%}
+{%- endif -%}

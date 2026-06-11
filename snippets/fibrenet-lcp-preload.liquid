@@ -1,0 +1,41 @@
+{%- doc -%}
+  Outputs a responsive image preload link when enabled in theme settings.
+
+  @param context {string} home | article | blog | product | collection
+  @param image {object} Shopify image object
+  @param fallback_url {string} External image URL when no Shopify image object
+  @param sizes {string} imagesizes attribute
+  @param widths {string} Comma-separated widths for imagesrcset
+  @param href_width {number} Default width for href fallback
+{%- enddoc -%}
+{%- liquid
+  assign preload_key = 'fibrenet_lcp_preload_' | append: context
+  assign preload_sizes = sizes | default: '100vw'
+  assign preload_href_width = href_width | default: 1000
+  assign preload_widths = widths | default: '750, 1000, 1200, 1400'
+  assign preload_width_list = preload_widths | split: ','
+-%}
+{%- if settings[preload_key] -%}
+{%- if image != blank -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ image | image_url: width: preload_href_width }}"
+    imagesrcset="
+      {%- for width in preload_width_list -%}
+        {%- assign width_num = width | strip | plus: 0 -%}
+        {{ image | image_url: width: width_num }} {{ width_num }}w{% unless forloop.last %}, {% endunless %}
+      {%- endfor -%}
+    "
+    imagesizes="{{ preload_sizes }}"
+    fetchpriority="high"
+  >
+{%- elsif fallback_url != blank -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ fallback_url | escape }}"
+    fetchpriority="high"
+  >
+{%- endif -%}
+{%- endif -%}

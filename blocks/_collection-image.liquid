@@ -36,10 +36,25 @@
       assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
     %}
 
+    {%- capture fetchpriority -%}
+      {%- render 'fibrenet-lcp-fetchpriority', context: 'collection', enabled: true -%}
+    {%- endcapture -%}
+    {%- assign fetchpriority = fetchpriority | strip -%}
+    {%- assign collection_image_preload = false -%}
+    {%- if settings.fibrenet_lcp_preload_collection -%}
+      {%- assign collection_image_preload = true -%}
+    {%- endif -%}
+
     {{
       block_settings.collection.featured_image
       | image_url: width: 3840
-      | image_tag: preload: true, class: 'collection-image__featured-image', widths: widths, sizes: sizes
+      | image_tag:
+        preload: collection_image_preload,
+        class: 'collection-image__featured-image',
+        widths: widths,
+        sizes: sizes,
+        loading: 'eager',
+        fetchpriority: fetchpriority
     }}
   </div>
 {% endif %}

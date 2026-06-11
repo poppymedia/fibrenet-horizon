@@ -1,28 +1,13 @@
 {%- assign first_block = section.blocks.first -%}
 {%- if section.settings.background_image_style == 'responsive_image' and section.index == 1 and first_block != blank -%}
-  {%- if first_block.settings.image != blank -%}
-    {%- assign lcp_image = first_block.settings.image -%}
-    <link
-      rel="preload"
-      as="image"
-      href="{{ lcp_image | image_url: width: 1000 }}"
-      imagesrcset="
-        {{ lcp_image | image_url: width: 750 }} 750w,
-        {{ lcp_image | image_url: width: 1000 }} 1000w,
-        {{ lcp_image | image_url: width: 1200 }} 1200w,
-        {{ lcp_image | image_url: width: 1400 }} 1400w
-      "
-      imagesizes="100vw"
-      fetchpriority="high"
-    >
-  {%- elsif first_block.settings.image_url_fallback != blank -%}
-    <link
-      rel="preload"
-      as="image"
-      href="{{ first_block.settings.image_url_fallback | escape }}"
-      fetchpriority="high"
-    >
-  {%- endif -%}
+  {%- render 'fibrenet-lcp-preload',
+    context: 'home',
+    image: first_block.settings.image,
+    fallback_url: first_block.settings.image_url_fallback,
+    sizes: '100vw',
+    widths: '750, 1000, 1200, 1400',
+    href_width: 1000
+  -%}
 {%- endif -%}
 
 {% liquid

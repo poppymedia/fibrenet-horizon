@@ -415,7 +415,17 @@
           "selected_variant_hover_border_color": "#525bff"
         }
       }
-    }
+    },
+    "fibrenet_lcp_preload_home": true,
+    "fibrenet_lcp_fetchpriority_home": true,
+    "fibrenet_lcp_preload_article": true,
+    "fibrenet_lcp_fetchpriority_article": true,
+    "fibrenet_lcp_preload_blog": true,
+    "fibrenet_lcp_fetchpriority_blog": true,
+    "fibrenet_lcp_preload_product": true,
+    "fibrenet_lcp_fetchpriority_product": true,
+    "fibrenet_lcp_preload_collection": true,
+    "fibrenet_lcp_fetchpriority_collection": true
   },
   "presets": {
     "Default": {

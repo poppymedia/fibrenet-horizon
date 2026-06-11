@@ -27,12 +27,24 @@
 >
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
-    assign fetch_priority = 'auto'
+    assign lcp_context = blank
     if is_main_product_media
-      assign fetch_priority = 'high'
+      if template.name == 'product'
+        assign lcp_context = 'product'
+      elsif template.name == 'collection'
+        assign lcp_context = 'collection'
+      endif
     endif
     assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
   %}
+  {% capture fetch_priority %}
+    {% if lcp_context != blank %}
+      {% render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: true %}
+    {% else %}
+      auto
+    {% endif %}
+  {% endcapture %}
+  {% assign fetch_priority = fetch_priority | strip %}
   {{
     media.preview_image
     | image_url: width: 3840

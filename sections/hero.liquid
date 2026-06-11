@@ -45,12 +45,16 @@
     assign has_media = true
   endif
 
-  assign fetch_priority = 'auto'
-
+  assign is_home_lcp_hero = false
   if section.index == 1
-    assign fetch_priority = 'high'
+    assign is_home_lcp_hero = true
   endif
 %}
+
+{% capture fetch_priority %}
+  {% render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_hero %}
+{% endcapture %}
+{% assign fetch_priority = fetch_priority | strip %}
 
 {% capture media %}
   {%- if has_image_1 -%}
@@ -73,12 +77,10 @@
     {% assign media_count = media_count | plus: 1 %}
     <div class="hero__video-wrapper">
       {%- if section.settings.video_1.preview_image -%}
-        {% liquid
-          assign fetch_priority_poster = false
-          if section.index == 1
-            assign fetch_priority_poster = 'high'
-          endif
-        %}
+        {% capture fetch_priority_poster %}
+          {% render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_hero %}
+        {% endcapture %}
+        {% assign fetch_priority_poster = fetch_priority_poster | strip %}
         {{
           section.settings.video_1.preview_image
           | image_url: width: 3840

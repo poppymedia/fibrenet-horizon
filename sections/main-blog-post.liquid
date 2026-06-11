@@ -27,6 +27,10 @@
           assign hero_alt = article.image.alt | default: article.title
         -%}
         <div class="article-editorial__hero">
+          {%- capture fetchpriority -%}
+            {%- render 'fibrenet-lcp-fetchpriority', context: 'article', enabled: true -%}
+          {%- endcapture -%}
+          {%- assign fetchpriority = fetchpriority | strip -%}
           {{
             article.image
             | image_url: width: 1600
@@ -35,6 +39,7 @@
               loading: 'eager',
               widths: '400, 800, 1200, 1600',
               sizes: '(min-width: 750px) 60vw, 100vw',
+              fetchpriority: fetchpriority,
               alt: hero_alt
           }}
         </div>

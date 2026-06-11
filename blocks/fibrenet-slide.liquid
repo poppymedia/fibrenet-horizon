@@ -37,13 +37,20 @@
           assign height = block_settings.image.width | divided_by: block_settings.image.aspect_ratio | round
           assign sizes = '100vw'
           assign widths = '750, 1000, 1200, 1400, 1600, 1920'
-          assign loading = 'eager'
-          assign fetchpriority = 'low'
+          assign loading = 'lazy'
+          assign is_home_lcp_slide = false
 
-          if block_index == 0 and section_index == 1
-            assign fetchpriority = 'high'
+          if block_index == 0
+            assign loading = 'eager'
+            if section_index == 1
+              assign is_home_lcp_slide = true
+            endif
           endif
         -%}
+        {%- capture fetchpriority -%}
+          {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
+        {%- endcapture -%}
+        {%- assign fetchpriority = fetchpriority | strip -%}
         {{
           block_settings.image
           | image_url: width: 1920
@@ -58,13 +65,20 @@
         }}
       {%- elsif block_settings.image_url_fallback != blank -%}
         {%- liquid
-          assign loading = 'eager'
-          assign fetchpriority = 'low'
+          assign loading = 'lazy'
+          assign is_home_lcp_slide = false
 
-          if block_index == 0 and section_index == 1
-            assign fetchpriority = 'high'
+          if block_index == 0
+            assign loading = 'eager'
+            if section_index == 1
+              assign is_home_lcp_slide = true
+            endif
           endif
         -%}
+        {%- capture fetchpriority -%}
+          {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
+        {%- endcapture -%}
+        {%- assign fetchpriority = fetchpriority | strip -%}
         <img
           src="{{ block_settings.image_url_fallback | escape }}"
           class="slide__image"

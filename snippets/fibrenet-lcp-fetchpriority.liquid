@@ -1,0 +1,16 @@
+{%- doc -%}
+  Returns fetchpriority for an LCP image candidate, gated by theme settings.
+
+  @param context {string} home | article | blog | product | collection
+  @param enabled {boolean} Whether this image is the LCP candidate on the page
+{%- enddoc -%}
+{%- liquid
+  assign fibrenet_lcp_output = 'auto'
+
+  if enabled
+    assign priority_key = 'fibrenet_lcp_fetchpriority_' | append: context
+    if settings[priority_key]
+      assign fibrenet_lcp_output = 'high'
+    endif
+  endif
+-%}{{- fibrenet_lcp_output -}}

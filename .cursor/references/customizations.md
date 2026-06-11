@@ -296,6 +296,30 @@ Five assignable templates share `product-information` + Fibrenet blocks; section
 - Headings: 14px / 500, `--color-accent-heading` (brand purple). Body links 14px / 400.
 - Color scheme: `scheme-5` (navy). Assign Shopify menus for **Further details** and **Legal links** in the theme editor after schema change (old per-link settings are removed).
 
+## Performance: LCP image priority (theme settings)
+
+**Theme settings group:** `LCP images` (`config/settings_schema.json`)
+
+Per-template toggles (default on):
+- `fibrenet_lcp_preload_{home|article|blog|product|collection}` — `<link rel="preload" as="image">` in `<head>` (or section for home slideshow)
+- `fibrenet_lcp_fetchpriority_{…}` — `fetchpriority="high"` on the LCP `<img>`
+
+**Snippets:**
+- `snippets/fibrenet-lcp-preload.liquid` — responsive preload link (checks `settings[fibrenet_lcp_preload_*]`)
+- `snippets/fibrenet-lcp-fetchpriority.liquid` — returns `high` or `auto` (checks `settings[fibrenet_lcp_fetchpriority_*]`)
+- `snippets/fibrenet-lcp-head-preloads.liquid` — rendered from `layout/theme.liquid` for product, article, blog, collection
+
+**Wired instances:**
+| Context | Preload | Fetch priority on |
+|---------|---------|-------------------|
+| Home | `fibrenet-slideshow` first slide; head N/A | First slideshow slide (`fibrenet-slide`, `_slide`); `hero.liquid` when `section.index == 1` |
+| Article | Head + `main-blog-post` hero | Knowledge-centre hero; `_blog-post-featured-image` |
+| Blog | Head (`blog.articles.first.image`) | First card only (`_blog-post-image`; others lazy) |
+| Product | Head (`product.featured_media`) | Main gallery image (`product-media` + `is_main_product_media`) |
+| Collection | Head (featured image or first product) | First product card image (`card-gallery`); `_collection-image` block |
+
+**Note:** Home slideshow preloads stay in the section (first section on index); other templates preload in `<head>` via `fibrenet-lcp-head-preloads`.
+
 ## Performance: conditional script loading
 
 **File:** `snippets/scripts.liquid`

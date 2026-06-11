@@ -2333,6 +2333,95 @@
     ]
   },
   {
+    "name": "t:names.fibrenet_lcp_images",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_lcp_images"
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_lcp_home"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_preload_home",
+        "label": "t:settings.fibrenet_lcp_preload",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_fetchpriority_home",
+        "label": "t:settings.fibrenet_lcp_fetchpriority",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_lcp_article"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_preload_article",
+        "label": "t:settings.fibrenet_lcp_preload",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_fetchpriority_article",
+        "label": "t:settings.fibrenet_lcp_fetchpriority",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_lcp_blog"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_preload_blog",
+        "label": "t:settings.fibrenet_lcp_preload",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_fetchpriority_blog",
+        "label": "t:settings.fibrenet_lcp_fetchpriority",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_lcp_product"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_preload_product",
+        "label": "t:settings.fibrenet_lcp_preload",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_fetchpriority_product",
+        "label": "t:settings.fibrenet_lcp_fetchpriority",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_lcp_collection"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_preload_collection",
+        "label": "t:settings.fibrenet_lcp_preload",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_lcp_fetchpriority_collection",
+        "label": "t:settings.fibrenet_lcp_fetchpriority",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "Contact CTA buttons",
     "settings": [
       {

@@ -34,6 +34,11 @@
     assign image_sizes = sizes_attribute | strip
   endif
 
+  assign is_collection_lcp_product = false
+  if template.name == 'collection' and collection.products.first != blank and product.id == collection.products.first.id
+    assign is_collection_lcp_product = true
+  endif
+
   assign ratio = '1'
   case block_settings.image_ratio
     when 'landscape'
@@ -185,8 +190,13 @@
             assign class = class | append: ' constrain-height'
           endif
 
+          assign is_lcp_product_media = false
+          if is_collection_lcp_product and forloop.first
+            assign is_lcp_product_media = true
+          endif
+
           capture slideshow_children
-            render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
+            render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true, is_main_product_media: is_lcp_product_media
           endcapture
 
           render 'slideshow-slide', slide_id: media.id, index: forloop.index, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit

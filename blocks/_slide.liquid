@@ -44,11 +44,15 @@
           assign sizes = lazy_sizes
         endif
 
-        assign fetchpriority = 'low'
+        assign is_home_lcp_slide = false
         if block_index == 0 and section_index == 1
-          assign fetchpriority = 'high'
+          assign is_home_lcp_slide = true
         endif
       -%}
+      {%- capture fetchpriority -%}
+        {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
+      {%- endcapture -%}
+      {%- assign fetchpriority = fetchpriority | strip -%}
 
       {%- if block_settings.media_type_1 == 'image' -%}
         {{
