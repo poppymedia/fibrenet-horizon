@@ -296,6 +296,20 @@ Five assignable templates share `product-information` + Fibrenet blocks; section
 - Headings: 14px / 500, `--color-accent-heading` (brand purple). Body links 14px / 400.
 - Color scheme: `scheme-5` (navy). Assign Shopify menus for **Further details** and **Legal links** in the theme editor after schema change (old per-link settings are removed).
 
+## Performance: View transition render blocker
+
+Horizon ships `<link rel="expect" href="#MainContent" blocking="render">` so cross-document view transitions wait for `<main>` before first paint. With both transition settings off, that delays header chrome (announcement bar, utility header) for no benefit.
+
+**Gated in:** `snippets/fibrenet-view-transition-render-blocker.liquid`, rendered from `layout/theme.liquid` and `layout/password.liquid`.
+
+**Outputs blocker when either is true:**
+- `settings.page_transition_enabled` — page-navigation fade/slide on `main`
+- `settings.transition_to_main_product` — product-card → PDP image transition (`view-transitions.js` also loads from `snippets/scripts.liquid`)
+
+**Unchanged:** `meta name="view-transition" content="same-origin"` in `snippets/meta-tags.liquid` and CSS in `assets/base.css` — only the render-blocking expect link is conditional.
+
+**Pitfall:** Re-enable either transition setting in the theme editor if transitions flash or feel broken on navigation.
+
 ## Performance: LCP image priority (theme settings)
 
 **Theme settings group:** `LCP images` (`config/settings_schema.json`)

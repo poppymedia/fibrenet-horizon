@@ -1,0 +1,15 @@
+{%- doc -%}
+  Horizon uses rel=expect on #MainContent to delay first paint until main exists,
+  so cross-document view transitions do not flash partial content.
+
+  Only output when a transition feature is enabled; otherwise header chrome
+  (announcement bar, utility header) can paint sooner.
+{%- enddoc -%}
+{%- if settings.page_transition_enabled or settings.transition_to_main_product -%}
+  <link
+    rel="expect"
+    href="#MainContent"
+    blocking="render"
+    id="view-transition-render-blocker"
+  >
+{%- endif -%}
