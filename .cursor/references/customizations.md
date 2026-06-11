@@ -337,9 +337,9 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 | `fn_needs_product_media` | product page or quick-add bundle |
 | `fn_needs_collection_filters` | collection, search → `show-more.js` |
 | `fn_needs_cart_quantity` | cart, product → `component-quantity-selector.js` |
-| `fn_needs_video_background` | false on page, article, blog, cart, list-collections, password |
+**Video backgrounds:** `video-background.js` is no longer in `<head>`. `snippets/fibrenet-video-background-bootstrap.liquid` at the end of `layout/theme.liquid` dynamically imports it only when `video-background-component` exists in the DOM.
 
-**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.) — unless lazy search is active on content pages (see below).
+**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.) — unless lazy search/home defer is active (see below).
 
 **Product-only:** `product-title-split.js`, `product-stock-status.js`, `gift-card-recipient-form.js`, `RecentlyViewed.addProduct` inline script.
 
@@ -374,6 +374,40 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 **Revert:** set theme setting to **Load on page load (Horizon default)** — no code change required.
 
 **Test:** mobile Lighthouse on `/pages/meet-fibrenet` with `off` vs `intent`; Network tab should not request `predictive-search.js` / `slideshow.js` until interaction.
+
+## Performance: lazy homepage scripts
+
+**Theme setting:** `fibrenet_lazy_home` in **LCP images** group (same options as `fibrenet_lazy_search_page`: `off` | `intent` | `click`, default `off`).
+
+**Scope:** `template.name == 'index'` only. Ignored in theme editor.
+
+**Flag:** `fn_lazy_home_active` — set in `layout/theme.liquid` and `snippets/scripts.liquid`.
+
+**Combined defer flag:** `fn_defer_slideshow_search` is true when `fn_lazy_search_active` **or** `fn_lazy_home_active`. Skips the same head scripts/modulepreloads as lazy search.
+
+**When active, additionally:**
+- `snippets/fibrenet-lazy-home-bootstrap.liquid` + `assets/fibrenet-lazy-home.js` load `slideshow.js` and `predictive-search.js` on search interaction, slideshow controls click, hero intersection (intent), pointer/touch on hero (intent), or `requestIdleCallback` / timeout (~2.5s intent) so autoplay can start after idle.
+- Lazy search modal pattern (shared with content pages when both would never overlap).
+
+**First slide:** `slideshow-slide` already outputs `aria-hidden="false"` on index 0 — hero LCP image renders without slideshow JS.
+
+**Pitfall:** Do not use `loading="lazy"` on hero slides 2+ — off-screen carousel images may never fetch until the slide scrolls into view, so autoplay shows blank backgrounds. All `fibrenet-slide` images use `loading="eager"` (small slide count). Each slide’s `.slide__image-container` also sets a CSS `background-image` (1000px URL) so slides 3+ still show art while `<img>` srcset bytes are in flight. Slides 2+ get `<link rel="preload" fetchpriority="low">` from `fibrenet-slideshow.liquid`. `brand.css` forces `content-visibility: visible` on `.hero-slideshow slideshow-component slideshow-slide.hero-slide`. Block index uses a `section.blocks` loop (not `find_index`) for reliable `aria-hidden` / LCP flags.
+
+**Revert:** set **Homepage script loading** to **Load on page load (Horizon default)**.
+
+**Test:** mobile Lighthouse on `/` with `off` vs `intent`; Network tab should defer `slideshow.js` / `predictive-search.js` until idle or interaction.
+
+## Performance: homepage hero srcset cap
+
+**Theme settings** (LCP images group):
+- `fibrenet_hero_srcset_cap` (checkbox, default **on**) — limit responsive hero widths
+- `fibrenet_hero_srcset_max` (range 1000–1900px, step 100, default **1400**) — shown when cap is on
+
+**Snippets:** `fibrenet-hero-image-widths.liquid`, `fibrenet-hero-image-max.liquid` — filter width ladder `750, 1000, 1200, 1400, 1600, 1920` to max.
+
+**Wired in:** `blocks/fibrenet-slide.liquid` (`image_tag` widths + `image_url` max), `sections/fibrenet-slideshow.liquid` (LCP preload srcset).
+
+**Revert:** disable **Cap hero responsive widths** to restore full 1920px ladder.
 
 ## Performance: search modal equal product columns
 

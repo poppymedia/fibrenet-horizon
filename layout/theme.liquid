@@ -43,6 +43,16 @@
       if settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
         assign fn_lazy_search_active = true
       endif
+
+      assign fn_lazy_home_active = false
+      if settings.fibrenet_lazy_home != 'off' and template.name == 'index' and request.design_mode == false
+        assign fn_lazy_home_active = true
+      endif
+
+      assign fn_lazy_search_modal = false
+      if fn_lazy_search_active or fn_lazy_home_active
+        assign fn_lazy_search_modal = true
+      endif
     -%}
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
     <div id="header-group">
@@ -69,12 +79,19 @@
 
     {% sections 'footer-group' %}
 
-    {% if fn_lazy_search_active %}
+    {% if fn_lazy_search_modal %}
       {% render 'search-modal', lazy: true %}
-      {% render 'fibrenet-lazy-search-bootstrap' %}
+      {% if fn_lazy_search_active %}
+        {% render 'fibrenet-lazy-search-bootstrap' %}
+      {% endif %}
+      {% if fn_lazy_home_active %}
+        {% render 'fibrenet-lazy-home-bootstrap' %}
+      {% endif %}
     {% else %}
       {% render 'search-modal' %}
     {% endif %}
+
+    {% render 'fibrenet-video-background-bootstrap' %}
 
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}

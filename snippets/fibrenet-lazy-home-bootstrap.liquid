@@ -1,0 +1,25 @@
+{%- comment -%}
+  Boots fibrenet-lazy-home.js on the homepage when fibrenet_lazy_home is not "off".
+  Only rendered from layout/theme.liquid when fn_lazy_home_active is true.
+{%- endcomment -%}
+<script>
+  window.FibrenetLazyHome = {
+    mode: {{ settings.fibrenet_lazy_home | json }},
+    warmupDelay: 150,
+    idleDelay: 2500,
+    slideshowSelector: '.hero-slideshow slideshow-component',
+    importUrls: [
+      {{ 'slideshow.js' | asset_url | json }},
+      {{ 'predictive-search.js' | asset_url | json }}
+    ],
+    moduleUrls: [
+      {{ 'slideshow.js' | asset_url | json }},
+      {{ 'predictive-search.js' | asset_url | json }}
+    ]
+  };
+</script>
+<script
+  src="{{ 'fibrenet-lazy-home.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>

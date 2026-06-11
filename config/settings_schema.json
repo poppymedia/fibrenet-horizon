@@ -2357,6 +2357,59 @@
       },
       {
         "type": "header",
+        "content": "t:content.fibrenet_lazy_home"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_lazy_home_help"
+      },
+      {
+        "type": "select",
+        "id": "fibrenet_lazy_home",
+        "label": "t:settings.fibrenet_lazy_home",
+        "options": [
+          {
+            "value": "off",
+            "label": "t:options.fibrenet_lazy_search_off"
+          },
+          {
+            "value": "intent",
+            "label": "t:options.fibrenet_lazy_search_intent"
+          },
+          {
+            "value": "click",
+            "label": "t:options.fibrenet_lazy_search_click"
+          }
+        ],
+        "default": "off"
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_hero_srcset"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_hero_srcset_help"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_hero_srcset_cap",
+        "label": "t:settings.fibrenet_hero_srcset_cap",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "fibrenet_hero_srcset_max",
+        "label": "t:settings.fibrenet_hero_srcset_max",
+        "min": 1000,
+        "max": 1900,
+        "step": 100,
+        "unit": "px",
+        "default": 1400,
+        "visible_if": "{{ settings.fibrenet_hero_srcset_cap }}"
+      },
+      {
+        "type": "header",
         "content": "t:content.fibrenet_lcp_article"
       },
       {

@@ -1,6 +1,12 @@
 {% liquid
   assign block_settings = block.settings
-  assign block_index = section.blocks | find_index: 'id', block.id
+  assign block_index = 0
+  for section_block in section.blocks
+    if section_block.id == block.id
+      assign block_index = forloop.index0
+      break
+    endif
+  endfor
   assign section_index = section.index
   assign use_responsive_image = false
   if section.settings.background_image_style == 'responsive_image'
@@ -8,10 +14,13 @@
   endif
 
   assign bg_image = blank
+  assign slide_bg_url = blank
   if block_settings.image != blank
     assign bg_image = block_settings.image | image_url: width: 1400
+    assign slide_bg_url = block_settings.image | image_url: width: 1000
   elsif block_settings.image_url_fallback != blank
     assign bg_image = block_settings.image_url_fallback
+    assign slide_bg_url = block_settings.image_url_fallback
   endif
 %}
 
@@ -25,27 +34,29 @@
 {% capture children %}
   <div
     class="slide__image-container hero-slide__media{% if use_responsive_image %} hero-slide__media--img{% endif %}"
-    {%- unless use_responsive_image -%}
-      {%- if bg_image != blank -%}
-        style="background-image: url('{{ bg_image | escape }}');"
-      {%- endif -%}
-    {%- endunless -%}
+    {%- if slide_bg_url != blank -%}
+      style="background-image: url('{{ slide_bg_url | escape }}');"
+    {%- elsif use_responsive_image == false and bg_image != blank -%}
+      style="background-image: url('{{ bg_image | escape }}');"
+    {%- endif -%}
   >
     {%- if use_responsive_image -%}
       {%- if block_settings.image != blank -%}
         {%- liquid
           assign height = block_settings.image.width | divided_by: block_settings.image.aspect_ratio | round
           assign sizes = '100vw'
-          assign widths = '750, 1000, 1200, 1400, 1600, 1920'
-          assign loading = 'lazy'
+          assign loading = 'eager'
           assign is_home_lcp_slide = false
 
-          if block_index == 0
-            assign loading = 'eager'
-            if section_index == 1
-              assign is_home_lcp_slide = true
-            endif
+          if block_index == 0 and section_index == 1
+            assign is_home_lcp_slide = true
           endif
+        -%}
+        {%- capture hero_image_widths -%}{%- render 'fibrenet-hero-image-widths' -%}{%- endcapture -%}
+        {%- capture hero_image_max -%}{%- render 'fibrenet-hero-image-max' -%}{%- endcapture -%}
+        {%- liquid
+          assign widths = hero_image_widths | strip
+          assign hero_image_max_width = hero_image_max | strip | plus: 0
         -%}
         {%- capture fetchpriority -%}
           {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
@@ -53,7 +64,7 @@
         {%- assign fetchpriority = fetchpriority | strip -%}
         {{
           block_settings.image
-          | image_url: width: 1920
+          | image_url: width: hero_image_max_width
           | image_tag:
             height: height,
             sizes: sizes,
@@ -65,14 +76,11 @@
         }}
       {%- elsif block_settings.image_url_fallback != blank -%}
         {%- liquid
-          assign loading = 'lazy'
+          assign loading = 'eager'
           assign is_home_lcp_slide = false
 
-          if block_index == 0
-            assign loading = 'eager'
-            if section_index == 1
-              assign is_home_lcp_slide = true
-            endif
+          if block_index == 0 and section_index == 1
+            assign is_home_lcp_slide = true
           endif
         -%}
         {%- capture fetchpriority -%}

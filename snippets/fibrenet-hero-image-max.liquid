@@ -1,0 +1,13 @@
+{%- doc -%}
+  Echoes the maximum hero image width for image_url / image_tag.
+
+  @example
+  {% capture hero_max %}{% render 'fibrenet-hero-image-max' %}{% endcapture %}
+{%- enddoc -%}
+{%- liquid
+  if settings.fibrenet_hero_srcset_cap
+    echo settings.fibrenet_hero_srcset_max | default: 1400
+  else
+    echo 1920
+  endif
+-%}

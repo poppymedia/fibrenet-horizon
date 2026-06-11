@@ -1,0 +1,9 @@
+{%- comment -%}
+  Loads video-background.js only when the page markup includes a video background section.
+  Replaces the global script tag in snippets/scripts.liquid.
+{%- endcomment -%}
+<script type="module">
+  if (document.querySelector('video-background-component')) {
+    import('{{ 'video-background.js' | asset_url }}');
+  }
+</script>

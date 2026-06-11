@@ -1,0 +1,27 @@
+{%- doc -%}
+  Echoes a comma-separated srcset width list for Fibrenet hero slides, respecting theme caps.
+
+  @example
+  {% capture hero_widths %}{% render 'fibrenet-hero-image-widths' %}{% endcapture %}
+{%- enddoc -%}
+{%- liquid
+  assign hero_max = 1920
+  if settings.fibrenet_hero_srcset_cap
+    assign hero_max = settings.fibrenet_hero_srcset_max | default: 1400
+  endif
+
+  assign hero_width_candidates = '750,1000,1200,1400,1600,1920' | split: ','
+  assign hero_widths = ''
+
+  for width_token in hero_width_candidates
+    assign width_value = width_token | strip | plus: 0
+    if settings.fibrenet_hero_srcset_cap == false or width_value <= hero_max
+      if hero_widths != ''
+        assign hero_widths = hero_widths | append: ', '
+      endif
+      assign hero_widths = hero_widths | append: width_value
+    endif
+  endfor
+
+  echo hero_widths
+-%}

@@ -56,14 +56,19 @@
     assign fn_needs_quick_add = true
   endif
 
-  assign fn_needs_video_background = true
-  if template.name == 'page' or template.name == 'article' or template.name == 'blog' or template.name == 'cart' or template.name == 'list-collections' or template.name == 'password'
-    assign fn_needs_video_background = false
-  endif
-
   assign fn_lazy_search_active = false
   if settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
     assign fn_lazy_search_active = true
+  endif
+
+  assign fn_lazy_home_active = false
+  if settings.fibrenet_lazy_home != 'off' and template.name == 'index' and request.design_mode == false
+    assign fn_lazy_home_active = true
+  endif
+
+  assign fn_defer_slideshow_search = false
+  if fn_lazy_search_active or fn_lazy_home_active
+    assign fn_defer_slideshow_search = true
   endif
 -%}
 
@@ -121,7 +126,7 @@
   href="{{ 'component.js' | asset_url }}"
   fetchpriority="low"
 >
-{% unless fn_lazy_search_active %}
+{% unless fn_defer_slideshow_search %}
   <link
     rel="modulepreload"
     href="{{ 'section-renderer.js' | asset_url }}"
@@ -165,7 +170,7 @@
   href="{{ 'focus.js' | asset_url }}"
   fetchpriority="low"
 >
-{% unless fn_lazy_search_active %}
+{% unless fn_defer_slideshow_search %}
   <link
     rel="modulepreload"
     href="{{ 'recently-viewed-products.js' | asset_url }}"
@@ -270,7 +275,7 @@
     fetchpriority="low"
   ></script>
 {% endif %}
-{% unless fn_lazy_search_active %}
+{% unless fn_defer_slideshow_search %}
   <script
     src="{{ 'slideshow.js' | asset_url }}"
     type="module"
@@ -287,13 +292,6 @@
   type="module"
   fetchpriority="low"
 ></script>
-{% if fn_needs_video_background %}
-  <script
-    src="{{ 'video-background.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
 {% if fn_needs_cart_quantity %}
   <script
     src="{{ 'component-quantity-selector.js' | asset_url }}"

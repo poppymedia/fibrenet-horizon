@@ -271,10 +271,18 @@ button.shopify-payment-button__button--unbranded {
   }
 }
 
-/* Keep off-screen hero slides renderable so eager/lazy images load (Horizon defaults to content-visibility: hidden) */
-.hero-slideshow slideshow-slide.hero-slide {
+/* Keep all hero slides renderable so images load before slideshow JS advances (Horizon hides aria-hidden slides) */
+.hero-slideshow slideshow-component slideshow-slide.hero-slide {
   content-visibility: visible;
+  contain-intrinsic-size: auto;
   align-self: stretch;
+}
+
+/* CSS background on container is the fallback when off-screen <img> bytes are still in flight */
+.hero-slideshow .hero-slide__media--img {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 /* Responsive <img> delivery — section height settings must win over intrinsic image dimensions */
