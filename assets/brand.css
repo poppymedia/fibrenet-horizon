@@ -2602,3 +2602,23 @@ shopify-forms-embed#app-embed-container-723526[data-fibrenet-forms-ready] {
 svg.logo g.title path {
   fill:#fff;
 }
+
+/* Predictive search product grids — equal columns when long titles would expand a track (Horizon uses 1fr without minmax(0, …)) */
+.fibrenet-search-grid-equal-columns .predictive-search-results__wrapper-products {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@container (min-width: 550px) {
+  .fibrenet-search-grid-equal-columns .predictive-search-results__wrapper-products {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.fibrenet-search-grid-equal-columns .predictive-search-results__wrapper-products .predictive-search-results__card--product,
+.fibrenet-search-grid-equal-columns .predictive-search-results__wrapper-products .resource-card {
+  min-width: 0;
+}
+
+.fibrenet-search-grid-equal-columns .predictive-search-results__wrapper-products .resource-card__title {
+  overflow-wrap: anywhere;
+}
