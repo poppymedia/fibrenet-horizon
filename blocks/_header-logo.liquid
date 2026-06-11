@@ -1,6 +1,12 @@
 {% liquid
   assign block_settings = block.settings
   assign use_inverse_logo = false
+  assign logo_display = settings.logo_display | default: 'inline_svg'
+  assign use_inline_svg = false
+
+  if logo_display == 'inline_svg'
+    assign use_inline_svg = true
+  endif
 
   if section.settings.enable_transparent_header_home and template.name == 'index' and section.settings.home_color_scheme == 'inverse'
     assign use_inverse_logo = true
@@ -56,7 +62,23 @@
     class="header-logo__image-container header-logo__image-container--original"
     data-testid="header-logo"
   >
-    {% if settings.logo != blank %}
+    {% if use_inline_svg %}
+      <span
+        class="header-logo__image header-logo__image--asset header-logo__svg"
+        style="{{ logo_style }}"
+        role="img"
+        aria-label="{{ shop.name | escape }}"
+        {% if settings.fibrenet_logo_animate %}
+          data-fibrenet-logo-animate
+        {% endif %}
+      >
+        {% if settings.fibrenet_logo_svg_static != blank %}
+          {{ settings.fibrenet_logo_svg_static }}
+        {% else %}
+          {{ 'logo.svg' | inline_asset_content }}
+        {% endif %}
+      </span>
+    {% elsif settings.logo != blank %}
       {% render 'image',
         image: settings.logo,
         class: 'header-logo__image',
@@ -179,8 +201,14 @@
 
 {% javascript %}
   const enableLogoAnimation = () => {
-    document.querySelectorAll('.header-logo__svg').forEach((logo) => {
+    document.querySelectorAll('.header-logo__svg[data-fibrenet-logo-animate]').forEach((logo) => {
       logo.classList.add('header-logo__svg--animated');
+    });
+  };
+
+  const disableLogoAnimation = () => {
+    document.querySelectorAll('.header-logo__svg--animated').forEach((logo) => {
+      logo.classList.remove('header-logo__svg--animated');
     });
   };
 
@@ -196,9 +224,7 @@
 
   reducedMotion.addEventListener('change', (event) => {
     if (event.matches) {
-      document.querySelectorAll('.header-logo__svg--animated').forEach((logo) => {
-        logo.classList.remove('header-logo__svg--animated');
-      });
+      disableLogoAnimation();
     } else if (document.readyState === 'complete') {
       enableLogoAnimation();
     }

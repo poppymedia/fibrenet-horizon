@@ -72,10 +72,19 @@ Contact blocks can be added to product pages through the theme editor:
 **Usage:** Loaded in theme layout
 
 ### Logo
-**File:** `assets/logo.svg`
-**Purpose:** Custom Fibrenet logo (animated droplet mark + wordmark)
-**Usage:** Inlined in `blocks/_header-logo.liquid` via `inline_asset_content` when no theme logo image is set — required so `assets/brand.css` can animate `.drop` groups (`--ax` / `--ay` pivot vars on each group). Do not use `<img src="logo.svg">` for the default logo; external CSS cannot reach SVG internals.
-**Animation:** Pulse keyframes in `brand.css` (`.header-logo__svg--animated .drop.large` / `.small`). Logo renders in static settled pose until `window` `load` adds `.header-logo__svg--animated` (`{% javascript %}` in `_header-logo.liquid`); skipped when `prefers-reduced-motion: reduce` (and removed if preference changes mid-session).
+**Files:** `assets/logo.svg` (dev fallback), `blocks/_header-logo.liquid`, theme settings (Logo and favicon)
+
+**Header display (`logo_display`):** Default `inline_svg`. Header always inlines SVG so `assets/brand.css` can target `.drop` groups (`--ax` / `--ay`). Do not use `<img src="logo.svg">` for the animated mark; external CSS cannot reach SVG internals. Optional `shopify_image` mode uses the theme image picker in the header (legacy Horizon behaviour).
+
+**Schema / social PNG (`logo`):** Kept for JSON-LD Organization logo in `sections/header.liquid` and social previews — not shown in the header when `logo_display` is `inline_svg`.
+
+**Theme settings (inline mode):**
+- `fibrenet_logo_svg_static` — inline header SVG (paste root `<svg class="logo">` with `.drop` groups). Falls back to `assets/logo.svg` when blank.
+- `fibrenet_logo_animate` — defer animation until `window` `load`; static settled pose until then (`:not(.header-logo__svg--animated)` rules in `brand.css`).
+
+**Animation:** Single SVG only — pulse keyframes in `brand.css` (`.header-logo__svg--animated .drop.large` / `.small`). `_header-logo.liquid` adds `.header-logo__svg--animated` on load (no DOM swap). Skipped when `prefers-reduced-motion: reduce`.
+
+**Inverse transparent header:** Still uses `logo_inverse` / `logo` images when set; inline SVG is hidden via existing `--header-logo-display` CSS.
 
 ### Custom Fonts
 **Files:** 

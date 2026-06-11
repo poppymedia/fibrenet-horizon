@@ -830,7 +830,7 @@ button.shopify-payment-button__button--unbranded {
   --header-logo-image-height-mobile: 48px;
 }
 
-/* Animated logo mark (assets/logo.svg — requires inline SVG in _header-logo.liquid) */
+/* Animated logo mark (inline SVG from theme settings or assets/logo.svg — see _header-logo.liquid) */
 .header-logo__svg .drop path {
   fill: var(--brand-accent);
 }
@@ -2597,4 +2597,8 @@ shopify-forms-embed#app-embed-container-723526[data-fibrenet-forms-ready] {
 .product-information--split .product-contact__helper {
   font-size: 0.96em;
   color: inherit;
+}
+
+svg.logo g.title path {
+  fill:#fff;
 }

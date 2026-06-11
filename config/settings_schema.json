@@ -15,15 +15,47 @@
         "content": "t:content.manage_store_name"
       },
       {
+        "type": "select",
+        "id": "logo_display",
+        "label": "t:settings.logo_display",
+        "options": [
+          {
+            "value": "inline_svg",
+            "label": "t:options.logo_display_inline_svg"
+          },
+          {
+            "value": "shopify_image",
+            "label": "t:options.logo_display_shopify_image"
+          }
+        ],
+        "default": "inline_svg"
+      },
+      {
         "type": "image_picker",
         "id": "logo",
-        "label": "t:settings.default_logo"
+        "label": "t:settings.logo_schema_image",
+        "info": "t:info.logo_schema_image"
       },
       {
         "type": "image_picker",
         "id": "logo_inverse",
         "label": "t:settings.inverse_logo",
         "info": "t:content.inverse_logo_info"
+      },
+      {
+        "type": "html",
+        "id": "fibrenet_logo_svg_static",
+        "label": "t:settings.fibrenet_logo_svg_static",
+        "info": "t:info.fibrenet_logo_svg_static",
+        "visible_if": "{{ settings.logo_display == 'inline_svg' }}"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_logo_animate",
+        "label": "t:settings.fibrenet_logo_animate",
+        "info": "t:info.fibrenet_logo_animate",
+        "default": true,
+        "visible_if": "{{ settings.logo_display == 'inline_svg' }}"
       },
       {
         "type": "range",
@@ -34,7 +66,7 @@
         "step": 1,
         "unit": "px",
         "default": 36,
-        "visible_if": "{{ settings.logo != blank or settings.logo_inverse != blank }}",
+        "visible_if": "{{ settings.logo_display == 'inline_svg' or settings.logo != blank or settings.logo_inverse != blank }}",
         "info": "t:info.logo_height"
       },
       {
@@ -46,7 +78,7 @@
         "step": 1,
         "unit": "px",
         "default": 28,
-        "visible_if": "{{ settings.logo != blank or settings.logo_inverse != blank }}",
+        "visible_if": "{{ settings.logo_display == 'inline_svg' or settings.logo != blank or settings.logo_inverse != blank }}",
         "info": "t:info.logo_height"
       },
       {
