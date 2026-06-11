@@ -5,16 +5,19 @@
   @param {string} [search_test_id] - A Playwright test ID for differentiating search components.
   @param {string} [input_id] - The ID for the search input element.
   @param {string} [products_test_id] - A Playwright test ID for differentiating products.
+  @param {boolean} [load_scripts] - When false, omit predictive-search.js (lazy search modal).
 
   @example
   {% render 'predictive-search', search_test_id: 'header-search' %}
 {%- enddoc -%}
 
-<script
-  src="{{ 'predictive-search.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% unless load_scripts == false %}
+  <script
+    src="{{ 'predictive-search.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endunless %}
 
 <predictive-search-component
   class="predictive-search color-{{ settings.popover_color_scheme }}{% if class != blank %} {{ class | strip }}{% endif %}"

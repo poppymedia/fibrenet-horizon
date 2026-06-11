@@ -60,6 +60,11 @@
   if template.name == 'page' or template.name == 'article' or template.name == 'blog' or template.name == 'cart' or template.name == 'list-collections' or template.name == 'password'
     assign fn_needs_video_background = false
   endif
+
+  assign fn_lazy_search_active = false
+  if settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
+    assign fn_lazy_search_active = true
+  endif
 -%}
 
 <script type="importmap">
@@ -116,21 +121,23 @@
   href="{{ 'component.js' | asset_url }}"
   fetchpriority="low"
 >
-<link
-  rel="modulepreload"
-  href="{{ 'section-renderer.js' | asset_url }}"
-  fetchpriority="low"
->
-<link
-  rel="modulepreload"
-  href="{{ 'section-hydration.js' | asset_url }}"
-  fetchpriority="low"
->
-<link
-  rel="modulepreload"
-  href="{{ 'morph.js' | asset_url }}"
-  fetchpriority="low"
->
+{% unless fn_lazy_search_active %}
+  <link
+    rel="modulepreload"
+    href="{{ 'section-renderer.js' | asset_url }}"
+    fetchpriority="low"
+  >
+  <link
+    rel="modulepreload"
+    href="{{ 'section-hydration.js' | asset_url }}"
+    fetchpriority="low"
+  >
+  <link
+    rel="modulepreload"
+    href="{{ 'morph.js' | asset_url }}"
+    fetchpriority="low"
+  >
+{% endunless %}
 
 {% if fn_needs_paginated_list %}
   <link
@@ -158,16 +165,18 @@
   href="{{ 'focus.js' | asset_url }}"
   fetchpriority="low"
 >
-<link
-  rel="modulepreload"
-  href="{{ 'recently-viewed-products.js' | asset_url }}"
-  fetchpriority="low"
->
-<link
-  rel="modulepreload"
-  href="{{ 'scrolling.js' | asset_url }}"
-  fetchpriority="low"
->
+{% unless fn_lazy_search_active %}
+  <link
+    rel="modulepreload"
+    href="{{ 'recently-viewed-products.js' | asset_url }}"
+    fetchpriority="low"
+  >
+  <link
+    rel="modulepreload"
+    href="{{ 'scrolling.js' | asset_url }}"
+    fetchpriority="low"
+  >
+{% endunless %}
 <link
   rel="modulepreload"
   href="{{ 'events.js' | asset_url }}"
@@ -261,11 +270,13 @@
     fetchpriority="low"
   ></script>
 {% endif %}
-<script
-  src="{{ 'slideshow.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% unless fn_lazy_search_active %}
+  <script
+    src="{{ 'slideshow.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endunless %}
 <script
   src="{{ 'anchored-popover.js' | asset_url }}"
   type="module"

@@ -1,0 +1,23 @@
+{%- comment -%}
+  Boots fibrenet-lazy-search.js on content pages when fibrenet_lazy_search_page is not "off".
+  Only rendered from layout/theme.liquid when fn_lazy_search_active is true.
+{%- endcomment -%}
+<script>
+  window.FibrenetLazySearch = {
+    mode: {{ settings.fibrenet_lazy_search_page | json }},
+    warmupDelay: 150,
+    importUrls: [
+      {{ 'slideshow.js' | asset_url | json }},
+      {{ 'predictive-search.js' | asset_url | json }}
+    ],
+    moduleUrls: [
+      {{ 'slideshow.js' | asset_url | json }},
+      {{ 'predictive-search.js' | asset_url | json }}
+    ]
+  };
+</script>
+<script
+  src="{{ 'fibrenet-lazy-search.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>

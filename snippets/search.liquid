@@ -8,10 +8,22 @@
   {% render 'search', style: 'default', class: 'custom-class' %}
 {%- enddoc -%}
 
+{%- liquid
+  assign search_lazy_active = fn_lazy_search_active | default: false
+  if search_lazy_active == false and settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
+    assign search_lazy_active = true
+  endif
+-%}
+
 {% unless style == 'none' %}
   <search-button class="search-action{% if class != blank %} {{ class | strip }}{% endif %}">
     <button
-      on:click="#search-modal/showDialog"
+      {% if search_lazy_active %}
+        type="button"
+        data-fibrenet-lazy-search
+      {% else %}
+        on:click="#search-modal/showDialog"
+      {% endif %}
       class="button button-unstyled search-modal__button header-actions__action"
       aria-label="{{ 'content.search_input_label' | t }}"
       aria-haspopup="dialog"

@@ -2418,6 +2418,48 @@
         "id": "fibrenet_lcp_fetchpriority_collection",
         "label": "t:settings.fibrenet_lcp_fetchpriority",
         "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_lazy_search_page"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_lazy_search_page_help"
+      },
+      {
+        "type": "select",
+        "id": "fibrenet_lazy_search_page",
+        "label": "t:settings.fibrenet_lazy_search_page",
+        "options": [
+          {
+            "value": "off",
+            "label": "t:options.fibrenet_lazy_search_off"
+          },
+          {
+            "value": "intent",
+            "label": "t:options.fibrenet_lazy_search_intent"
+          },
+          {
+            "value": "click",
+            "label": "t:options.fibrenet_lazy_search_click"
+          }
+        ],
+        "default": "off"
+      },
+      {
+        "type": "header",
+        "content": "t:content.fibrenet_search_grid_equal_columns"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_search_grid_equal_columns_help"
+      },
+      {
+        "type": "checkbox",
+        "id": "fibrenet_search_grid_equal_columns",
+        "label": "t:settings.fibrenet_search_grid_equal_columns",
+        "default": true
       }
     ]
   },

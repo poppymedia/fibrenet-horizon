@@ -339,11 +339,51 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 | `fn_needs_cart_quantity` | cart, product → `component-quantity-selector.js` |
 | `fn_needs_video_background` | false on page, article, blog, cart, list-collections, password |
 
-**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.).
+**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.) — unless lazy search is active on content pages (see below).
 
 **Product-only:** `product-title-split.js`, `product-stock-status.js`, `gift-card-recipient-form.js`, `RecentlyViewed.addProduct` inline script.
 
 **Upgrade merge:** preserve the `fn_*` liquid block and re-apply guards to any new `<script>` tags Horizon adds upstream.
+
+## Performance: lazy search on content pages
+
+**Theme setting:** `fibrenet_lazy_search_page` in **LCP images** group (`config/settings_schema.json`)
+
+| Value | Behaviour |
+|-------|-----------|
+| `off` (default) | Horizon default — search modal and scripts on page load |
+| `intent` | Defer search until interaction; preload `slideshow.js` + `predictive-search.js` on hover, touch, or focus |
+| `click` | Defer until search button click (no intent preload) |
+
+**Scope:** `template.name == 'page'` only. Ignored in theme editor (`request.design_mode`).
+
+**Flag:** `fn_lazy_search_active` — set in `layout/theme.liquid` (body) and `snippets/scripts.liquid` (head).
+
+**When active, skipped on initial load:**
+- `slideshow.js`
+- Modulepreloads: `section-renderer`, `section-hydration`, `morph`, `recently-viewed-products`, `scrolling`
+- Live search modal DOM (stored in `<template id="fibrenet-search-modal-template">`)
+
+**Files:**
+- `assets/fibrenet-lazy-search.js` — intent warmup + click open
+- `snippets/fibrenet-lazy-search-bootstrap.liquid` — config + loader script
+- `snippets/search-modal.liquid` — `lazy: true` param
+- `snippets/predictive-search.liquid` — `load_scripts: false` when lazy
+- `snippets/search.liquid` — `data-fibrenet-lazy-search` button when active
+
+**Revert:** set theme setting to **Load on page load (Horizon default)** — no code change required.
+
+**Test:** mobile Lighthouse on `/pages/meet-fibrenet` with `off` vs `intent`; Network tab should not request `predictive-search.js` / `slideshow.js` until interaction.
+
+## Performance: search modal equal product columns
+
+**Theme setting:** `fibrenet_search_grid_equal_columns` (checkbox, default **on**) in **LCP images** group.
+
+**Problem:** Horizon `.predictive-search-results__wrapper-products` uses `repeat(4, 1fr)`; long product titles inflate a column’s min-content size so one card (e.g. recently viewed) appears wider than its neighbours.
+
+**Fix when enabled:** `layout/theme.liquid` adds body class `fibrenet-search-grid-equal-columns`; `assets/brand.css` applies `minmax(0, 1fr)`, `min-width: 0` on cards, and `overflow-wrap: anywhere` on titles.
+
+**Revert:** uncheck **Equal-width product columns** in theme settings — body class omitted, Horizon grid behaviour returns.
 
 ## Maintenance Notes
 

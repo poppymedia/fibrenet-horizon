@@ -1,7 +1,22 @@
-<script
-  src="{{ 'dialog.js' | asset_url }}"
-  type="module"
-></script>
+{%- liquid
+  assign search_modal_lazy = lazy | default: false
+  assign search_load_scripts = true
+  if search_modal_lazy
+    assign search_load_scripts = false
+  endif
+-%}
+
+{% unless search_modal_lazy %}
+  <script
+    src="{{ 'dialog.js' | asset_url }}"
+    type="module"
+  ></script>
+{% endunless %}
+
+{% if search_modal_lazy %}
+  <div id="fibrenet-search-modal-mount"></div>
+  <template id="fibrenet-search-modal-template">
+{% endif %}
 
 <dialog-component
   id="search-modal"
@@ -25,10 +40,15 @@
     {% render 'predictive-search',
       input_id: 'cmdk-input',
       search_test_id: 'search-component--modal',
-      products_test_id: 'products-list-default--modal'
+      products_test_id: 'products-list-default--modal',
+      load_scripts: search_load_scripts
     %}
   </dialog>
 </dialog-component>
+
+{% if search_modal_lazy %}
+  </template>
+{% endif %}
 
 {% stylesheet %}
   /* Search modal style */

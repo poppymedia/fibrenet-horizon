@@ -37,7 +37,13 @@
     {{ content_for_header }}
   </head>
 
-  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} template-{{ template.name }}">
+  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} template-{{ template.name }}{% if settings.fibrenet_search_grid_equal_columns %} fibrenet-search-grid-equal-columns{% endif %}">
+    {%- liquid
+      assign fn_lazy_search_active = false
+      if settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
+        assign fn_lazy_search_active = true
+      endif
+    -%}
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
     <div id="header-group">
       {% sections 'header-group' %}
@@ -63,7 +69,12 @@
 
     {% sections 'footer-group' %}
 
-    {% render 'search-modal' %}
+    {% if fn_lazy_search_active %}
+      {% render 'search-modal', lazy: true %}
+      {% render 'fibrenet-lazy-search-bootstrap' %}
+    {% else %}
+      {% render 'search-modal' %}
+    {% endif %}
 
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}

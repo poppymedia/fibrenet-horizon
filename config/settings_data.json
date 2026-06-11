@@ -425,7 +425,9 @@
     "fibrenet_lcp_preload_product": true,
     "fibrenet_lcp_fetchpriority_product": true,
     "fibrenet_lcp_preload_collection": true,
-    "fibrenet_lcp_fetchpriority_collection": true
+    "fibrenet_lcp_fetchpriority_collection": true,
+    "fibrenet_lazy_search_page": "off",
+    "fibrenet_search_grid_equal_columns": true
   },
   "presets": {
     "Default": {
