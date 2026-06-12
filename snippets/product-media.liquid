@@ -5,7 +5,7 @@
   @param {boolean} [preview_image_only] - Renders only the preview image without controls.
   @param {string} [widths] - Image widths for responsive images.
   @param {string} [sizes] - Image sizes for responsive images.
-  @param {string} [loading] - The loading attribute for the image.
+  @param {string} [loading] - The loading attribute for the image. Defaults to eager for the main image on product pages, lazy otherwise.
   @param {object} [block] - The block object.
   @param {object} [section] - The section object.
   @param {object} [selected_product] - The currently selected product.
@@ -36,6 +36,19 @@
       endif
     endif
     assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
+
+    if loading == blank
+      if is_main_product_media and template.name == 'product'
+        assign loading = 'eager'
+      else
+        assign loading = 'lazy'
+      endif
+    endif
+
+    assign product_http_preload = false
+    if loading == 'eager' and is_main_product_media and template.name == 'product' and settings.fibrenet_lcp_preload_product
+      assign product_http_preload = true
+    endif
   %}
   {% capture fetch_priority %}
     {% if lcp_context != blank %}
@@ -57,6 +70,7 @@
       transitionToProduct: settings.transition_to_main_product,
       data_max_resolution: high_res_url,
       fetchpriority: fetch_priority,
+      preload: product_http_preload,
       style: focal_point_style
   }}
 

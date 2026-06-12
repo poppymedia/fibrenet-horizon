@@ -315,13 +315,13 @@ Horizon ships `<link rel="expect" href="#MainContent" blocking="render">` so cro
 **Theme settings group:** `LCP images` (`config/settings_schema.json`)
 
 Per-template toggles (default on):
-- `fibrenet_lcp_preload_{home|article|blog|product|collection}` — home: `image_tag: preload: true` on first slide (HTTP `Link` header); other templates: `<link rel="preload">` in `<head>`
+- `fibrenet_lcp_preload_{home|article|blog|product|collection}` — home + product: `image_tag: preload: true` (HTTP `Link` header); article/blog/collection: `<link rel="preload">` in `<head>`
 - `fibrenet_lcp_fetchpriority_{…}` — `fetchpriority="high"` on the LCP `<img>`
 
 **Snippets:**
 - `snippets/fibrenet-lcp-preload.liquid` — responsive preload link (checks `settings[fibrenet_lcp_preload_*]`)
 - `snippets/fibrenet-lcp-fetchpriority.liquid` — returns `high` or `auto` (checks `settings[fibrenet_lcp_fetchpriority_*]`)
-- `snippets/fibrenet-lcp-head-preloads.liquid` — rendered from `layout/theme.liquid` for product, article, blog, collection
+- `snippets/fibrenet-lcp-head-preloads.liquid` — rendered from `layout/theme.liquid` for article, blog, collection (not product — see `product-media`)
 
 **Wired instances:**
 | Context | Preload | Fetch priority on |
@@ -329,12 +329,14 @@ Per-template toggles (default on):
 | Home | `image_tag: preload: true` on first slide (Shopify HTTP header); HTML `<link>` only for URL-fallback slides | First slideshow slide (`fibrenet-slide`); `hero.liquid` when `section.index == 1` |
 | Article | Head + `main-blog-post` hero | Knowledge-centre hero; `_blog-post-featured-image` |
 | Blog | Head (`blog.articles.first.image`) | First card only (`_blog-post-image`; others lazy) |
-| Product | Head (`product.featured_media`) | Main gallery image (`product-media` + `is_main_product_media`) |
+| Product | `image_tag: preload: true` on first visible gallery image (HTTP header); no duplicate `<head>` preload | Main gallery image only (`product-media` + `is_main_product_media` + `loading: eager`) |
 | Collection | Head (featured image or first product) | First product card image (`card-gallery`); `_collection-image` block |
 
-**Note:** Home hero uses Shopify’s `image_tag: preload: true` (earliest preload via response `Link` header — check Network → document → Response Headers, not `<head>`). Do **not** duplicate with section-level `<link rel=preload>` for the same Shopify image. Other templates preload in `<head>` via `fibrenet-lcp-head-preloads`.
+**Note:** Home hero and product main gallery use Shopify’s `image_tag: preload: true` (earliest preload via response `Link` header — check Network → document → Response Headers, not `<head>`). Do **not** duplicate with `<link rel=preload>` for the same Shopify image. Article/blog/collection still preload in `<head>` via `fibrenet-lcp-head-preloads`.
 
 **Home hero LCP:** When **Background image delivery** is `responsive_image`, slide 1 (`block_index == 0`) has no CSS `background-image` — only the `<img>` is the LCP source. Slides 2+ keep CSS background fallback for blank-slide safety. Slides 2–4 do not get `<link rel=preload fetchpriority=low>`.
+
+**Product gallery LCP:** First image in carousel/grid uses `loading: eager` + HTTP preload when `fibrenet_lcp_preload_product` is on. Gallery slides/images 2+ use `loading: lazy`. Zoom dialog images always lazy with `is_main_product_media: false` so they never trigger HTTP preload. Preload targets the variant-sorted first media (not `product.featured_media` in `<head>`), matching what visitors see.
 
 ## Performance: conditional script loading
 
