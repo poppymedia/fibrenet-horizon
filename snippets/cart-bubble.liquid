@@ -6,9 +6,33 @@
   count will be displayed as "99+".
 {%- enddoc -%}
 
+{%- liquid
+  assign cart_bubble_scheme_id = settings.fibrenet_cart_bubble_color_scheme | default: 'scheme-1'
+  if cart_bubble_scheme_id.id != blank
+    assign cart_bubble_scheme_id = cart_bubble_scheme_id.id
+  endif
+
+  assign cart_bubble_bg = blank
+  assign cart_bubble_text = blank
+
+  for scheme in settings.color_schemes
+    if scheme.id == cart_bubble_scheme_id
+      assign cart_bubble_bg = scheme.settings.primary_button_background
+      assign cart_bubble_text = scheme.settings.primary_button_text
+      break
+    endif
+  endfor
+-%}
+
 <div
   ref="cartBubble"
-  class="cart-bubble{% if cart == empty %} visually-hidden{% endif %}"
+  class="cart-bubble cart-bubble-scheme--{{ cart_bubble_scheme_id }}{% if cart == empty %} visually-hidden{% endif %}"
+  {% if cart_bubble_bg != blank and cart_bubble_text != blank %}
+    style="
+      --color-cart-bubble-background: rgb({{ cart_bubble_bg.rgba }});
+      --color-cart-bubble-text: rgb({{ cart_bubble_text.rgba }});
+    "
+  {% endif %}
   {% assign item_count = cart.item_count %}
   {% if item_count <= 99 %}
     data-maintain-ratio

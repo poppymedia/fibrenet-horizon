@@ -117,6 +117,17 @@
     {% endif %}
   {% endfor %}
 
+  {%- comment -%}
+    Fibrenet: cart bubble uses its own scheme (see cart-bubble.liquid) so the badge stays visible
+    when the header background matches the header colour scheme’s primary button fill.
+  {%- endcomment -%}
+  {% for scheme in settings.color_schemes -%}
+    .cart-bubble-scheme--{{ scheme.id }} {
+      --color-cart-bubble-background: rgb({{ scheme.settings.primary_button_background.rgba }});
+      --color-cart-bubble-text: rgb({{ scheme.settings.primary_button_text.rgba }});
+    }
+  {% endfor %}
+
   {{ scheme_classes | prepend: 'body' }} {
     color: var(--color-foreground);
     background-color: var(--color-background);

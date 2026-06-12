@@ -81,6 +81,7 @@
     "fibrenet_hero_srcset_help": "Limits responsive hero srcset widths to reduce decode cost on mobile. Disable to use Horizon’s full width ladder (up to 1920px).",
     "fibrenet_search_grid_equal_columns": "Search modal product grid",
     "fibrenet_search_grid_equal_columns_help": "Keeps recently viewed and product suggestion columns equal width when a product title is very long. Disable to restore Horizon default grid sizing.",
+    "fibrenet_cart_bubble": "Cart count badge in the header cart icon. Uses the selected colour scheme’s primary button fill and text so it stays visible when the header background matches that scheme’s button colour.",
     "follow_on_shop_eligiblity": "For the button to show, the Shop channel must be installed and Shop Pay activated. [Learn more](https://help.shopify.com/en/manual/online-store/themes/customizing-themes/add-shop-buttons)",
     "gift_card_form_description": "Customers can send gift cards to a recipient's email with a personal message. [Learn more](https://help.shopify.com/manual/products/gift-card-products)",
     "fonts": "Fonts",
@@ -333,6 +334,7 @@
     "local_pickup": "Local pickup",
     "logo": "Logo",
     "fibrenet_lcp_images": "LCP images",
+    "fibrenet_cart_bubble": "Cart bubble",
     "logo_and_favicon": "Logo and favicon",
     "magazine_grid": "Magazine grid",
     // Scrolling text/content component with horizontal animation
@@ -938,6 +940,7 @@
     "fibrenet_hero_srcset_cap": "Cap hero responsive widths",
     "fibrenet_hero_srcset_max": "Maximum hero image width",
     "fibrenet_search_grid_equal_columns": "Equal-width product columns",
+    "fibrenet_cart_bubble_color_scheme": "Colour scheme",
     "fibrenet_lcp_preload": "Preload in page head",
     "fibrenet_logo_animate": "Animate logo on load",
     "fibrenet_logo_svg_static": "Logo SVG",

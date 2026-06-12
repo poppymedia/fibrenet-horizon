@@ -2546,5 +2546,20 @@
         "default": "scheme-5"
       }
     ]
+  },
+  {
+    "name": "t:names.fibrenet_cart_bubble",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_cart_bubble"
+      },
+      {
+        "type": "color_scheme",
+        "id": "fibrenet_cart_bubble_color_scheme",
+        "label": "t:settings.fibrenet_cart_bubble_color_scheme",
+        "default": "scheme-1"
+      }
+    ]
   }
 ]
