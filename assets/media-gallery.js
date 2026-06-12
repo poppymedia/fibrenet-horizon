@@ -38,15 +38,62 @@ export class MediaGallery extends Component {
    * @param {VariantUpdateEvent} event - The variant update event.
    */
   #handleVariantUpdate = (event) => {
+    if (!(event instanceof VariantUpdateEvent)) return;
+
     const source = event.detail.data.html;
-
     if (!source) return;
-    const newMediaGallery = source.querySelector('media-gallery');
 
+    const variant = event.detail.resource;
+    const sectionMorphed = event.detail.data.sectionMorphed === true;
+
+    if (sectionMorphed) {
+      this.selectVariantSlide(variant);
+      return;
+    }
+
+    const newMediaGallery = source.querySelector('media-gallery');
     if (!newMediaGallery) return;
 
     this.replaceWith(newMediaGallery);
+
+    if (newMediaGallery instanceof MediaGallery) {
+      newMediaGallery.selectVariantSlide(variant);
+    }
   };
+
+  /**
+   * Shows the slide for the selected variant's featured media (or slide 0).
+   *
+   * @param {VariantUpdateEvent['detail']['resource']} variant
+   */
+  selectVariantSlide(variant) {
+    requestAnimationFrame(() => {
+      const { slideshow } = this.refs;
+      if (!slideshow) return;
+
+      const featuredMediaId = variant?.featured_media?.id;
+      if (featuredMediaId != null) {
+        const slideId = String(featuredMediaId);
+        const slides = slideshow.refs.slides ?? [];
+        const hasSlideId = slides.some((slide) => slide.getAttribute('slide-id') === slideId);
+
+        if (hasSlideId) {
+          slideshow.select({ id: slideId }, undefined, { animate: false });
+          return;
+        }
+
+        const index = slides.findIndex(
+          (slide) => slide.querySelector(`[data-media-id="${featuredMediaId}"]`) != null
+        );
+        if (index >= 0) {
+          slideshow.select(index, undefined, { animate: false });
+          return;
+        }
+      }
+
+      slideshow.select(0, undefined, { animate: false });
+    });
+  }
 
   /**
    * Handles the 'zoom-media:selected' event.

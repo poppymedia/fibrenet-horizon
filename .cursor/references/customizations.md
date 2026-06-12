@@ -336,7 +336,9 @@ Per-template toggles (default on):
 
 **Home hero LCP:** When **Background image delivery** is `responsive_image`, slide 1 (`block_index == 0`) has no CSS `background-image` — only the `<img>` is the LCP source. Slides 2+ keep CSS background fallback for blank-slide safety. Slides 2–4 do not get `<link rel=preload fetchpriority=low>`.
 
-**Product gallery LCP:** First image in carousel/grid uses `loading: eager` + HTTP preload when `fibrenet_lcp_preload_product` is on. Gallery slides/images 2+ use `loading: lazy`. Zoom dialog images always lazy with `is_main_product_media: false` so they never trigger HTTP preload. Preload targets the variant-sorted first media (not `product.featured_media` in `<head>`), matching what visitors see.
+**Product gallery LCP:** First image in carousel/grid uses `loading: eager` + HTTP preload when `fibrenet_lcp_preload_product` is on (full page load only — not Section Rendering API requests). **All carousel/grid slides use `loading: eager`** (small slide count; lazy + Horizon `content-visibility: hidden` on off-screen slides prevented variant images from loading). Zoom dialog images stay lazy. `slide-id="{{ media.id }}"` on carousel slides for variant media selection. Preload targets the variant-sorted first media (not `product.featured_media` in `<head>`), matching what visitors see.
+
+**Product variant updates (split layout):** `product-information--split` morphs the full section via Section Rendering API. `variant:update` must dispatch on the **live** `.shopify-section` after morph (not the pre-morph picker instance — otherwise `product-form` never re-enables Add to cart). `media-gallery` skips `replaceWith` when `sectionMorphed: true` (section morph already updated the gallery) and calls `selectVariantSlide()` for the variant's `featured_media`.
 
 ## Performance: conditional script loading
 

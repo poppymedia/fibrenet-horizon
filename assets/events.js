@@ -68,6 +68,7 @@ export class VariantUpdateEvent extends Event {
    * @param {Object} [data.newProduct] - If a new product was loaded as part of the variant update (combined listing)
    * @param {string} data.newProduct.id - The id of the new product
    * @param {string} data.newProduct.url - The url of the new product
+   * @param {boolean} [data.sectionMorphed] - True when product-information was morphed via Section Rendering API
    */
   constructor(resource, sourceId, data) {
     super(ThemeEvents.variantUpdate, { bubbles: true });
@@ -78,6 +79,7 @@ export class VariantUpdateEvent extends Event {
         html: data.html,
         productId: data.productId,
         newProduct: data.newProduct,
+        sectionMorphed: data.sectionMorphed,
       },
     };
   }

@@ -278,6 +278,12 @@ button.shopify-payment-button__button--unbranded {
   align-self: stretch;
 }
 
+/* Product gallery carousel — same as hero: lazy + content-visibility:hidden breaks off-screen slides */
+.media-gallery--carousel slideshow-component slideshow-slide {
+  content-visibility: visible;
+  contain-intrinsic-size: auto;
+}
+
 /* CSS background on container is the fallback when off-screen <img> bytes are still in flight */
 .hero-slideshow .hero-slide__media--img {
   background-size: cover;

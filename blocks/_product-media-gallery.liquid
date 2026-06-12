@@ -299,11 +299,7 @@
             else
               assign media_sizes = sizes
             endif
-            if forloop.first
-              assign media_loading = 'eager'
-            else
-              assign media_loading = 'lazy'
-            endif
+            assign media_loading = 'eager'
         -%}
         {% if block_settings.aspect_ratio != 'adapt' and block_settings.constrain_to_viewport %}
           <div class="product-media-constraint-wrapper">
@@ -339,6 +335,7 @@
 
       {% render 'slideshow-slide',
         index: forloop.index0,
+        slide_id: media.id,
         children: children,
         class: class,
         style: style,
@@ -420,11 +417,7 @@
             else
               assign media_sizes = sizes
             endif
-            if forloop.first
-              assign media_loading = 'eager'
-            else
-              assign media_loading = 'lazy'
-            endif
+            assign media_loading = 'eager'
           -%}
           {% if block_settings.aspect_ratio != 'adapt' and block_settings.constrain_to_viewport %}
             <div class="product-media-constraint-wrapper">

@@ -47,7 +47,9 @@
 
     assign product_http_preload = false
     if loading == 'eager' and is_main_product_media and template.name == 'product' and settings.fibrenet_lcp_preload_product
-      assign product_http_preload = true
+      if request.params.section_id == blank
+        assign product_http_preload = true
+      endif
     endif
   %}
   {% capture fetch_priority %}

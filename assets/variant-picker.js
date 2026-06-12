@@ -1,7 +1,7 @@
 import { Component } from '@theme/component';
 import { VariantSelectedEvent, VariantUpdateEvent } from '@theme/events';
 import { morph } from '@theme/morph';
-import { normalizeSectionId, sectionRenderer } from '@theme/section-renderer';
+import { buildSectionSelector, normalizeSectionId, sectionRenderer } from '@theme/section-renderer';
 import { requestYieldCallback } from '@theme/utilities';
 
 /**
@@ -252,23 +252,48 @@ export default class VariantPicker extends Component {
     const html = new DOMParser().parseFromString(sectionHTML, 'text/html');
     html.querySelector('overflow-list[defer]')?.removeAttribute('defer');
 
+    const productId = this.dataset.productId ?? '';
+    const sectionId = this.dataset.sectionId ?? '';
+
     const picker =
       html.querySelector(
-        `variant-picker[data-product-id="${this.dataset.productId}"][data-section-id="${this.dataset.sectionId}"]`
-      ) || html.querySelector(`variant-picker[data-product-id="${this.dataset.productId}"]`);
+        `variant-picker[data-product-id="${productId}"][data-section-id="${sectionId}"]`
+      ) || html.querySelector(`variant-picker[data-product-id="${productId}"]`);
 
     const textContent = picker?.querySelector('script[type="application/json"]')?.textContent;
     if (!textContent) return;
 
     const variantData = JSON.parse(textContent);
-    const sourceId = this.selectedOptionId ?? String(variantData.id ?? '');
 
-    this.dispatchEvent(
-      new VariantUpdateEvent(variantData, sourceId, {
-        html,
-        productId: this.dataset.productId ?? '',
-      })
-    );
+    const livePicker =
+      document.querySelector(
+        `variant-picker[data-product-id="${productId}"][data-section-id="${sectionId}"]`
+      ) || document.querySelector(`variant-picker[data-product-id="${productId}"]`);
+
+    let sourceId = String(variantData.id ?? '');
+    try {
+      sourceId = livePicker?.selectedOptionId ?? this.selectedOptionId ?? sourceId;
+    } catch {
+      // Picker may be mid-morph; fall back to variant id from section HTML.
+    }
+
+    const event = new VariantUpdateEvent(variantData, sourceId, {
+      html,
+      productId,
+      sectionMorphed: true,
+    });
+
+    const sectionEl =
+      livePicker?.closest('.shopify-section') ??
+      (sectionId ? document.getElementById(buildSectionSelector(sectionId)) : null);
+
+    if (sectionEl) {
+      sectionEl.dispatchEvent(event);
+    } else if (livePicker) {
+      livePicker.dispatchEvent(event);
+    } else {
+      document.dispatchEvent(event);
+    }
   }
 
   /**
