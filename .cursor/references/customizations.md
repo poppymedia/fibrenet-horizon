@@ -315,7 +315,7 @@ Horizon ships `<link rel="expect" href="#MainContent" blocking="render">` so cro
 **Theme settings group:** `LCP images` (`config/settings_schema.json`)
 
 Per-template toggles (default on):
-- `fibrenet_lcp_preload_{home|article|blog|product|collection}` — `<link rel="preload" as="image">` in `<head>` (or section for home slideshow)
+- `fibrenet_lcp_preload_{home|article|blog|product|collection}` — home: `image_tag: preload: true` on first slide (HTTP `Link` header); other templates: `<link rel="preload">` in `<head>`
 - `fibrenet_lcp_fetchpriority_{…}` — `fetchpriority="high"` on the LCP `<img>`
 
 **Snippets:**
@@ -326,13 +326,15 @@ Per-template toggles (default on):
 **Wired instances:**
 | Context | Preload | Fetch priority on |
 |---------|---------|-------------------|
-| Home | `fibrenet-slideshow` first slide; head N/A | First slideshow slide (`fibrenet-slide`, `_slide`); `hero.liquid` when `section.index == 1` |
+| Home | `image_tag: preload: true` on first slide (Shopify HTTP header); HTML `<link>` only for URL-fallback slides | First slideshow slide (`fibrenet-slide`); `hero.liquid` when `section.index == 1` |
 | Article | Head + `main-blog-post` hero | Knowledge-centre hero; `_blog-post-featured-image` |
 | Blog | Head (`blog.articles.first.image`) | First card only (`_blog-post-image`; others lazy) |
 | Product | Head (`product.featured_media`) | Main gallery image (`product-media` + `is_main_product_media`) |
 | Collection | Head (featured image or first product) | First product card image (`card-gallery`); `_collection-image` block |
 
-**Note:** Home slideshow preloads stay in the section (first section on index); other templates preload in `<head>` via `fibrenet-lcp-head-preloads`.
+**Note:** Home hero uses Shopify’s `image_tag: preload: true` (earliest preload via response `Link` header — check Network → document → Response Headers, not `<head>`). Do **not** duplicate with section-level `<link rel=preload>` for the same Shopify image. Other templates preload in `<head>` via `fibrenet-lcp-head-preloads`.
+
+**Home hero LCP:** When **Background image delivery** is `responsive_image`, slide 1 (`block_index == 0`) has no CSS `background-image` — only the `<img>` is the LCP source. Slides 2+ keep CSS background fallback for blank-slide safety. Slides 2–4 do not get `<link rel=preload fetchpriority=low>`.
 
 ## Performance: conditional script loading
 
@@ -405,7 +407,9 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 
 **First slide:** `slideshow-slide` already outputs `aria-hidden="false"` on index 0 — hero LCP image renders without slideshow JS.
 
-**Pitfall:** Do not use `loading="lazy"` on hero slides 2+ — off-screen carousel images may never fetch until the slide scrolls into view, so autoplay shows blank backgrounds. All `fibrenet-slide` images use `loading="eager"` (small slide count). Each slide’s `.slide__image-container` also sets a CSS `background-image` (1000px URL) so slides 3+ still show art while `<img>` srcset bytes are in flight. Slides 2+ get `<link rel="preload" fetchpriority="low">` from `fibrenet-slideshow.liquid`. `brand.css` forces `content-visibility: visible` on `.hero-slideshow slideshow-component slideshow-slide.hero-slide`. Block index uses a `section.blocks` loop (not `find_index`) for reliable `aria-hidden` / LCP flags.
+**Pitfall:** Do not use `loading="lazy"` on hero slides 2+ — off-screen carousel images may never fetch until the slide scrolls into view, so autoplay shows blank backgrounds. All `fibrenet-slide` images use `loading="eager"` (small slide count). Slides 2+ get CSS `background-image` (1000px URL) only — not slide 1 when `responsive_image`. `brand.css` forces `content-visibility: visible` on `.hero-slideshow slideshow-component slideshow-slide.hero-slide`. Block index uses a `section.blocks` loop (not `find_index`) for reliable `aria-hidden` / LCP flags.
+
+**Enable lazy home:** Theme editor → **Theme settings** → **LCP images** → **Homepage script loading** → **Intent** (or set `"fibrenet_lazy_home": "intent"` in `config/settings_data.json` under `current`). Wired via `fn_lazy_home_active` in `layout/theme.liquid` and `snippets/scripts.liquid` (`fn_defer_slideshow_search`).
 
 **Revert:** set **Homepage script loading** to **Load on page load (Horizon default)**.
 

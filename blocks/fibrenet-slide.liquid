@@ -31,10 +31,26 @@
   endif
 %}
 
+{% liquid
+  assign is_home_lcp_slide = false
+  if block_index == 0 and section_index == 1
+    assign is_home_lcp_slide = true
+  endif
+%}
+
+{% liquid
+  assign show_slide_bg = false
+  if slide_bg_url != blank
+    if use_responsive_image == false or block_index > 0
+      assign show_slide_bg = true
+    endif
+  endif
+%}
+
 {% capture children %}
   <div
     class="slide__image-container hero-slide__media{% if use_responsive_image %} hero-slide__media--img{% endif %}"
-    {%- if slide_bg_url != blank -%}
+    {%- if show_slide_bg -%}
       style="background-image: url('{{ slide_bg_url | escape }}');"
     {%- elsif use_responsive_image == false and bg_image != blank -%}
       style="background-image: url('{{ bg_image | escape }}');"
@@ -46,10 +62,9 @@
           assign height = block_settings.image.width | divided_by: block_settings.image.aspect_ratio | round
           assign sizes = '100vw'
           assign loading = 'eager'
-          assign is_home_lcp_slide = false
-
-          if block_index == 0 and section_index == 1
-            assign is_home_lcp_slide = true
+          assign hero_http_preload = false
+          if is_home_lcp_slide and settings.fibrenet_lcp_preload_home
+            assign hero_http_preload = true
           endif
         -%}
         {%- capture hero_image_widths -%}{%- render 'fibrenet-hero-image-widths' -%}{%- endcapture -%}
@@ -72,16 +87,12 @@
             class: 'slide__image',
             loading: loading,
             fetchpriority: fetchpriority,
+            preload: hero_http_preload,
             alt: ''
         }}
       {%- elsif block_settings.image_url_fallback != blank -%}
         {%- liquid
           assign loading = 'eager'
-          assign is_home_lcp_slide = false
-
-          if block_index == 0 and section_index == 1
-            assign is_home_lcp_slide = true
-          endif
         -%}
         {%- capture fetchpriority -%}
           {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}

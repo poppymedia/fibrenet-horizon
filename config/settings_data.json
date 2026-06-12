@@ -427,6 +427,7 @@
     "fibrenet_lcp_preload_collection": true,
     "fibrenet_lcp_fetchpriority_collection": true,
     "fibrenet_lazy_search_page": "off",
+    "fibrenet_lazy_home": "intent",
     "fibrenet_search_grid_equal_columns": true
   },
   "presets": {

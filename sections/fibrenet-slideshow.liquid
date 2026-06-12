@@ -1,44 +1,18 @@
+{%- comment -%}
+  Home LCP: slide 1 uses image_tag preload:true (HTTP Link header). No HTML link preload for Shopify
+  images (avoids duplicate hints). URL-fallback slides still use section-level fibrenet-lcp-preload.
+{%- endcomment -%}
 {%- assign first_block = section.blocks.first -%}
 {%- if section.settings.background_image_style == 'responsive_image' and section.index == 1 and first_block != blank -%}
-  {%- capture hero_preload_widths -%}{%- render 'fibrenet-hero-image-widths' -%}{%- endcapture -%}
-  {%- capture hero_preload_max -%}{%- render 'fibrenet-hero-image-max' -%}{%- endcapture -%}
-  {%- liquid
-    assign hero_preload_href_width = 1000
-    assign hero_preload_max_num = hero_preload_max | strip | plus: 0
-    if hero_preload_max_num < hero_preload_href_width
-      assign hero_preload_href_width = hero_preload_max_num
-    endif
-  -%}
-  {%- render 'fibrenet-lcp-preload',
-    context: 'home',
-    image: first_block.settings.image,
-    fallback_url: first_block.settings.image_url_fallback,
-    sizes: '100vw',
-    widths: hero_preload_widths | strip,
-    href_width: hero_preload_href_width
-  -%}
-{%- endif -%}
-
-{%- if section.settings.background_image_style == 'responsive_image' -%}
-  {%- for block in section.blocks -%}
-    {%- if block.settings.image != blank -%}
-      {%- unless forloop.first and section.index == 1 -%}
-        <link
-          rel="preload"
-          as="image"
-          href="{{ block.settings.image | image_url: width: 1000 }}"
-          fetchpriority="low"
-        >
-      {%- endunless -%}
-    {%- elsif block.settings.image_url_fallback != blank -%}
-      <link
-        rel="preload"
-        as="image"
-        href="{{ block.settings.image_url_fallback | escape }}"
-        fetchpriority="low"
-      >
-    {%- endif -%}
-  {%- endfor -%}
+  {%- if first_block.settings.image == blank and first_block.settings.image_url_fallback != blank -%}
+    {%- render 'fibrenet-lcp-preload',
+      context: 'home',
+      image: blank,
+      fallback_url: first_block.settings.image_url_fallback,
+      sizes: '100vw',
+      href_width: 750
+    -%}
+  {%- endif -%}
 {%- endif -%}
 
 {% liquid
