@@ -1,0 +1,38 @@
+{%- comment -%}
+  Defers search, product-card, and slideshow scripts on product pages until after LCP.
+  Only rendered from layout/theme.liquid when fn_lazy_product_active is true.
+{%- endcomment -%}
+<script>
+  window.FibrenetLazyProduct = {
+    mode: {{ mode | default: settings.fibrenet_lazy_product | json }},
+    warmupDelay: 150,
+    idleDelay: 2500,
+    gallerySelector: 'media-gallery slideshow-component',
+    cardBundleUrls: [
+      {{ 'section-renderer.js' | asset_url | json }},
+      {{ 'section-hydration.js' | asset_url | json }},
+      {{ 'morph.js' | asset_url | json }},
+      {{ 'scrolling.js' | asset_url | json }},
+      {{ 'product-title-truncation.js' | asset_url | json }},
+      {{ 'product-price.js' | asset_url | json }},
+      {{ 'product-card.js' | asset_url | json }},
+      {{ 'slideshow.js' | asset_url | json }},
+      {{ 'predictive-search.js' | asset_url | json }}
+    ],
+    sectionScripts: [
+      {
+        selector: 'recently-viewed-products',
+        url: {{ 'recently-viewed-products-section.js' | asset_url | json }}
+      },
+      {
+        selector: 'product-recommendations',
+        url: {{ 'product-recommendations.js' | asset_url | json }}
+      }
+    ]
+  };
+</script>
+<script
+  src="{{ 'fibrenet-lazy-product.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>

@@ -61,8 +61,15 @@
         assign fn_lazy_home_active = true
       endif
 
+      assign fn_lazy_product_active = false
+      assign fn_lazy_product_mode = 'off'
+      if template.name == 'product' and request.design_mode == false and settings.fibrenet_lazy_product != 'off'
+        assign fn_lazy_product_active = true
+        assign fn_lazy_product_mode = settings.fibrenet_lazy_product
+      endif
+
       assign fn_lazy_search_modal = false
-      if fn_lazy_search_active or fn_lazy_home_active
+      if fn_lazy_search_active or fn_lazy_home_active or fn_lazy_product_active
         assign fn_lazy_search_modal = true
       endif
     -%}
@@ -98,6 +105,9 @@
       {% endif %}
       {% if fn_lazy_home_active %}
         {% render 'fibrenet-lazy-home-bootstrap' %}
+      {% endif %}
+      {% if fn_lazy_product_active %}
+        {% render 'fibrenet-lazy-product-bootstrap', mode: fn_lazy_product_mode %}
       {% endif %}
     {% else %}
       {% render 'search-modal' %}

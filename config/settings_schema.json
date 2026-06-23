@@ -2750,6 +2750,38 @@
       },
       {
         "type": "header",
+        "content": "t:content.fibrenet_lazy_product"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:content.fibrenet_lazy_product_help"
+      },
+      {
+        "type": "select",
+        "id": "fibrenet_lazy_product",
+        "label": "t:settings.fibrenet_lazy_search_page",
+        "options": [
+          {
+            "value": "off",
+            "label": "t:options.fibrenet_lazy_search_off"
+          },
+          {
+            "value": "after_lcp",
+            "label": "t:options.fibrenet_lazy_after_lcp"
+          },
+          {
+            "value": "intent",
+            "label": "t:options.fibrenet_lazy_search_intent"
+          },
+          {
+            "value": "click",
+            "label": "t:options.fibrenet_lazy_search_click"
+          }
+        ],
+        "default": "after_lcp"
+      },
+      {
+        "type": "header",
         "content": "t:content.fibrenet_search_grid_equal_columns"
       },
       {

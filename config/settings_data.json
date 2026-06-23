@@ -106,6 +106,7 @@
     "fibrenet_lcp_preload_page": false,
     "fibrenet_lcp_fetchpriority_page": false,
     "fibrenet_lazy_search_page": "intent",
+    "fibrenet_lazy_product": "after_lcp",
     "fibrenet_search_grid_equal_columns": true,
     "fibrenet_cta_chat_color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
     "fibrenet_cta_call_color_scheme": "scheme-4cd39f4f-74a7-487a-a0a6-97246a10ea88",

@@ -1,8 +1,10 @@
-<script
-  src="{{ 'product-recommendations.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% unless template.name == 'product' and request.design_mode == false and settings.fibrenet_lazy_product != 'off' %}
+  <script
+    src="{{ 'product-recommendations.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endunless %}
 
 {% liquid
   case section.settings.layout_type

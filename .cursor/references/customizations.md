@@ -382,9 +382,11 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 | `fn_needs_cart_quantity` | cart, product → `component-quantity-selector.js` |
 **Video backgrounds:** `video-background.js` is no longer in `<head>`. `snippets/fibrenet-video-background-bootstrap.liquid` at the end of `layout/theme.liquid` dynamically imports it only when `video-background-component` exists in the DOM.
 
-**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.) — unless lazy search/home defer is active (see below).
+**Still loaded globally:** `slideshow.js` (header predictive-search carousels), `recently-viewed-products` import map + preload (predictive search empty state), core Horizon modules (`dialog`, `accordion-custom`, etc.) — unless lazy search/home/**product** defer is active (see below).
 
-**Product-only:** `product-title-split.js`, `product-stock-status.js`, `gift-card-recipient-form.js`, `RecentlyViewed.addProduct` inline script.
+**Product-only (critical path):** `fibrenet-product-title.js`, `fibrenet-product-stock.js`, `gift-card-recipient-form.js`, `variant-picker.js`, `product-form.js`, `media-gallery.js`, `media.js`.
+
+**Product-only (deferred when `fibrenet_lazy_product` active):** `product-card.js`, `product-price.js`, `product-title-truncation.js`, `slideshow.js`, `predictive-search.js`, morph/section-renderer chain, section scripts for recently viewed / recommendations. `RecentlyViewed.addProduct` uses inline `localStorage` (no module import).
 
 **Upgrade merge:** preserve the `fn_*` liquid block and re-apply guards to any new `<script>` tags Horizon adds upstream.
 
@@ -414,9 +416,11 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 - `snippets/fibrenet-lazy-search-bootstrap.liquid` — config + loader script
 - `snippets/search-modal.liquid` — `lazy: true` param
 - `snippets/predictive-search.liquid` — `load_scripts: false` when lazy
-- `snippets/search.liquid` — `data-fibrenet-lazy-search` button when active
+- `snippets/search.liquid` — `data-fibrenet-lazy-search` button when active. **Must read `settings` + `template.name` directly** — layout `assign`s (e.g. `fn_lazy_product_active`) do not reach snippets rendered from `sections/header.liquid`.
 
 **Revert:** set theme setting to **Load on page load (Horizon default)** — no code change required.
+
+**Pitfall:** `snippets/search.liquid` is rendered from the header **section**, not from `layout/theme.liquid`. Do not rely on layout `assign`s (`fn_lazy_search_active`, etc.) — use `settings.fibrenet_lazy_*` + `template.name` so the button gets `data-fibrenet-lazy-search` while the lazy modal lives in a `<template>`.
 
 **Test:** mobile Lighthouse on `/pages/meet-fibrenet`, a Knowledge Centre article, and `/blogs/knowledge-centre` with `off` vs `intent`; Network tab should not request `predictive-search.js` / `slideshow.js` until interaction.
 
@@ -443,6 +447,37 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 **Revert:** set **Homepage** script loading to **Load on page load (Horizon default)**.
 
 **Test:** mobile Lighthouse on `/` with `off` vs `intent`; Network tab should defer `slideshow.js` / `predictive-search.js` until idle or interaction.
+
+## Performance: lazy product page scripts (search + cards)
+
+**Theme setting:** `fibrenet_lazy_product` in **Deferred scripts** group (`off` | `after_lcp` | `intent` | `click`, default **`after_lcp`**).
+
+**Scope:** `template.name == 'product'` only. Ignored in theme editor.
+
+**Goal:** Keep LCP/buy-box scripts on the critical path; defer search chrome, product-card bundle, and header `slideshow.js` until after the LCP image paints.
+
+| Value | Behaviour |
+|-------|-----------|
+| `off` | Horizon default — product page loads full card/search bundle in `<head>` (`fn_has_product_cards` true on product) |
+| `after_lcp` (default) | After LCP (+ idle), load card/search/slideshow bundle; search opens on click |
+| `intent` | Same as `after_lcp`, plus search hover/touch/focus preloads the bundle |
+| `click` | Card bundle after LCP; search bundle loads on search click (or gallery dot click) if sooner |
+
+**Flags (`snippets/scripts.liquid`):**
+- `fn_lazy_product_active` / `fn_lazy_product_mode`
+- `fn_defer_search_card_bundle` — true when lazy search/home **or** lazy product; gates `slideshow.js`, morph/section-renderer preloads, `product-card.js`, etc.
+- `fn_has_product_cards` — **false** on product when lazy product active (stops head-loading card scripts)
+
+**Also:** lazy search modal on product (`fn_lazy_search_modal`), inline `viewedProducts` localStorage write (no `RecentlyViewed` import), section `<script>` tags omitted on product for `recently-viewed-products-section.js` / `product-recommendations.js` (loaded via IO in bootstrap).
+
+**Files:**
+- `assets/fibrenet-lazy-product.js` — LCP observer, idle bundle load, search open, gallery control warmup, below-fold section IO
+- `snippets/fibrenet-lazy-product-bootstrap.liquid`
+- `snippets/search.liquid` — `data-fibrenet-lazy-search` when lazy product active (settings-based; see lazy search pitfall above)
+
+**Pitfall:** Product gallery uses `slideshow-component` — first slide must render without JS (LCP). Gallery dots/arrows load `slideshow.js` on click or after deferred bundle. Do not set `fn_has_product_cards` true on lazy product.
+
+**Test:** mobile Lighthouse on `/products/cab-6-utp`; Network tab should omit `product-card.js` / `predictive-search.js` until after LCP; search modal, recently viewed, and recommendations still work after scroll/interaction.
 
 ## Performance: homepage hero srcset cap
 

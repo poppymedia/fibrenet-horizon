@@ -9,13 +9,32 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign search_lazy_active = fn_lazy_search_active | default: false
-  if search_lazy_active == false
-    assign fn_lazy_home_active = fn_lazy_home_active | default: false
-    if fn_lazy_home_active
-      assign search_lazy_active = true
-    endif
-  endif
+  assign search_lazy_active = false
+
+  unless request.design_mode
+    case template.name
+      when 'index'
+        if settings.fibrenet_lazy_home != 'off'
+          assign search_lazy_active = true
+        endif
+      when 'page'
+        if settings.fibrenet_lazy_search_page != 'off'
+          assign search_lazy_active = true
+        endif
+      when 'article'
+        if settings.fibrenet_lazy_search_article != 'off'
+          assign search_lazy_active = true
+        endif
+      when 'blog'
+        if settings.fibrenet_lazy_search_blog != 'off'
+          assign search_lazy_active = true
+        endif
+      when 'product'
+        if settings.fibrenet_lazy_product != 'off'
+          assign search_lazy_active = true
+        endif
+    endcase
+  endunless
 -%}
 
 {% unless style == 'none' %}

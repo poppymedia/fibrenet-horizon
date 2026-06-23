@@ -11,7 +11,13 @@
 
   assign fn_has_product_cards = false
   if fn_is_product
-    assign fn_has_product_cards = true
+    assign fn_lazy_product_for_cards = false
+    if request.design_mode == false and settings.fibrenet_lazy_product != 'off'
+      assign fn_lazy_product_for_cards = true
+    endif
+    unless fn_lazy_product_for_cards
+      assign fn_has_product_cards = true
+    endunless
   elsif template.name == 'index' or template.name == 'collection' or template.name == 'search' or template.name == '404'
     assign fn_has_product_cards = true
   endif
@@ -84,9 +90,21 @@
     assign fn_lazy_home_active = true
   endif
 
+  assign fn_lazy_product_active = false
+  assign fn_lazy_product_mode = 'off'
+  if template.name == 'product' and request.design_mode == false and settings.fibrenet_lazy_product != 'off'
+    assign fn_lazy_product_active = true
+    assign fn_lazy_product_mode = settings.fibrenet_lazy_product
+  endif
+
   assign fn_defer_slideshow_search = false
   if fn_lazy_search_active or fn_lazy_home_active
     assign fn_defer_slideshow_search = true
+  endif
+
+  assign fn_defer_search_card_bundle = fn_defer_slideshow_search
+  if fn_lazy_product_active
+    assign fn_defer_search_card_bundle = true
   endif
 
 -%}
@@ -110,8 +128,8 @@
       "@theme/section-hydration": "{{ 'section-hydration.js' | asset_url }}",
       "@theme/utilities": "{{ 'utilities.js' | asset_url }}",
       "@theme/variant-picker": "{{ 'variant-picker.js' | asset_url }}",
-      "@theme/product-title-split": "{{ 'product-title-split.js' | asset_url }}",
-      "@theme/product-stock-status": "{{ 'product-stock-status.js' | asset_url }}",
+      "@theme/product-title-split": "{{ 'fibrenet-product-title.js' | asset_url }}",
+      "@theme/product-stock-status": "{{ 'fibrenet-product-stock.js' | asset_url }}",
       "@theme/media-gallery": "{{ 'media-gallery.js' | asset_url }}",
       "@theme/quick-add": "{{ 'quick-add.js' | asset_url }}",
       "@theme/paginated-list-aspect-ratio": "{{ 'paginated-list-aspect-ratio.js' | asset_url }}",
@@ -145,7 +163,7 @@
   href="{{ 'component.js' | asset_url }}"
   fetchpriority="low"
 >
-{% unless fn_defer_slideshow_search %}
+{% unless fn_defer_search_card_bundle %}
   <link
     rel="modulepreload"
     href="{{ 'section-renderer.js' | asset_url }}"
@@ -189,7 +207,7 @@
   href="{{ 'focus.js' | asset_url }}"
   fetchpriority="low"
 >
-{% unless fn_defer_slideshow_search %}
+{% unless fn_defer_search_card_bundle %}
   <link
     rel="modulepreload"
     href="{{ 'recently-viewed-products.js' | asset_url }}"
@@ -294,7 +312,7 @@
     fetchpriority="low"
   ></script>
 {% endif %}
-{% unless fn_defer_slideshow_search %}
+{% unless fn_defer_search_card_bundle %}
   <script
     src="{{ 'slideshow.js' | asset_url }}"
     type="module"
@@ -347,17 +365,36 @@
 {% endif %}
 
 {% if fn_is_product %}
-  <script type="module">
-    import { RecentlyViewed } from '@theme/recently-viewed-products';
-    RecentlyViewed.addProduct('{{ product.id }}');
-  </script>
+  {% if fn_lazy_product_active %}
+    <script>
+      (function () {
+        var productId = {{ product.id | json }};
+        var storageKey = 'viewedProducts';
+        try {
+          var viewed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          viewed = viewed.filter(function (id) {
+            return id !== productId;
+          });
+          viewed.unshift(productId);
+          localStorage.setItem(storageKey, JSON.stringify(viewed.slice(0, 4)));
+        } catch (error) {
+          /* ignore storage errors */
+        }
+      })();
+    </script>
+  {% else %}
+    <script type="module">
+      import { RecentlyViewed } from '@theme/recently-viewed-products';
+      RecentlyViewed.addProduct('{{ product.id }}');
+    </script>
+  {% endif %}
   <script
-    src="{{ 'product-title-split.js' | asset_url }}"
+    src="{{ 'fibrenet-product-title.js' | asset_url }}"
     type="module"
     fetchpriority="low"
   ></script>
   <script
-    src="{{ 'product-stock-status.js' | asset_url }}"
+    src="{{ 'fibrenet-product-stock.js' | asset_url }}"
     type="module"
     fetchpriority="low"
   ></script>
