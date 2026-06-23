@@ -1,22 +1,19 @@
 {%- comment -%}
   Template-level LCP preloads in <head>. Section-level heroes (e.g. slideshow) use fibrenet-lcp-preload in the section.
+  Product LCP preload: main gallery image uses image_tag preload in snippets/product-media.liquid
+  Article LCP preload: knowledge-centre hero uses image_tag preload in sections/main-blog-post.liquid (HTTP Link header)
+  Page LCP: no head preload (no global page image). Enable page LCP settings and use hero/image blocks — preload runs in section or via image_tag.
 {%- endcomment -%}
-{%- comment -%} Product LCP preload: main gallery image uses image_tag preload in snippets/product-media.liquid {%- endcomment -%}
-{%- if template.name == 'article' and article.image != blank -%}
-  {%- render 'fibrenet-lcp-preload',
-    context: 'article',
-    image: article.image,
-    sizes: '(min-width: 750px) 60vw, 100vw',
-    widths: '400, 800, 1200, 1600',
-    href_width: 800
-  -%}
-{%- elsif template.name == 'blog' and blog.articles.first.image != blank -%}
+{%- if template.name == 'blog' and blog.articles.first.image != blank -%}
+  {%- capture blog_lcp_widths -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'widths' -%}{%- endcapture -%}
+  {%- capture blog_lcp_sizes -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'sizes' -%}{%- endcapture -%}
+  {%- capture blog_lcp_href -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'preload_href' -%}{%- endcapture -%}
   {%- render 'fibrenet-lcp-preload',
     context: 'blog',
     image: blog.articles.first.image,
-    sizes: '(min-width: 750px) 33vw, 100vw',
-    widths: '350, 750, 1100',
-    href_width: 750
+    sizes: blog_lcp_sizes,
+    widths: blog_lcp_widths,
+    href_width: blog_lcp_href
   -%}
 {%- elsif template.name == 'collection' -%}
   {%- liquid
@@ -29,12 +26,15 @@
     endif
   -%}
   {%- if collection_lcp_image != blank -%}
+    {%- capture collection_lcp_widths -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'collection', part: 'widths' -%}{%- endcapture -%}
+    {%- capture collection_lcp_sizes -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'collection', part: 'sizes' -%}{%- endcapture -%}
+    {%- capture collection_lcp_href -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'collection', part: 'preload_href' -%}{%- endcapture -%}
     {%- render 'fibrenet-lcp-preload',
       context: 'collection',
       image: collection_lcp_image,
-      sizes: '(min-width: 750px) 50vw, 100vw',
-      widths: '240, 352, 832, 1200',
-      href_width: 832
+      sizes: collection_lcp_sizes,
+      widths: collection_lcp_widths,
+      href_width: collection_lcp_href
     -%}
   {%- endif -%}
 {%- endif -%}

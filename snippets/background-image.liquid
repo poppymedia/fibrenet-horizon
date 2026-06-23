@@ -47,14 +47,29 @@
     {% liquid
       assign fetch_priority = 'auto'
       assign loading = 'lazy'
-      if section and section.index == 1
-        assign fetch_priority = 'high'
-      endif
-
-      if section and section.index <= 3
-        assign loading = 'eager'
-      endif
+      assign lcp_context = 'none'
+      assign is_lcp_background = false
     %}
+    {% if section %}
+      {% capture lcp_context %}
+        {% render 'fibrenet-lcp-resolve', section_index: section.index %}
+      {% endcapture %}
+      {% liquid
+        assign lcp_context = lcp_context | strip
+        if lcp_context != 'none'
+          assign is_lcp_background = true
+        endif
+      %}
+    {% endif %}
+    {% if is_lcp_background %}
+      {% capture fetch_priority %}
+        {% render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: true %}
+      {% endcapture %}
+      {% assign fetch_priority = fetch_priority | strip %}
+      {% assign loading = 'eager' %}
+    {% elsif section and section.index <= 3 %}
+      {% assign loading = 'eager' %}
+    {% endif %}
     {{
       background_image
       | image_url: width: 3840

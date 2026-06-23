@@ -1,0 +1,28 @@
+{%- doc -%}
+  Returns the LCP settings context for first-section media on supported templates, or "none".
+
+  @param section_index {number} Section position on the page (1 = first in main content)
+  @param [block_index] {number} When set, only block 0 qualifies (first slide in a slideshow)
+{%- enddoc -%}
+{%- liquid
+  assign lcp_result = 'none'
+
+  if section_index == 1
+    assign block_ok = true
+    if block_index != blank
+      assign block_index_num = block_index | plus: 0
+      if block_index_num > 0
+        assign block_ok = false
+      endif
+    endif
+
+    if block_ok
+      case template.name
+        when 'index'
+          assign lcp_result = 'home'
+        when 'page'
+          assign lcp_result = 'page'
+      endcase
+    endif
+  endif
+-%}{{- lcp_result -}}

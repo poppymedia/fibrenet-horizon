@@ -45,14 +45,48 @@
     assign has_media = true
   endif
 
-  assign is_home_lcp_hero = false
-  if section.index == 1
-    assign is_home_lcp_hero = true
+  assign is_lcp_hero = false
+%}
+{% capture lcp_context %}
+  {% render 'fibrenet-lcp-resolve', section_index: section.index %}
+{% endcapture %}
+{% liquid
+  assign lcp_context = lcp_context | strip
+  if lcp_context != 'none'
+    assign is_lcp_hero = true
+  endif
+
+  if lcp_context == 'home' or lcp_context == 'page'
+    capture hero_lcp_widths
+      render 'fibrenet-lcp-image-dimensions', context: lcp_context, part: 'widths'
+    endcapture
+    capture hero_lcp_max
+      render 'fibrenet-lcp-image-dimensions', context: lcp_context, part: 'max'
+    endcapture
+    capture hero_lcp_preload_href
+      render 'fibrenet-lcp-image-dimensions', context: lcp_context, part: 'preload_href'
+    endcapture
+    assign widths = hero_lcp_widths | strip
+    assign hero_image_max = hero_lcp_max | strip
+    assign hero_preload_href = hero_lcp_preload_href | strip
+  else
+    assign hero_image_max = 3840
+    assign hero_preload_href = 1200
   endif
 %}
 
+{%- if is_lcp_hero and has_image_1 and media_type_1 == 'image' -%}
+  {%- render 'fibrenet-lcp-preload',
+    context: lcp_context,
+    image: section.settings.image_1,
+    sizes: sizes,
+    widths: widths,
+    href_width: hero_preload_href
+  -%}
+{%- endif -%}
+
 {% capture fetch_priority %}
-  {% render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_hero %}
+  {% render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: is_lcp_hero %}
 {% endcapture %}
 {% assign fetch_priority = fetch_priority | strip %}
 
@@ -61,7 +95,7 @@
     {% assign media_count = media_count | plus: 1 %}
     {{
       section.settings.image_1
-      | image_url: width: 3840
+      | image_url: width: hero_image_max
       | image_tag:
         width: section.settings.image_1.width,
         widths: widths,
@@ -78,12 +112,12 @@
     <div class="hero__video-wrapper">
       {%- if section.settings.video_1.preview_image -%}
         {% capture fetch_priority_poster %}
-          {% render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_hero %}
+          {% render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: is_lcp_hero %}
         {% endcapture %}
         {% assign fetch_priority_poster = fetch_priority_poster | strip %}
         {{
           section.settings.video_1.preview_image
-          | image_url: width: 3840
+          | image_url: width: hero_image_max
           | image_tag:
             width: section.settings.video_1.preview_image.width,
             widths: widths,
@@ -111,7 +145,7 @@
     {% assign media_count = media_count | plus: 1 %}
     {{
       section.settings.image_2
-      | image_url: width: 3840
+      | image_url: width: hero_image_max
       | image_tag:
         width: section.settings.image_2.width,
         widths: widths,
@@ -129,7 +163,7 @@
       {%- if section.settings.video_2.preview_image -%}
         {{
           section.settings.video_2.preview_image
-          | image_url: width: 3840
+          | image_url: width: hero_image_max
           | image_tag:
             width: section.settings.video_2.preview_image.width,
             widths: widths,
@@ -161,7 +195,7 @@
   {% if has_image_1 %}
     {{
       section.settings.image_1
-      | image_url: width: 3840
+      | image_url: width: hero_image_max
       | image_tag:
         width: section.settings.image_1.width,
         widths: widths,
@@ -174,7 +208,7 @@
   {% if has_image_2 %}
     {{
       section.settings.image_2
-      | image_url: width: 3840
+      | image_url: width: hero_image_max
       | image_tag:
         width: section.settings.image_2.width,
         widths: widths,

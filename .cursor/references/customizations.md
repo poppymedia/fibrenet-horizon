@@ -241,9 +241,9 @@ After pulling Futura values into JSON, confirm fonts resolve in the theme editor
 
 - `main-blog-post` with `layout_style: knowledge_centre` — centred 60% editorial column on desktop (`.article-editorial__inner`, text left-aligned). Pages use the same via `main-page` + `.editorial__inner`.
 - Title: native `blog-post-title` text block via `content_for` (same as KC blog index — `type_preset: rte`, `<h1>{{ article.title }}</h1>`). Section uses `blog-posts--knowledge-centre` so `.text-block h1` styles apply. Tag line is a simple `<p class="article-editorial__tags">` after the block.
-- Hero + body: featured image 3:2; first `<p>` split to `.article-editorial__lead`, then metafields snippet, then `.article-editorial__content.rte`.
+- Hero + body: featured image 3:2; first `<p>` split to `.article-editorial__lead`, then `snippets/fibrenet-article-metafields.liquid`, then `.article-editorial__content.rte`.
 - Highlight lines: `class="article-highlight"` in the article HTML editor (allowed in article body; not in theme JSON richtext).
-- Footer nav: `snippets/article-editorial-navigation.liquid` — history back + `button--pill button--primary` to `blog.url`.
+- Footer nav: `snippets/fibrenet-article-navigation.liquid` — history back + `button--pill button--primary` to `blog.url`.
 - Styles: `assets/brand.css` (`.article-editorial*`, `.article-highlight` color/weight only).
 - **Pitfall:** Horizon allows only one `{% content_for 'blocks' %}` per section file — never duplicate it inside `if`/`else` layout branches; place a single call after the branch closes.
 - **Page head H1:** Single rule in `brand.css` via `--head-to-title-gap` (3.5rem desktop, `var(--padding-4xl)` mobile). Gap is `margin-block-start` on the `h1` (specificity beats `base.css` `.text-block > *:first-child`). Title text blocks reset `--padding-block-start: 0` (needs `!important` vs theme-editor inline spacing). Page/collection/product: gap from header; blog/article: gap from tag bar. Homepage exempt.
@@ -313,27 +313,49 @@ Horizon ships `<link rel="expect" href="#MainContent" blocking="render">` so cro
 
 ## Performance: LCP image priority (theme settings)
 
-**Theme settings group:** `LCP images` (`config/settings_schema.json`)
+**Theme settings group:** `LCP images` (`config/settings_schema.json`) — one self-contained section per template (header + paragraph + LCP toggles + srcset caps). No nested “Responsive image widths” sub-headers.
 
-Per-template toggles (default on):
-- `fibrenet_lcp_preload_{home|article|blog|product|collection}` — home + product: `image_tag: preload: true` (HTTP `Link` header); article/blog/collection: `<link rel="preload">` in `<head>`
+| Section header | What it controls |
+|----------------|------------------|
+| Homepage — full-width hero | Slideshow + Horizon hero (100vw) |
+| Article page — featured hero | Single article featured image (~60vw desktop) — **not** blog cards |
+| Blog index — card thumbnails | Listing grid images (~⅓ width); first card only for LCP preload |
+| Product page — main gallery image | First gallery image (~50vw desktop) |
+| Collection page — featured image or product card | Collection hero or first product card |
+| Content pages — hero or image block | Page heroes when LCP enabled (default off) |
+
+Per-template toggles (default on unless noted):
+- `fibrenet_lcp_preload_{home|article|blog|product|collection|page}` — home + product + article: `image_tag: preload: true` (HTTP `Link` header); blog/collection: `<link rel="preload">` in `<head>`; page: section-level preload / `image_tag` when enabled (default off)
 - `fibrenet_lcp_fetchpriority_{…}` — `fetchpriority="high"` on the LCP `<img>`
+- `fibrenet_lcp_image_cap_{article|blog|product|collection|page}` + `fibrenet_lcp_image_max_{…}` + `fibrenet_lcp_image_max_mobile_{…}` — responsive srcset caps per template (see `snippets/fibrenet-lcp-image-dimensions.liquid`). Home uses `fibrenet_hero_srcset_cap` / `fibrenet_hero_srcset_max` / `fibrenet_hero_srcset_max_mobile` under the same homepage section.
 
 **Snippets:**
 - `snippets/fibrenet-lcp-preload.liquid` — responsive preload link (checks `settings[fibrenet_lcp_preload_*]`)
 - `snippets/fibrenet-lcp-fetchpriority.liquid` — returns `high` or `auto` (checks `settings[fibrenet_lcp_fetchpriority_*]`)
-- `snippets/fibrenet-lcp-head-preloads.liquid` — rendered from `layout/theme.liquid` for article, blog, collection (not product — see `product-media`)
+- `snippets/fibrenet-lcp-image-dimensions.liquid` — per-context width ladder, desktop max, mobile/preload max
+- `snippets/fibrenet-lcp-head-preloads.liquid` — rendered from `layout/theme.liquid` for blog, collection (not product or article — see below)
 
 **Wired instances:**
 | Context | Preload | Fetch priority on |
 |---------|---------|-------------------|
 | Home | `image_tag: preload: true` on first slide (Shopify HTTP header); HTML `<link>` only for URL-fallback slides | First slideshow slide (`fibrenet-slide`); `hero.liquid` when `section.index == 1` |
-| Article | Head + `main-blog-post` hero | Knowledge-centre hero; `_blog-post-featured-image` |
-| Blog | Head (`blog.articles.first.image`) | First card only (`_blog-post-image`; others lazy) |
+| Article | `image_tag: preload: true` on knowledge-centre hero + `_blog-post-featured-image` (HTTP header); no duplicate `<head>` preload | Knowledge-centre hero in `main-blog-post`; `_blog-post-featured-image` for default layout |
+| Blog | Head (`blog.articles.first.image`) with capped srcset | First card only (`_blog-post-image`; others lazy) |
 | Product | `image_tag: preload: true` on first visible gallery image (HTTP header); no duplicate `<head>` preload | Main gallery image only (`product-media` + `is_main_product_media` + `loading: eager`) |
-| Collection | Head (featured image or first product) | First product card image (`card-gallery`); `_collection-image` block |
+| Collection | Head (featured image or first product) with capped srcset | First product card image (`card-gallery`); `_collection-image` block |
+| Page | Section-level (`hero.liquid`, `image` block) via `fibrenet-lcp-preload` or `image_tag: preload: true` when settings on | First-section hero (`hero.liquid`), first `image` block in `main-page`, or slideshow slide 1 — **settings default off** |
 
-**Note:** Home hero and product main gallery use Shopify’s `image_tag: preload: true` (earliest preload via response `Link` header — check Network → document → Response Headers, not `<head>`). Do **not** duplicate with `<link rel=preload>` for the same Shopify image. Article/blog/collection still preload in `<head>` via `fibrenet-lcp-head-preloads`.
+**Recommended default caps (mobile / desktop, 20px steps):** home **760** / **1400**; article **400** / **1200**; blog **360** / **1100**; product **840** / **1600**; collection **360** / **1200**; page **840** / **1400**. Srcset uses **Horizon anchor ladders** filtered by caps; mobile/desktop setting values are injected into srcset when missing from anchors.
+
+**Unified dimensions:** `snippets/fibrenet-lcp-image-dimensions.liquid` — all LCP contexts share one snippet. Range settings use **step 20** (min **240** mobile, **800** desktop). Anchors per context: home `750,1000,1200,1400,1600,1920`; article `400,800,1200,1600`; blog `350,750,1100,1500`; product/collection cards `240,352,832,1200,1600` (+ `1920` product); page/hero `832,1200,1400,1600,1920`. Setting values need not match anchors exactly (e.g. **840** preload ≈ Horizon **832**).
+
+**Pitfall:** After schema changes, always push **`config/settings_schema.json` and `config/settings_data.json` together** — pushing `settings_data` alone validates against the **remote** (often stale) schema and fails (e.g. `840` vs old page mobile `min 332 step 50`). **`shopify theme pull` on those files overwrites local step-20 schema with remote old ranges** — avoid pulling settings unless intentional. Close theme editor tabs before push; `--theme-editor-sync` can write invalid slider values (e.g. `382`) back to the remote theme. Range `step` must evenly divide `(max − min)` — e.g. blog mobile `240–750 step 20` fails; use `760` max instead.
+
+**Page LCP (default off):** Most pages are title + RTE only. `fibrenet_lcp_preload_page` / `fibrenet_lcp_fetchpriority_page` default **false**. When enabled, first-section media on `template.name == 'page'` uses context `page` via `snippets/fibrenet-lcp-resolve.liquid` — **not** home settings. Homepage slideshow/hero always uses context `home` only on `template.name == 'index'`. Images embedded in page RTE (`page-content`) are not auto-detected.
+
+**LCP resolve:** `snippets/fibrenet-lcp-resolve.liquid` returns `home`, `page`, or `none` from `template.name` + `section.index == 1` (+ optional `block_index == 0` for slides).
+
+**Note:** Home hero, product main gallery, and article hero use Shopify’s `image_tag: preload: true` (earliest preload via response `Link` header — check Network → document → Response Headers, not `<head>`). Do **not** duplicate with `<link rel=preload>` for the same Shopify image. Blog/collection still preload in `<head>` via `fibrenet-lcp-head-preloads`.
 
 **Home hero LCP:** When **Background image delivery** is `responsive_image`, slide 1 (`block_index == 0`) has no CSS `background-image` — only the `<img>` is the LCP source. Slides 2+ keep CSS background fallback for blank-slide safety. Slides 2–4 do not get `<link rel=preload fetchpriority=low>`.
 
@@ -366,19 +388,21 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 
 **Upgrade merge:** preserve the `fn_*` liquid block and re-apply guards to any new `<script>` tags Horizon adds upstream.
 
-## Performance: lazy search on content pages
+## Performance: lazy search defer (page, article, blog)
 
-**Theme setting:** `fibrenet_lazy_search_page` in **LCP images** group (`config/settings_schema.json`)
+**Theme settings group:** `Deferred scripts` (`config/settings_schema.json`) — separate from LCP images.
+
+**Settings:** `fibrenet_lazy_search_page`, `fibrenet_lazy_search_article`, `fibrenet_lazy_search_blog`
 
 | Value | Behaviour |
 |-------|-----------|
-| `off` (default) | Horizon default — search modal and scripts on page load |
-| `intent` | Defer search until interaction; preload `slideshow.js` + `predictive-search.js` on hover, touch, or focus |
+| `off` | Horizon default — search modal and scripts on page load |
+| `intent` (default for page/article/blog in `settings_data.json`) | Defer search until interaction; preload `slideshow.js` + `predictive-search.js` on hover, touch, or focus |
 | `click` | Defer until search button click (no intent preload) |
 
-**Scope:** `template.name == 'page'` only. Ignored in theme editor (`request.design_mode`).
+**Scope:** `template.name == 'page'`, `'article'`, or `'blog'`. Ignored in theme editor (`request.design_mode`).
 
-**Flag:** `fn_lazy_search_active` — set in `layout/theme.liquid` (body) and `snippets/scripts.liquid` (head).
+**Flags:** `fn_lazy_search_active`, `fn_lazy_search_mode`, `fn_lazy_home_active`, `fn_lazy_search_modal`, and `fn_defer_slideshow_search` — duplicated in `layout/theme.liquid` (body) and `snippets/scripts.liquid` (head). `snippets/fibrenet-lazy-search-flags.liquid` is reference-only (Shopify disallows `{% include %}` inside rendered snippets).
 
 **When active, skipped on initial load:**
 - `slideshow.js`
@@ -394,11 +418,11 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 
 **Revert:** set theme setting to **Load on page load (Horizon default)** — no code change required.
 
-**Test:** mobile Lighthouse on `/pages/meet-fibrenet` with `off` vs `intent`; Network tab should not request `predictive-search.js` / `slideshow.js` until interaction.
+**Test:** mobile Lighthouse on `/pages/meet-fibrenet`, a Knowledge Centre article, and `/blogs/knowledge-centre` with `off` vs `intent`; Network tab should not request `predictive-search.js` / `slideshow.js` until interaction.
 
 ## Performance: lazy homepage scripts
 
-**Theme setting:** `fibrenet_lazy_home` in **LCP images** group (same options as `fibrenet_lazy_search_page`: `off` | `intent` | `click`, default `off`).
+**Theme setting:** `fibrenet_lazy_home` in **Deferred scripts** group (same options as `fibrenet_lazy_search_page`: `off` | `intent` | `click`, default `off`).
 
 **Scope:** `template.name == 'index'` only. Ignored in theme editor.
 
@@ -414,27 +438,36 @@ Fibrenet extends Horizon’s partial guards (collection/search `paginated-list` 
 
 **Pitfall:** Do not use `loading="lazy"` on hero slides 2+ — off-screen carousel images may never fetch until the slide scrolls into view, so autoplay shows blank backgrounds. All `fibrenet-slide` images use `loading="eager"` (small slide count). Slides 2+ get CSS `background-image` (1000px URL) only — not slide 1 when `responsive_image`. `brand.css` forces `content-visibility: visible` on `.hero-slideshow slideshow-component slideshow-slide.hero-slide`. Block index uses a `section.blocks` loop (not `find_index`) for reliable `aria-hidden` / LCP flags.
 
-**Enable lazy home:** Theme editor → **Theme settings** → **LCP images** → **Homepage script loading** → **Intent** (or set `"fibrenet_lazy_home": "intent"` in `config/settings_data.json` under `current`). Wired via `fn_lazy_home_active` in `layout/theme.liquid` and `snippets/scripts.liquid` (`fn_defer_slideshow_search`).
+**Enable lazy home:** Theme editor → **Theme settings** → **Deferred scripts** → **Homepage** → **Intent** (or set `"fibrenet_lazy_home": "intent"` in `config/settings_data.json` under `current`). Wired via `fn_lazy_home_active` in `layout/theme.liquid` and `snippets/scripts.liquid` (`fn_defer_slideshow_search`).
 
-**Revert:** set **Homepage script loading** to **Load on page load (Horizon default)**.
+**Revert:** set **Homepage** script loading to **Load on page load (Horizon default)**.
 
 **Test:** mobile Lighthouse on `/` with `off` vs `intent`; Network tab should defer `slideshow.js` / `predictive-search.js` until idle or interaction.
 
 ## Performance: homepage hero srcset cap
 
-**Theme settings** (LCP images group):
+**Theme settings:** under **Homepage — full-width hero** in LCP images group:
 - `fibrenet_hero_srcset_cap` (checkbox, default **on**) — limit responsive hero widths
-- `fibrenet_hero_srcset_max` (range 1000–1900px, step 100, default **1400**) — shown when cap is on
+- `fibrenet_hero_srcset_max` (range 1000–1920px, step **20**, default **1400**) — desktop max
+- `fibrenet_hero_srcset_max_mobile` (range 400–1200px, step **20**, default **760**) — mobile / preload hint width
 
-**Snippets:** `fibrenet-hero-image-widths.liquid`, `fibrenet-hero-image-max.liquid` — filter width ladder `750, 1000, 1200, 1400, 1600, 1920` to max.
+**Implementation:** `snippets/fibrenet-lcp-image-dimensions.liquid` (context `home`); thin wrappers `fibrenet-hero-image-widths.liquid` / `fibrenet-hero-image-max.liquid` delegate to it.
 
 **Wired in:** `blocks/fibrenet-slide.liquid` (`image_tag` widths + `image_url` max), `sections/fibrenet-slideshow.liquid` (LCP preload srcset).
 
-**Revert:** disable **Cap hero responsive widths** to restore full 1920px ladder.
+## Performance: per-template LCP image width caps
+
+**Theme settings:** under each template section in LCP images — cap checkbox + desktop max (min 800, step **20**) + mobile/preload max (min **240**, step **20**).
+
+**Snippet:** `snippets/fibrenet-lcp-image-dimensions.liquid` — pass `context` and `part` (`widths`, `max`, `mobile`, `preload_href`, `sizes`). Filters Horizon anchors by desktop max; injects mobile/desktop settings into srcset when capping.
+
+**Wired in:** `sections/main-blog-post.liquid`, `blocks/_blog-post-image.liquid`, `blocks/_blog-post-featured-image.liquid`, `blocks/_collection-image.liquid`, `snippets/product-media.liquid`, `sections/hero.liquid`, `blocks/image.liquid`, `snippets/fibrenet-lcp-head-preloads.liquid`.
+
+**Pitfall:** Do not combine `<head>` preload and `image_tag: preload: true` for the same article hero URL — article uses HTTP preload only.
 
 ## Performance: search modal equal product columns
 
-**Theme setting:** `fibrenet_search_grid_equal_columns` (checkbox, default **on**) in **LCP images** group.
+**Theme setting:** `fibrenet_search_grid_equal_columns` (checkbox, default **on**) in **Deferred scripts** group (under **Search modal product grid**).
 
 **Problem:** Horizon `.predictive-search-results__wrapper-products` uses `repeat(4, 1fr)`; long product titles inflate a column’s min-content size so one card (e.g. recently viewed) appears wider than its neighbours.
 

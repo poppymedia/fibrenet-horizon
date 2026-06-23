@@ -34,8 +34,26 @@
   <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} template-{{ template.name }}{% if settings.fibrenet_search_grid_equal_columns %} fibrenet-search-grid-equal-columns{% endif %}">
     {%- liquid
       assign fn_lazy_search_active = false
-      if settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
-        assign fn_lazy_search_active = true
+      assign fn_lazy_search_mode = 'off'
+
+      if request.design_mode == false
+        case template.name
+          when 'page'
+            if settings.fibrenet_lazy_search_page != 'off'
+              assign fn_lazy_search_active = true
+              assign fn_lazy_search_mode = settings.fibrenet_lazy_search_page
+            endif
+          when 'article'
+            if settings.fibrenet_lazy_search_article != 'off'
+              assign fn_lazy_search_active = true
+              assign fn_lazy_search_mode = settings.fibrenet_lazy_search_article
+            endif
+          when 'blog'
+            if settings.fibrenet_lazy_search_blog != 'off'
+              assign fn_lazy_search_active = true
+              assign fn_lazy_search_mode = settings.fibrenet_lazy_search_blog
+            endif
+        endcase
       endif
 
       assign fn_lazy_home_active = false
@@ -76,7 +94,7 @@
     {% if fn_lazy_search_modal %}
       {% render 'search-modal', lazy: true %}
       {% if fn_lazy_search_active %}
-        {% render 'fibrenet-lazy-search-bootstrap' %}
+        {% render 'fibrenet-lazy-search-bootstrap', mode: fn_lazy_search_mode %}
       {% endif %}
       {% if fn_lazy_home_active %}
         {% render 'fibrenet-lazy-home-bootstrap' %}

@@ -20,29 +20,28 @@
 {%- if is_blog_lcp_image -%}
   {%- assign image_loading = 'eager' -%}
 {%- endif -%}
+{%- capture blog_card_widths -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'widths' -%}{%- endcapture -%}
+{%- capture blog_card_sizes -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'sizes' -%}{%- endcapture -%}
+{%- capture blog_card_max -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'max' -%}{%- endcapture -%}
+{%- capture image_border_style -%}
+  {% render 'border-override', settings: block_settings %}
+{%- endcapture -%}
+{%- assign image_class = 'border-style blog-post-card__image blog-post-card__image--' | append: block_settings.height -%}
 
-<img
-  srcset="
-    {% if image.width >= 350 %}{{ image | image_url: width: 350 }} 350w,{% endif %}
-    {% if image.width >= 750 %}{{ image | image_url: width: 750 }} 750w,{% endif %}
-    {% if image.width >= 1100 %}{{ image | image_url: width: 1100 }} 1100w,{% endif %}
-    {% if image.width >= 1500 %}{{ image | image_url: width: 1500 }} 1500w,{% endif %}
-    {{ image | image_url }} {{ image.width }}w
-  "
-  sizes="(min-width: 750px) 33vw, 100vw"
-  src="{{ image | image_url: width: 1100 }}"
-  loading="{{ image_loading }}"
-  fetchpriority="{{ fetchpriority }}"
-  width="{{ image.width }}"
-  height="{{ image.height }}"
-  alt="{{ image.alt | escape }}"
-  class="
-    border-style
-    blog-post-card__image
-    blog-post-card__image--{{ block_settings.height }}
-  "
-  style="{% render 'border-override', settings: block_settings %}"
->
+{{
+  image
+  | image_url: width: blog_card_max
+  | image_tag:
+    class: image_class,
+    widths: blog_card_widths,
+    sizes: blog_card_sizes,
+    loading: image_loading,
+    fetchpriority: fetchpriority,
+    width: image.width,
+    height: image.height,
+    alt: image.alt,
+    style: image_border_style
+}}
 
 {% stylesheet %}
   .blog-post-card__image {

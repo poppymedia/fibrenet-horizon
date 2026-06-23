@@ -44,13 +44,19 @@
           assign sizes = lazy_sizes
         endif
 
-        assign is_home_lcp_slide = false
-        if block_index == 0 and section_index == 1
-          assign is_home_lcp_slide = true
+        assign is_lcp_slide = false
+      -%}
+      {% capture lcp_context %}
+        {% render 'fibrenet-lcp-resolve', section_index: section_index, block_index: block_index %}
+      {% endcapture %}
+      {%- liquid
+        assign lcp_context = lcp_context | strip
+        if lcp_context != 'none'
+          assign is_lcp_slide = true
         endif
       -%}
       {%- capture fetchpriority -%}
-        {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
+        {%- render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: is_lcp_slide -%}
       {%- endcapture -%}
       {%- assign fetchpriority = fetchpriority | strip -%}
 

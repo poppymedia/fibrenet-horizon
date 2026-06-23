@@ -1,0 +1,136 @@
+{%- doc -%}
+  Unified LCP image widths: Horizon anchor ladders filtered by theme caps, with mobile/desktop
+  max settings always included in srcset when capping is on. Range settings use 20px steps.
+
+  @param context {string} home | article | blog | collection | product | page
+  @param part {string} widths | max | mobile | preload_href | sizes
+  @param sizes {string} Optional sizes override (part: sizes only)
+{%- enddoc -%}
+{%- liquid
+  assign context = context | default: 'article'
+  assign part = part | default: 'widths'
+  assign cap_enabled = true
+  assign desktop_max = 1200
+  assign mobile_max = 400
+  assign default_sizes = '100vw'
+  assign horizon_anchors = '400,800,1200,1600'
+
+  case context
+    when 'home'
+      if settings.fibrenet_hero_srcset_cap == false
+        assign cap_enabled = false
+      else
+        assign cap_enabled = true
+      endif
+      assign desktop_max = settings.fibrenet_hero_srcset_max | default: 1400
+      assign mobile_max = settings.fibrenet_hero_srcset_max_mobile | default: 760
+      assign default_sizes = '100vw'
+      assign horizon_anchors = '750,1000,1200,1400,1600,1920'
+    when 'article'
+      if settings.fibrenet_lcp_image_cap_article == false
+        assign cap_enabled = false
+      endif
+      assign desktop_max = settings.fibrenet_lcp_image_max_article | default: 1200
+      assign mobile_max = settings.fibrenet_lcp_image_max_mobile_article | default: 400
+      assign default_sizes = '(min-width: 750px) 60vw, 100vw'
+      assign horizon_anchors = '400,800,1200,1600'
+    when 'blog'
+      if settings.fibrenet_lcp_image_cap_blog == false
+        assign cap_enabled = false
+      endif
+      assign desktop_max = settings.fibrenet_lcp_image_max_blog | default: 1100
+      assign mobile_max = settings.fibrenet_lcp_image_max_mobile_blog | default: 360
+      assign default_sizes = '(min-width: 750px) 33vw, 100vw'
+      assign horizon_anchors = '350,750,1100,1500'
+    when 'collection'
+      if settings.fibrenet_lcp_image_cap_collection == false
+        assign cap_enabled = false
+      endif
+      assign desktop_max = settings.fibrenet_lcp_image_max_collection | default: 1200
+      assign mobile_max = settings.fibrenet_lcp_image_max_mobile_collection | default: 360
+      assign default_sizes = '(min-width: 750px) 50vw, 100vw'
+      assign horizon_anchors = '240,352,832,1200,1600'
+    when 'product'
+      if settings.fibrenet_lcp_image_cap_product == false
+        assign cap_enabled = false
+      endif
+      assign desktop_max = settings.fibrenet_lcp_image_max_product | default: 1600
+      assign mobile_max = settings.fibrenet_lcp_image_max_mobile_product | default: 840
+      assign default_sizes = '(min-width: 750px) 50vw, 100vw'
+      assign horizon_anchors = '240,352,832,1200,1600,1920'
+    when 'page'
+      if settings.fibrenet_lcp_image_cap_page == false
+        assign cap_enabled = false
+      endif
+      assign desktop_max = settings.fibrenet_lcp_image_max_page | default: 1400
+      assign mobile_max = settings.fibrenet_lcp_image_max_mobile_page | default: 840
+      assign default_sizes = '100vw'
+      assign horizon_anchors = '832,1200,1400,1600,1920'
+  endcase
+
+  assign anchor_list = horizon_anchors | split: ','
+  assign filtered_widths = ''
+  assign has_mobile_in_widths = false
+  assign has_desktop_in_widths = false
+
+  for width_token in anchor_list
+    assign width_value = width_token | strip | plus: 0
+    assign include_width = true
+    if cap_enabled and width_value > desktop_max
+      assign include_width = false
+    endif
+    if include_width
+      if width_value == mobile_max
+        assign has_mobile_in_widths = true
+      endif
+      if width_value == desktop_max
+        assign has_desktop_in_widths = true
+      endif
+      if filtered_widths != ''
+        assign filtered_widths = filtered_widths | append: ', '
+      endif
+      assign filtered_widths = filtered_widths | append: width_value
+    endif
+  endfor
+
+  if cap_enabled
+    if has_mobile_in_widths == false and mobile_max <= desktop_max
+      if filtered_widths != ''
+        assign filtered_widths = filtered_widths | append: ', '
+      endif
+      assign filtered_widths = filtered_widths | append: mobile_max
+    endif
+    if has_desktop_in_widths == false
+      if filtered_widths != ''
+        assign filtered_widths = filtered_widths | append: ', '
+      endif
+      assign filtered_widths = filtered_widths | append: desktop_max
+    endif
+  endif
+
+  if filtered_widths == ''
+    assign filtered_widths = mobile_max | append: ''
+  endif
+
+  assign preload_href = mobile_max
+  if preload_href > desktop_max
+    assign preload_href = desktop_max
+  endif
+
+  case part
+    when 'widths'
+      echo filtered_widths
+    when 'max'
+      echo desktop_max
+    when 'mobile'
+      echo mobile_max
+    when 'preload_href'
+      echo preload_href
+    when 'sizes'
+      if sizes != blank
+        echo sizes
+      else
+        echo default_sizes
+      endif
+  endcase
+-%}

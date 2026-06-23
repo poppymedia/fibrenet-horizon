@@ -25,7 +25,14 @@
       {%- if article.image -%}
         {%- liquid
           assign hero_alt = article.image.alt | default: article.title
+          assign article_http_preload = false
+          if settings.fibrenet_lcp_preload_article and request.params.section_id == blank
+            assign article_http_preload = true
+          endif
         -%}
+        {%- capture article_lcp_widths -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'article', part: 'widths' -%}{%- endcapture -%}
+        {%- capture article_lcp_sizes -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'article', part: 'sizes' -%}{%- endcapture -%}
+        {%- capture article_lcp_max -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'article', part: 'max' -%}{%- endcapture -%}
         <div class="article-editorial__hero">
           {%- capture fetchpriority -%}
             {%- render 'fibrenet-lcp-fetchpriority', context: 'article', enabled: true -%}
@@ -33,13 +40,14 @@
           {%- assign fetchpriority = fetchpriority | strip -%}
           {{
             article.image
-            | image_url: width: 1600
+            | image_url: width: article_lcp_max
             | image_tag:
               class: 'article-editorial__hero-img',
               loading: 'eager',
-              widths: '400, 800, 1200, 1600',
-              sizes: '(min-width: 750px) 60vw, 100vw',
+              widths: article_lcp_widths,
+              sizes: article_lcp_sizes,
               fetchpriority: fetchpriority,
+              preload: article_http_preload,
               alt: hero_alt
           }}
         </div>
@@ -61,7 +69,7 @@
         </div>
       {%- endif -%}
 
-      {% render 'article-editorial-metafields', article: article %}
+      {% render 'fibrenet-article-metafields', article: article %}
 
       <div class="article-editorial__content rte">
         {%- if article_lead != blank -%}
@@ -71,7 +79,7 @@
         {%- endif -%}
       </div>
 
-      {% render 'article-editorial-navigation',
+      {% render 'fibrenet-article-navigation',
         blog: blog,
         back_label: section.settings.back_label,
         knowledge_centre_label: section.settings.knowledge_centre_label

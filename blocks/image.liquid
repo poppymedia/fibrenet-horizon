@@ -2,6 +2,36 @@
   assign block_settings = block.settings
   assign ratio = 1
 
+  assign is_page_lcp_image = false
+  if template.name == 'page' and section.index == 1
+    assign first_image_block_id = nil
+    for section_block in section.blocks
+      if section_block.type == 'image' and section_block.settings.image != blank
+        assign first_image_block_id = section_block.id
+        break
+      endif
+    endfor
+    if first_image_block_id == block.id
+      assign is_page_lcp_image = true
+    endif
+  endif
+%}
+{% capture lcp_context %}
+  {% render 'fibrenet-lcp-resolve', section_index: section.index %}
+{% endcapture %}
+{% liquid
+  assign lcp_context = lcp_context | strip
+
+  assign image_loading = 'lazy'
+  assign image_preload = false
+  if is_page_lcp_image and lcp_context != 'none'
+    assign image_loading = 'eager'
+    assign preload_key = 'fibrenet_lcp_preload_' | append: lcp_context
+    if settings[preload_key]
+      assign image_preload = true
+    endif
+  endif
+
   case block_settings.image_ratio
     when 'landscape'
       assign ratio = '16 / 9'
@@ -36,20 +66,39 @@
   assign media_width_mobile = '100vw'
   assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+  assign page_image_max = 3840
+
+  if is_page_lcp_image and lcp_context != 'none'
+    capture page_lcp_widths
+      render 'fibrenet-lcp-image-dimensions', context: lcp_context, part: 'widths'
+    endcapture
+    capture page_lcp_max
+      render 'fibrenet-lcp-image-dimensions', context: lcp_context, part: 'max'
+    endcapture
+    assign widths = page_lcp_widths | strip
+    assign page_image_max = page_lcp_max | strip
+  endif
 %}
 
 {% capture image %}
   {%- if block_settings.image -%}
+    {%- capture fetchpriority -%}
+      {%- render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: is_page_lcp_image -%}
+    {%- endcapture -%}
+    {%- assign fetchpriority = fetchpriority | strip -%}
     {{
       block_settings.image
-      | image_url: width: 3840
+      | image_url: width: page_image_max
       | image_tag:
         width: block_settings.image.width,
         widths: widths,
         height: block_settings.image.height,
         class: 'image-block__image border-style',
         style: image_border_style,
-        sizes: sizes
+        sizes: sizes,
+        loading: image_loading,
+        fetchpriority: fetchpriority,
+        preload: image_preload
     }}
   {%- else -%}
     <div class="placeholder-image border-style size-style" style="{{ image_border_style }}">

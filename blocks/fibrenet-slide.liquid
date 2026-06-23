@@ -32,9 +32,15 @@
 %}
 
 {% liquid
-  assign is_home_lcp_slide = false
-  if block_index == 0 and section_index == 1
-    assign is_home_lcp_slide = true
+  assign is_lcp_slide = false
+%}
+{% capture lcp_context %}
+  {% render 'fibrenet-lcp-resolve', section_index: section_index, block_index: block_index %}
+{% endcapture %}
+{% liquid
+  assign lcp_context = lcp_context | strip
+  if lcp_context != 'none'
+    assign is_lcp_slide = true
   endif
 %}
 
@@ -63,8 +69,11 @@
           assign sizes = '100vw'
           assign loading = 'eager'
           assign hero_http_preload = false
-          if is_home_lcp_slide and settings.fibrenet_lcp_preload_home
-            assign hero_http_preload = true
+          if is_lcp_slide
+            assign preload_key = 'fibrenet_lcp_preload_' | append: lcp_context
+            if settings[preload_key]
+              assign hero_http_preload = true
+            endif
           endif
         -%}
         {%- capture hero_image_widths -%}{%- render 'fibrenet-hero-image-widths' -%}{%- endcapture -%}
@@ -74,7 +83,7 @@
           assign hero_image_max_width = hero_image_max | strip | plus: 0
         -%}
         {%- capture fetchpriority -%}
-          {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
+          {%- render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: is_lcp_slide -%}
         {%- endcapture -%}
         {%- assign fetchpriority = fetchpriority | strip -%}
         {{
@@ -95,7 +104,7 @@
           assign loading = 'eager'
         -%}
         {%- capture fetchpriority -%}
-          {%- render 'fibrenet-lcp-fetchpriority', context: 'home', enabled: is_home_lcp_slide -%}
+          {%- render 'fibrenet-lcp-fetchpriority', context: lcp_context, enabled: is_lcp_slide -%}
         {%- endcapture -%}
         {%- assign fetchpriority = fetchpriority | strip -%}
         <img

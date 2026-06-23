@@ -57,8 +57,26 @@
   endif
 
   assign fn_lazy_search_active = false
-  if settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
-    assign fn_lazy_search_active = true
+  assign fn_lazy_search_mode = 'off'
+
+  if request.design_mode == false
+    case template.name
+      when 'page'
+        if settings.fibrenet_lazy_search_page != 'off'
+          assign fn_lazy_search_active = true
+          assign fn_lazy_search_mode = settings.fibrenet_lazy_search_page
+        endif
+      when 'article'
+        if settings.fibrenet_lazy_search_article != 'off'
+          assign fn_lazy_search_active = true
+          assign fn_lazy_search_mode = settings.fibrenet_lazy_search_article
+        endif
+      when 'blog'
+        if settings.fibrenet_lazy_search_blog != 'off'
+          assign fn_lazy_search_active = true
+          assign fn_lazy_search_mode = settings.fibrenet_lazy_search_blog
+        endif
+    endcase
   endif
 
   assign fn_lazy_home_active = false
@@ -70,6 +88,7 @@
   if fn_lazy_search_active or fn_lazy_home_active
     assign fn_defer_slideshow_search = true
   endif
+
 -%}
 
 <script type="importmap">

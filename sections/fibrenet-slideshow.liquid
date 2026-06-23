@@ -1,16 +1,20 @@
 {%- comment -%}
   Home LCP: slide 1 uses image_tag preload:true (HTTP Link header). No HTML link preload for Shopify
   images (avoids duplicate hints). URL-fallback slides still use section-level fibrenet-lcp-preload.
+  Page template: only when page LCP settings are enabled (see fibrenet-lcp-preload).
 {%- endcomment -%}
 {%- assign first_block = section.blocks.first -%}
 {%- if section.settings.background_image_style == 'responsive_image' and section.index == 1 and first_block != blank -%}
-  {%- if first_block.settings.image == blank and first_block.settings.image_url_fallback != blank -%}
+  {%- capture lcp_context -%}{%- render 'fibrenet-lcp-resolve', section_index: section.index, block_index: 0 -%}{%- endcapture -%}
+  {%- assign lcp_context = lcp_context | strip -%}
+  {%- if lcp_context != 'none' and first_block.settings.image == blank and first_block.settings.image_url_fallback != blank -%}
+    {%- capture fallback_preload_href -%}{%- render 'fibrenet-lcp-image-dimensions', context: lcp_context, part: 'preload_href' -%}{%- endcapture -%}
     {%- render 'fibrenet-lcp-preload',
-      context: 'home',
+      context: lcp_context,
       image: blank,
       fallback_url: first_block.settings.image_url_fallback,
       sizes: '100vw',
-      href_width: 750
+      href_width: fallback_preload_href
     -%}
   {%- endif -%}
 {%- endif -%}

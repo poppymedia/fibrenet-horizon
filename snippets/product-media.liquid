@@ -17,7 +17,28 @@
 {%- enddoc -%}
 
 {% liquid
-  assign widths = widths | default: '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+  assign lcp_image_context = blank
+  if is_main_product_media
+    if template.name == 'product'
+      assign lcp_image_context = 'product'
+    elsif template.name == 'collection'
+      assign lcp_image_context = 'collection'
+    endif
+  endif
+
+  if lcp_image_context != blank
+    capture product_media_widths
+      render 'fibrenet-lcp-image-dimensions', context: lcp_image_context, part: 'widths'
+    endcapture
+    capture product_media_max
+      render 'fibrenet-lcp-image-dimensions', context: lcp_image_context, part: 'max'
+    endcapture
+    assign widths = product_media_widths | strip
+    assign product_image_max = product_media_max | strip
+  else
+    assign widths = widths | default: '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+    assign product_image_max = 3840
+  endif
 %}
 
 <div
@@ -26,7 +47,7 @@
   data-media-id="{{ media.id }}"
 >
   {% liquid
-    assign high_res_url = media.preview_image | image_url: width: 3840
+    assign high_res_url = media.preview_image | image_url: width: product_image_max
     assign lcp_context = blank
     if is_main_product_media
       if template.name == 'product'
@@ -62,7 +83,7 @@
   {% assign fetch_priority = fetch_priority | strip %}
   {{
     media.preview_image
-    | image_url: width: 3840
+    | image_url: width: product_image_max
     | image_tag:
       widths: widths,
       alt: media.alt,

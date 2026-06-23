@@ -10,11 +10,11 @@
 
 {%- liquid
   assign search_lazy_active = fn_lazy_search_active | default: false
-  if search_lazy_active == false and settings.fibrenet_lazy_search_page != 'off' and template.name == 'page' and request.design_mode == false
-    assign search_lazy_active = true
-  endif
-  if search_lazy_active == false and settings.fibrenet_lazy_home != 'off' and template.name == 'index' and request.design_mode == false
-    assign search_lazy_active = true
+  if search_lazy_active == false
+    assign fn_lazy_home_active = fn_lazy_home_active | default: false
+    if fn_lazy_home_active
+      assign search_lazy_active = true
+    endif
   endif
 -%}
 
