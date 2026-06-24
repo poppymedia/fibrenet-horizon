@@ -1,10 +1,31 @@
 {%- comment -%}
   Template-level LCP preloads in <head>. Section-level heroes (e.g. slideshow) use fibrenet-lcp-preload in the section.
-  Product LCP preload: main gallery image uses image_tag preload in snippets/product-media.liquid
+  Product LCP preload: variant-first gallery image via fibrenet-lcp-preload below (matches product-media LCP candidate).
   Article LCP preload: knowledge-centre hero uses image_tag preload in sections/main-blog-post.liquid (HTTP Link header)
   Page LCP: no head preload (no global page image). Enable page LCP settings and use hero/image blocks — preload runs in section or via image_tag.
 {%- endcomment -%}
-{%- if template.name == 'blog' and blog.articles.first.image != blank -%}
+{%- if template.name == 'product' and product != blank and request.params.section_id == blank -%}
+  {%- liquid
+    assign product_lcp_media = product.media.first
+    assign product_lcp_variant_media = product.selected_or_first_available_variant.featured_media
+    if product_lcp_variant_media
+      assign product_lcp_media = product_lcp_variant_media
+    endif
+    assign product_lcp_image = product_lcp_media.preview_image
+  -%}
+  {%- if product_lcp_image != blank -%}
+    {%- capture product_lcp_widths -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'product', part: 'widths' -%}{%- endcapture -%}
+    {%- capture product_lcp_sizes -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'product', part: 'sizes' -%}{%- endcapture -%}
+    {%- capture product_lcp_href -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'product', part: 'preload_href' -%}{%- endcapture -%}
+    {%- render 'fibrenet-lcp-preload',
+      context: 'product',
+      image: product_lcp_image,
+      sizes: product_lcp_sizes,
+      widths: product_lcp_widths,
+      href_width: product_lcp_href
+    -%}
+  {%- endif -%}
+{%- elsif template.name == 'blog' and blog.articles.first.image != blank -%}
   {%- capture blog_lcp_widths -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'widths' -%}{%- endcapture -%}
   {%- capture blog_lcp_sizes -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'sizes' -%}{%- endcapture -%}
   {%- capture blog_lcp_href -%}{%- render 'fibrenet-lcp-image-dimensions', context: 'blog', part: 'preload_href' -%}{%- endcapture -%}

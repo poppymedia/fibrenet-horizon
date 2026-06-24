@@ -33,8 +33,16 @@
     capture product_media_max
       render 'fibrenet-lcp-image-dimensions', context: lcp_image_context, part: 'max'
     endcapture
+    capture product_media_src_width
+      render 'fibrenet-lcp-image-dimensions', context: lcp_image_context, part: 'mobile'
+    endcapture
+    capture product_media_lcp_sizes
+      render 'fibrenet-lcp-image-dimensions', context: lcp_image_context, part: 'sizes'
+    endcapture
     assign widths = product_media_widths | strip
     assign product_image_max = product_media_max | strip
+    assign product_image_src_width = product_media_src_width | strip
+    assign sizes = product_media_lcp_sizes | strip
   else
     assign widths = widths | default: '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
     assign product_image_max = 3840
@@ -66,12 +74,6 @@
       endif
     endif
 
-    assign product_http_preload = false
-    if loading == 'eager' and is_main_product_media and template.name == 'product' and settings.fibrenet_lcp_preload_product
-      if request.params.section_id == blank
-        assign product_http_preload = true
-      endif
-    endif
   %}
   {% capture fetch_priority %}
     {% if lcp_context != blank %}
@@ -81,9 +83,15 @@
     {% endif %}
   {% endcapture %}
   {% assign fetch_priority = fetch_priority | strip %}
+  {%- liquid
+    assign product_image_url_width = product_image_max
+    if lcp_image_context != blank
+      assign product_image_url_width = product_image_src_width
+    endif
+  -%}
   {{
     media.preview_image
-    | image_url: width: product_image_max
+    | image_url: width: product_image_url_width
     | image_tag:
       widths: widths,
       alt: media.alt,
@@ -93,7 +101,6 @@
       transitionToProduct: settings.transition_to_main_product,
       data_max_resolution: high_res_url,
       fetchpriority: fetch_priority,
-      preload: product_http_preload,
       style: focal_point_style
   }}
 
