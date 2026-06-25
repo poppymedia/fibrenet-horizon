@@ -359,7 +359,25 @@ Per-template toggles (default on unless noted):
 
 **Home hero LCP:** When **Background image delivery** is `responsive_image`, slide 1 (`block_index == 0`) has no CSS `background-image` — only the `<img>` is the LCP source. Slides 2+ keep CSS background fallback for blank-slide safety. Slides 2–4 do not get `<link rel=preload fetchpriority=low>`.
 
-**Product gallery LCP:** `loading: eager` + **head** `<link rel="preload" fetchpriority="high">` when `fibrenet_lcp_preload_product` is on (full page load only — not Section Rendering API). **`src` fallback width = mobile max** (`fibrenet_lcp_image_max_mobile_product`); **`srcset`** includes the capped width ladder through desktop max — browsers pick width from `sizes`, not from `src` alone. Head preload `href` uses the same mobile max (`preload_href` in `fibrenet-lcp-image-dimensions`). Tune mobile cap in theme editor (e.g. **400–800**) without a separate mobile `src`. **All carousel/grid slides use `loading: eager`** (small slide count; lazy + Horizon `content-visibility: hidden` on off-screen slides prevented variant images from loading). Zoom dialog images stay lazy. `slide-id="{{ media.id }}"` on carousel slides for variant media selection. Head preload uses variant-first media (`selected_or_first_available_variant.featured_media` when set), matching the gallery’s first slide.
+**Product gallery LCP:** `loading: eager` + **head** `<link rel="preload" fetchpriority="high">` when `fibrenet_lcp_preload_product` is on (full page load only — not Section Rendering API). **`src` fallback width = mobile max** (`fibrenet_lcp_image_max_mobile_product`); **`srcset`** includes the capped width ladder through desktop max — browsers pick width from `sizes`, not from `src` alone. Head preload `href` uses the same mobile max (`preload_href` in `fibrenet-lcp-image-dimensions`). Tune mobile cap in theme editor (e.g. **400–800**) without a separate mobile `src`. **Gallery slides:** first slide `loading: eager` + LCP flags; **slides 2+ `loading: lazy`** (carousel + grid in `blocks/_product-media-gallery.liquid`). **Do not** force `content-visibility: visible` on all `.media-gallery--carousel` slides in `brand.css` — Horizon hides `aria-hidden` slides so lazy images defer until the slide is shown (unlike homepage hero autoplay). Zoom dialog images stay lazy. `slide-id="{{ media.id }}"` on carousel slides for variant media selection. Head preload uses variant-first media (`selected_or_first_available_variant.featured_media` when set), matching the gallery’s first slide.
+
+**Pitfall (gallery lazy):** If variant picker jumps to a never-shown slide, user may see a brief empty frame while the lazy image loads — acceptable on Slow 4G; prefetch on variant hover is a future option. **QA:** dots/arrows after `slideshow.js` loads (`fibrenet_lazy_product` defers bundle until after LCP); swipe; variant colour change; templates with mobile **hint** peek (adjacent slide uses Horizon `base.css` rules, not hero-style override).
+
+**Incognito LH reference (Jun 2026, production `/products/cab-6-utp`):** desktop **99** (LCP 0.8 s); mobile **84** (LCP 3.6 s, FCP 2.5 s, TBT 160 ms, SI 2.6 s) after head preload + mobile max + gallery lazy slides 1/2+. Mobile TBT varies run-to-run (530 ms outlier with extensions vs ~160 ms incognito).
+
+## Performance: product gallery — planned Phase 3 (mobile LCP / FCP)
+
+**Goal:** Reduce **resource load delay** (~360 ms in LCP breakdown) and **render-blocking CSS** (~230 ms mobile LH) — not more image minify.
+
+| Priority | Change | Target metric |
+|----------|--------|----------------|
+| 1 | **Defer `brand.css`** (async/`media=print` onload or critical subset) | FCP, render-blocking insight |
+| 2 | **Lower mobile product LCP cap** further if visual QA passes (800 → 640) | LCP resource duration |
+| 3 | **Variant slide prefetch** — `pointerenter` on swatch / variant option loads featured media when slide was lazy | Variant UX without eager all slides |
+| 4 | **Third-party defer** — chat/forms after LCP or interaction | TBT variance |
+| 5 | **Do not** minify pipeline for `base.css`/`brand.css` — Shopify CDN already minifies | — |
+
+**Stop:** desktop product LH already **99**; avoid changes that regress split-layout variant morph or gallery without mobile Slow 4G proof.
 
 **Product variant updates (split layout):** `product-information--split` morphs the full section via Section Rendering API. `variant:update` must dispatch on the **live** `.shopify-section` after morph (not the pre-morph picker instance — otherwise `product-form` never re-enables Add to cart). `media-gallery` skips `replaceWith` when `sectionMorphed: true` (section morph already updated the gallery) and calls `selectVariantSlide()` for the variant's `featured_media`.
 

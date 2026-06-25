@@ -299,7 +299,11 @@
             else
               assign media_sizes = sizes
             endif
-            assign media_loading = 'eager'
+            if forloop.first
+              assign media_loading = 'eager'
+            else
+              assign media_loading = 'lazy'
+            endif
         -%}
         {% if block_settings.aspect_ratio != 'adapt' and block_settings.constrain_to_viewport %}
           <div class="product-media-constraint-wrapper">
@@ -417,7 +421,11 @@
             else
               assign media_sizes = sizes
             endif
-            assign media_loading = 'eager'
+            if forloop.first
+              assign media_loading = 'eager'
+            else
+              assign media_loading = 'lazy'
+            endif
           -%}
           {% if block_settings.aspect_ratio != 'adapt' and block_settings.constrain_to_viewport %}
             <div class="product-media-constraint-wrapper">

@@ -278,11 +278,10 @@ button.shopify-payment-button__button--unbranded {
   align-self: stretch;
 }
 
-/* Product gallery carousel — same as hero: lazy + content-visibility:hidden breaks off-screen slides */
-.media-gallery--carousel slideshow-component slideshow-slide {
-  content-visibility: visible;
-  contain-intrinsic-size: auto;
-}
+/* Product gallery carousel: rely on Horizon defaults (content-visibility:hidden on aria-hidden slides)
+   + loading="lazy" on slides 2+ in _product-media-gallery.liquid. Do not force all slides visible —
+   that defeats lazy loading and parallel-fetches every variant image before LCP. Hero autoplay rule above
+   does not apply here (no autoplay on product gallery). */
 
 /* CSS background on container is the fallback when off-screen <img> bytes are still in flight */
 .hero-slideshow .hero-slide__media--img {
