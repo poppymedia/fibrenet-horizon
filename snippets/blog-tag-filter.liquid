@@ -8,10 +8,13 @@
 
 {% liquid
   assign show_all_tab = show_all_tab | default: true
-  assign active_tag = current_tags | first
-
-  if active_tag == blank and article != blank and article.tags.size > 0
-    assign active_tag = article.tags.first
+  assign all_tab_is_active = false
+  if current_tags.size == 0
+    if article == blank
+      assign all_tab_is_active = true
+    elsif article.tags.size == 0
+      assign all_tab_is_active = true
+    endif
   endif
 %}
 
@@ -20,9 +23,9 @@
     {%- if show_all_tab -%}
       <li class="blog-tag-filter__item" role="presentation">
         <a
-          class="blog-tag-filter__tab{% if current_tags.size == 0 and active_tag == blank %} blog-tag-filter__tab--active{% endif %}"
+          class="blog-tag-filter__tab{% if all_tab_is_active %} blog-tag-filter__tab--active{% endif %}"
           href="{{ blog.url }}"
-          {% if current_tags.size == 0 and active_tag == blank %}
+          {% if all_tab_is_active %}
             aria-current="page"
           {% endif %}
         >
@@ -33,7 +36,9 @@
     {%- for tag in blog.all_tags -%}
       {% liquid
         assign tab_is_active = false
-        if active_tag == tag
+        if current_tags contains tag
+          assign tab_is_active = true
+        elsif article != blank and article.tags contains tag
           assign tab_is_active = true
         endif
       %}
@@ -41,7 +46,7 @@
         <a
           class="blog-tag-filter__tab{% if tab_is_active %} blog-tag-filter__tab--active{% endif %}"
           href="{{ blog.url }}/tagged/{{ tag | handleize }}"
-          {% if tab_is_active %}
+          {% if current_tags contains tag %}
             aria-current="page"
           {% endif %}
         >

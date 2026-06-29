@@ -655,12 +655,12 @@ button.shopify-payment-button__button--unbranded {
   }
 }
 
-.blog-tag-filter__tab--active {
+.blog-tag-filter-bar .blog-tag-filter__list .blog-tag-filter__tab--active {
   color: var(--color-foreground-accent);
   border-bottom-color: var(--color-foreground-accent);
 }
 
-.blog-tag-filter__tab:hover {
+.blog-tag-filter-bar .blog-tag-filter__list .blog-tag-filter__tab:hover {
   color: var(--color-foreground-accent);
 }
 
