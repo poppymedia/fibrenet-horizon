@@ -86,8 +86,9 @@
       "settings": {
         "layout_style": "knowledge_centre",
         "show_blog_tag_nav": true,
-        "back_label": "← Back",
-        "knowledge_centre_label": "→ Back to Knowledge Centre",
+        "previous_label": "← Previous",
+        "next_label": "Next →",
+        "knowledge_centre_label": "Back to Knowledge Centre",
         "content_direction": "column",
         "gap": 32,
         "color_scheme": "scheme-1",

@@ -1,39 +1,50 @@
 {%- doc -%}
-  Knowledge Centre article footer navigation.
+  Knowledge Centre article footer navigation — prev / back to blog / next.
 
   @param {object} blog - Blog object
-  @param {string} [back_label] - Left back control label
-  @param {string} [knowledge_centre_label] - Right CTA label
+  @param {string} [previous_label] - Previous (newer) control label
+  @param {string} [next_label] - Next (older) control label
+  @param {string} [knowledge_centre_label] - Centre CTA label (blog index)
 {%- enddoc -%}
 
 {%- liquid
-  assign back_label = back_label | default: '← Back'
-  assign knowledge_centre_label = knowledge_centre_label | default: '→ Back to Knowledge Centre'
+  assign previous_label = previous_label | default: '← Previous'
+  assign next_label = next_label | default: 'Next →'
+  assign knowledge_centre_label = knowledge_centre_label | default: 'Back to Knowledge Centre'
 -%}
 
 <nav class="article-editorial__nav" aria-label="Article navigation">
-  <button
-    type="button"
-    class="article-editorial__nav-back button button--outline"
-    data-article-editorial-back
-    data-fallback-url="{{ blog.url }}"
-  >
-    {{ back_label | escape }}
-  </button>
-  <a href="{{ blog.url }}" class="button button--pill button--primary article-editorial__nav-cta">
+  {%- if blog.previous_article -%}
+    <a
+      href="{{ blog.previous_article.url }}"
+      class="button button--pill button--outline"
+      rel="prev"
+      aria-label="{{ previous_label | escape }}: {{ blog.previous_article.title | escape }}"
+    >
+      {{ previous_label | escape }}
+    </a>
+  {%- else -%}
+    <span class="button button--pill button--outline" aria-disabled="true">
+      {{ previous_label | escape }}
+    </span>
+  {%- endif -%}
+
+  <a href="{{ blog.url }}" class="button button--pill button--primary button--outline">
     {{ knowledge_centre_label | escape }}
   </a>
-</nav>
 
-{% javascript %}
-  document.querySelectorAll('[data-article-editorial-back]').forEach((backControl) => {
-    backControl.addEventListener('click', () => {
-      if (window.history.length > 1) {
-        window.history.back();
-        return;
-      }
-      const fallback = backControl.dataset.fallbackUrl;
-      if (fallback) window.location.assign(fallback);
-    });
-  });
-{% endjavascript %}
+  {%- if blog.next_article -%}
+    <a
+      href="{{ blog.next_article.url }}"
+      class="button button--pill button--outline"
+      rel="next"
+      aria-label="{{ next_label | escape }}: {{ blog.next_article.title | escape }}"
+    >
+      {{ next_label | escape }}
+    </a>
+  {%- else -%}
+    <span class="button button--pill button--outline" aria-disabled="true">
+      {{ next_label | escape }}
+    </span>
+  {%- endif -%}
+</nav>

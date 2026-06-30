@@ -243,7 +243,7 @@ After pulling Futura values into JSON, confirm fonts resolve in the theme editor
 - Title: native `blog-post-title` text block via `content_for` (same as KC blog index — `type_preset: rte`, `<h1>{{ article.title }}</h1>`). Section uses `blog-posts--knowledge-centre` so `.text-block h1` styles apply. Tag line is a simple `<p class="article-editorial__tags">` after the block.
 - Hero + body: featured image 3:2; first `<p>` split to `.article-editorial__lead`, then `snippets/fibrenet-article-metafields.liquid`, then `.article-editorial__content.rte`.
 - Highlight lines: `class="article-highlight"` in the article HTML editor (allowed in article body; not in theme JSON richtext).
-- Footer nav: `snippets/fibrenet-article-navigation.liquid` — history back + `button--pill button--primary` to `blog.url`.
+- Footer nav: `snippets/fibrenet-article-navigation.liquid` — 3-column grid (`article-editorial__nav`), three `button button--pill button--outline` controls (prev / back to blog / next). Disabled prev/next use `aria-disabled="true"` spans.
 - Styles: `assets/brand.css` (`.article-editorial*`, `.article-highlight` color/weight only).
 - **Pitfall:** Horizon allows only one `{% content_for 'blocks' %}` per section file — never duplicate it inside `if`/`else` layout branches; place a single call after the branch closes.
 - **Page head H1:** Single rule in `brand.css` via `--head-to-title-gap` (3.5rem desktop, `var(--padding-4xl)` mobile). Gap is `margin-block-start` on the `h1` (specificity beats `base.css` `.text-block > *:first-child`). Title text blocks reset `--padding-block-start: 0` (needs `!important` vs theme-editor inline spacing). Page/collection/product: gap from header; blog/article: gap from tag bar. Homepage exempt.

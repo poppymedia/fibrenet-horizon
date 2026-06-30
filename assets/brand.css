@@ -213,6 +213,11 @@ button.shopify-payment-button__button--unbranded {
 .article-editorial__nav-back.button a {
   text-decoration: none;
 }
+.article-editorial__nav .button {
+  background-color: var(--color-input-background);
+  border-color: var(--color-input-border);
+  color: var(--color-input-text);
+}
 
 .variant-picker .variant-option__button-label,
 .variant-picker .variant-option__button-label__text {
@@ -651,7 +656,7 @@ button.shopify-payment-button__button--unbranded {
 
 @media screen and (min-width: 750px) {
   .blog-tag-filter-bar .blog-tag-filter__list .blog-tag-filter__tab {
-    padding-block: 1.25em 0.5em;
+    padding-block: 1em 0.75em;
   }
 }
 

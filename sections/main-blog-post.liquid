@@ -81,7 +81,8 @@
 
       {% render 'fibrenet-article-navigation',
         blog: blog,
-        back_label: section.settings.back_label,
+        previous_label: section.settings.previous_label,
+        next_label: section.settings.next_label,
         knowledge_centre_label: section.settings.knowledge_centre_label
       %}
     </div>
@@ -280,9 +281,16 @@
     },
     {
       "type": "text",
-      "id": "back_label",
-      "label": "Back link label",
-      "default": "← Back",
+      "id": "previous_label",
+      "label": "Previous article label",
+      "default": "← Previous",
+      "visible_if": "{{ section.settings.layout_style == 'knowledge_centre' }}"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Next article label",
+      "default": "Next →",
       "visible_if": "{{ section.settings.layout_style == 'knowledge_centre' }}"
     },
     {
