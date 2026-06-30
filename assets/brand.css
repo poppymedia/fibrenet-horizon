@@ -794,7 +794,7 @@ button.shopify-payment-button__button--unbranded {
     justify-content: space-between;
     width: 100%;
     padding: 12px 16px;
-    margin: 5px 0;
+    margin: 10px 0;
     gap: var(--padding-lg);
   }
 
