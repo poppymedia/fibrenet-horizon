@@ -10,14 +10,19 @@
   if show_sub_label == nil
     assign show_sub_label = true
   endif
+
+  assign is_fibrenet_layout = false
+  if layout == 'fibrenet'
+    assign is_fibrenet_layout = true
+  endif
 -%}
 
 <div class="product-contact{% if layout == 'fibrenet' %} product-contact--stacked{% endif %}">
   {% render 'header-cta-buttons',
     cta_settings: cta_settings,
     show_sub_label: show_sub_label,
-    product_layout: layout == 'fibrenet',
-    product_page: layout == 'fibrenet'
+    product_layout: is_fibrenet_layout,
+    product_page: is_fibrenet_layout
   %}
   {%- if layout == 'fibrenet' and cta_settings.product_cta_helper != blank -%}
     <p class="product-contact__helper">{{ cta_settings.product_cta_helper | escape }}</p>
