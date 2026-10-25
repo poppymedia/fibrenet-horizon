@@ -1,0 +1,252 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="propositions section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} spacing-style"
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --proposition-columns: {{ section.settings.columns }};
+  "
+>
+  <div class="propositions__grid">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .propositions {
+    border-block-end: 1px solid var(--proposition-rule);
+  }
+
+  .propositions__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--proposition-columns, 3), minmax(0, 1fr));
+    gap: var(--padding-lg);
+  }
+
+  @media screen and (max-width: 749px) {
+    .propositions__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Propositions",
+  "tag": "section",
+  "class": "propositions-section",
+  "blocks": [
+    {
+      "type": "propositions"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        { "value": "page-width", "label": "Page" },
+        { "value": "full-width", "label": "Full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Propositions",
+      "category": "Fibrenet",
+      "settings": {
+        "columns": 3,
+        "section_width": "page-width",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "control": {
+          "type": "propositions",
+          "settings": { "accent": "#111efa" },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "settings": {
+                "text": "<p>01 — Control</p>",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "uppercase",
+                "width": "100%",
+                "color": "var(--color-foreground)"
+              }
+            },
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Take Control</h2>",
+                "type_preset": "h2",
+                "width": "100%",
+                "color": "var(--color-foreground-heading)"
+              }
+            },
+            "body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Vendor independence, procurement choice, reduced OEM dependency and greater commercial control.</p>",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "color": "var(--color-foreground)"
+              }
+            },
+            "link": {
+              "type": "button",
+              "settings": {
+                "label": "Explore Vendor Independence →",
+                "link": "shopify://pages/take-control",
+                "style_class": "link"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "body", "link"]
+        },
+        "confidence": {
+          "type": "propositions",
+          "settings": { "accent": "#111efa" },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "settings": {
+                "text": "<p>02 — Confidence</p>",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "uppercase",
+                "width": "100%",
+                "color": "var(--color-foreground)"
+              }
+            },
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Network Confidence</h2>",
+                "type_preset": "h2",
+                "width": "100%",
+                "color": "var(--color-foreground-heading)"
+              }
+            },
+            "body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Compatibility, testing, warranty, UK stock, rapid replacement, technical support and risk reduction.</p>",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "color": "var(--color-foreground)"
+              }
+            },
+            "link": {
+              "type": "button",
+              "settings": {
+                "label": "See How We Support Your Network →",
+                "link": "shopify://pages/why-fibrenet",
+                "style_class": "link"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "body", "link"]
+        },
+        "code": {
+          "type": "propositions",
+          "settings": { "accent": "#111efa" },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "settings": {
+                "text": "<p>03 — Code</p>",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "uppercase",
+                "width": "100%",
+                "color": "var(--color-foreground)"
+              }
+            },
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Code. Recode. Deploy.</h2>",
+                "type_preset": "h2",
+                "width": "100%",
+                "color": "var(--color-foreground-heading)"
+              }
+            },
+            "body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Coding Box, multi-vendor flexibility, inventory rationalisation, recoding and redeployment.</p>",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "color": "var(--color-foreground)"
+              }
+            },
+            "link": {
+              "type": "button",
+              "settings": {
+                "label": "Discuss Coding Options →",
+                "link": "shopify://pages/contact",
+                "style_class": "link"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "body", "link"]
+        }
+      },
+      "block_order": ["control", "confidence", "code"]
+    }
+  ]
+}
+{% endschema %}

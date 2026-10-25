@@ -15,58 +15,333 @@
         "slide_1": {
           "type": "fibrenet-slide",
           "settings": {
-            "heading": "Tested, evaluated, approved",
-            "subheading": "and used by the largest service providers in the world",
-            "image": "shopify://shop_images/Flare_5_resized_1000x355_JPG.jpg",
-            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_1_resized_1000x355_JPG.jpg?v=1777381124"
+            "heading": "",
+            "subheading": "",
+            "image": "shopify://shop_images/Flare_1_resized_1000x355_JPG.jpg",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_1_resized_1000x355_JPG.jpg?v=1777381124",
+            "show_overlay": true,
+            "overlay_opacity": 50,
+            "content_alignment": "left",
+            "content_width": "half"
           },
-          "blocks": {}
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h1>Take control<br>of your network</h1>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h1",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "lede": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Greater choice over how your optical infrastructure is specified, supplied and supported.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "cta": {
+              "type": "button",
+              "settings": {
+                "label": "Discover How to Take Control",
+                "link": "shopify://pages/take-control",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["heading", "lede", "cta"]
         },
         "slide_2": {
           "type": "fibrenet-slide",
           "settings": {
-            "heading": "95% of orders shipped same day from UK stock",
-            "subheading": "with tracked UPS overnight delivery",
-            "image": "shopify://shop_images/Flare_4_resized_1000x355_JPG.jpg",
-            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_2_resized_and_flipped_1000x355_PNG.png?v=1777381144"
+            "heading": "",
+            "subheading": "",
+            "image": "shopify://shop_images/Flare_2_resized_and_flipped_1000x355_PNG.png",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_2_resized_and_flipped_1000x355_PNG.png?v=1777381144",
+            "show_overlay": true,
+            "overlay_opacity": 50,
+            "content_alignment": "right",
+            "content_width": "half"
           },
-          "blocks": {}
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>One Partner Across<br>Your Multi-Vendor Estate</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h1",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "lede": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Simplify your optical infrastructure with expertise, compatibility testing and coding across network platforms.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "cta": {
+              "type": "button",
+              "settings": {
+                "label": "Discuss Your Network",
+                "link": "shopify://pages/contact",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["heading", "lede", "cta"]
         },
         "slide_3": {
           "type": "fibrenet-slide",
           "settings": {
-            "heading": "Guaranteed compatibility for all network vendors",
-            "subheading": "We constantly research and provide the latest vendor coding",
+            "heading": "",
+            "subheading": "",
             "image": "shopify://shop_images/Flare_3_resized_1000x355_JPG.jpg",
-            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_3_resized_1000x355_JPG.jpg?v=1777381162"
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_3_resized_1000x355_JPG.jpg?v=1777381162",
+            "show_overlay": true,
+            "overlay_opacity": 50,
+            "content_alignment": "left",
+            "content_width": "half"
           },
-          "blocks": {}
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Lower Network Cost<br>Not Network Confidence</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h1",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "lede": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Improve network economics with independent optics backed by testing, qualification and responsive support.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "cta": {
+              "type": "button",
+              "settings": {
+                "label": "Request a Network Cost Review",
+                "link": "shopify://pages/contact",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["heading", "lede", "cta"]
         },
         "slide_4": {
           "type": "fibrenet-slide",
           "settings": {
-            "heading": "Minimum 5 year warranty on all Fibrenet products",
-            "subheading": "with advance replacement as standard",
-            "image": "shopify://shop_images/Flare_2_resized_and_flipped_1000x355_PNG.png",
-            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_4_resized_1000x355_JPG.jpg?v=1777381165"
+            "heading": "",
+            "subheading": "",
+            "image": "shopify://shop_images/Flare_4_resized_1000x355_JPG.jpg",
+            "image_url_fallback": "https://cdn.shopify.com/s/files/1/0907/5464/6391/files/Flare_4_resized_1000x355_JPG.jpg?v=1777381165",
+            "show_overlay": true,
+            "overlay_opacity": 50,
+            "content_alignment": "right",
+            "content_width": "half"
           },
-          "blocks": {}
+          "blocks": {
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Greater Independence.<br>Expert Support.</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h1",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "lede": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Reduce OEM dependency with an optical infrastructure specialist supporting you from selection to deployment and beyond.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "cta": {
+              "type": "button",
+              "settings": {
+                "label": "Meet Your Optical Partner",
+                "link": "shopify://pages/why-fibrenet",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["heading", "lede", "cta"]
         }
       },
-      "block_order": [
-        "slide_1",
-        "slide_2",
-        "slide_3",
-        "slide_4"
-      ],
+      "block_order": ["slide_1", "slide_2", "slide_3", "slide_4"],
       "settings": {
         "auto_rotate": true,
-        "change_slides_speed": 3,
-        "show_arrows": true,
-        "icons_style": "arrows_large",
-        "slideshow_controls_style": "hidden",
-        "slide_height_desktop": 250,
-        "slide_height_mobile": "auto",
+        "change_slides_speed": 5,
+        "show_arrows": false,
+        "icons_style": "none",
+        "slideshow_controls_style": "dots",
+        "slide_height_desktop": 650,
+        "slide_height_mobile": "500",
         "background_image_style": "responsive_image",
         "color_scheme": "scheme-6",
         "section_width": "full-width",
@@ -190,8 +465,9 @@
       ],
       "settings": {
         "color_scheme": "scheme-4",
-        "padding-block-start": 4,
-        "padding-block-end": 4
+        "padding-block-start": 24,
+        "padding-block-end": 24,
+        "heading": "One optical partner across your multi-vendor estate"
       }
     },
     "category_navigator": {
@@ -351,9 +627,7 @@
               "blocks": {}
             }
           },
-          "block_order": [
-            "product_list_text"
-          ]
+          "block_order": ["product_list_text"]
         },
         "static-product-card": {
           "type": "_product-card",
@@ -434,11 +708,7 @@
               "blocks": {}
             }
           },
-          "block_order": [
-            "product_card_gallery",
-            "product_title",
-            "price"
-          ]
+          "block_order": ["product_card_gallery", "product_title", "price"]
         }
       },
       "settings": {
@@ -460,10 +730,318 @@
         "padding-block-start": 40,
         "padding-block-end": 40
       }
+    },
+    "propositions": {
+      "type": "propositions",
+      "blocks": {
+        "control": {
+          "type": "propositions",
+          "settings": {
+            "accent": "#111efa"
+          },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "settings": {
+                "text": "<p>01 \u2014 Control</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "uppercase",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Take Control</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h2",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Vendor independence, procurement choice, reduced OEM dependency and greater commercial control.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "link": {
+              "type": "button",
+              "settings": {
+                "label": "Explore Vendor Independence \u2192",
+                "link": "shopify://pages/take-control",
+                "open_in_new_tab": false,
+                "style_class": "link",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["eyebrow", "heading", "body", "link"]
+        },
+        "confidence": {
+          "type": "propositions",
+          "settings": {
+            "accent": "#111efa"
+          },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "settings": {
+                "text": "<p>02 \u2014 Confidence</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "uppercase",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Network Confidence</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h2",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Compatibility, testing, warranty, UK stock, rapid replacement, technical support and risk reduction.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "link": {
+              "type": "button",
+              "settings": {
+                "label": "See How We Support Your Network \u2192",
+                "link": "shopify://pages/why-fibrenet",
+                "open_in_new_tab": false,
+                "style_class": "link",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["eyebrow", "heading", "body", "link"]
+        },
+        "code": {
+          "type": "propositions",
+          "settings": {
+            "accent": "#111efa"
+          },
+          "blocks": {
+            "eyebrow": {
+              "type": "text",
+              "settings": {
+                "text": "<p>03 \u2014 Code</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "uppercase",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Code. Recode. Deploy.</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h2",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Coding Box, multi-vendor flexibility, inventory rationalisation, recoding and redeployment.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "link": {
+              "type": "button",
+              "settings": {
+                "label": "Discuss Coding Options \u2192",
+                "link": "shopify://pages/contact",
+                "open_in_new_tab": false,
+                "style_class": "link",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["eyebrow", "heading", "body", "link"]
+        }
+      },
+      "block_order": ["control", "confidence", "code"],
+      "settings": {
+        "columns": 3,
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
     }
   },
   "order": [
     "fibrenet_slideshow",
+    "propositions",
     "partner_bar",
     "category_navigator",
     "most_popular"

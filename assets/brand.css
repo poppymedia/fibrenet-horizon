@@ -60,6 +60,16 @@
   --variant-btn-radius: calc(var(--brand-radius-pill) * 0.7);
   --hero-heading-size: clamp(1.75rem, 3.5vw, 2.75rem);
   --hero-subheading-size: 1rem;
+  --hero-editorial-heading-size: clamp(1.875rem, 4.6vw, 3.5rem);
+  --hero-editorial-lede-size: clamp(1rem, 1.5vw, 1.1875rem);
+  --hero-heading: #fff;
+  --hero-lede: #d7ddff;
+  --hero-overlay: rgb(13 13 82 / 50%);
+  --hero-pill-background: #fff;
+  --hero-pill-text: #0d0d52;
+  --proposition-kicker: #5b6394;
+  --proposition-heading: #0d0d52;
+  --proposition-rule: #d2dffb;
   --section-heading-size: 1.375rem;
   --category-label-size: 0.8125rem;
   --partner-logo-height: 70px;
@@ -365,6 +375,18 @@ button.shopify-payment-button__button--unbranded {
   min-height: 0;
 }
 
+.hero-slide__media {
+  position: relative;
+}
+
+.hero-slide__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgb(13 13 82 / calc(var(--hero-overlay-opacity, 50) * 1%));
+  pointer-events: none;
+}
+
 .hero-slide__content {
   height: 100%;
   display: flex;
@@ -374,11 +396,73 @@ button.shopify-payment-button__button--unbranded {
   text-align: center;
 }
 
+.hero-slide__content--left,
+.hero-slide__content--right {
+  padding-inline: var(--util-page-margin-offset, var(--page-margin));
+  text-align: start;
+}
+
+.hero-slide__content--left {
+  justify-content: flex-start;
+}
+
+.hero-slide__content--right {
+  justify-content: flex-end;
+}
+
 .hero-slide__text {
   align-items: center;
   justify-content: center;
   gap: var(--padding-xs);
   padding-inline: var(--padding-lg);
+}
+
+.hero-slide__text--half {
+  width: min(50%, 40rem);
+  align-items: flex-start;
+  text-align: start;
+  padding-inline: 0;
+  gap: var(--padding-sm);
+  --color-foreground: var(--hero-lede);
+  --color-foreground-heading: var(--hero-heading);
+}
+
+.hero-slide__text--half :is(h1, h2, .h1, .h2) {
+  max-width: 16ch;
+  margin: 0;
+  font-size: var(--hero-editorial-heading-size);
+  font-weight: var(--brand-weight-base);
+  line-height: 1.1;
+  color: var(--hero-heading);
+  text-shadow: var(--hero-slide-text-shadow);
+}
+
+.hero-slide__text--half :is(p, .paragraph) {
+  max-width: 52ch;
+  margin: 0;
+  font-size: var(--hero-editorial-lede-size);
+  font-weight: var(--brand-weight-base);
+  line-height: 1.55;
+  color: var(--hero-lede);
+  text-shadow: var(--hero-slide-text-shadow);
+}
+
+.hero-slide__text--half .button,
+.hero-slide__text--half .button-secondary,
+.hero-slide__text--half .button:hover,
+.hero-slide__text--half .button-secondary:hover {
+  --button-color: var(--hero-pill-text);
+  --button-background-color: var(--hero-pill-background);
+  --button-border-color: var(--hero-pill-background);
+  border-radius: var(--brand-radius-pill);
+  min-height: 2.875rem;
+  padding-inline: 1.625rem;
+}
+
+@media screen and (max-width: 749px) {
+  .hero-slide__text--half {
+    width: 100%;
+  }
 }
 
 .hero-slide__heading {
@@ -402,7 +486,16 @@ button.shopify-payment-button__button--unbranded {
 
 /* Homepage — partner bar */
 .partner-bar {
-  background-color: var(--color-accent-1);
+  background-color: var(--color-background);
+}
+
+.partner-bar__heading {
+  margin: 0 0 var(--padding-sm);
+  padding-inline: var(--page-margin);
+  text-align: center;
+  color: var(--color-foreground-heading);
+  font-size: var(--section-heading-size);
+  font-weight: var(--brand-weight-heading);
 }
 
 .partner-bar__list {
@@ -526,10 +619,10 @@ button.shopify-payment-button__button--unbranded {
   background-color: var(--color-background-2);
 }
 
-/* Page head H1 — blog, article, page, collection, product (not homepage) */
+/* Page head H1 — blog, article, page, collection, product (not the homepage hero) */
 :is(.blog-posts--knowledge-centre, .editorial, .article-editorial) .text-block h1,
 .blog-posts--knowledge-centre > .text-block h1,
-#MainContent > .shopify-section:first-child .text-block h1,
+#MainContent > .shopify-section:first-child:not(:has(.hero-slideshow)) .text-block h1,
 .product-information--split .product-title-split__heading,
 .product-details .text-block h1 {
   margin-block-start: var(--head-to-title-gap);
@@ -540,6 +633,15 @@ button.shopify-payment-button__button--unbranded {
   text-transform: var(--font-h1--case, none);
   color: var(--brand-accent);
   text-align: left;
+}
+
+/* Beats the page-title accent above when the slideshow is the first section */
+#MainContent .hero-slideshow .hero-slide__text--half .text-block :is(h1, h2) {
+  margin: 0;
+  letter-spacing: var(--brand-letter-spacing);
+  text-transform: none;
+  color: var(--hero-heading);
+  text-align: start;
 }
 
 .product-information--split .product-title-split__heading,
@@ -2138,7 +2240,7 @@ label:not(.variant-option__button-label) {
 
 @media screen and (max-width: 749px) {
   :is(.blog-posts--knowledge-centre, .editorial, .article-editorial) .text-block h1,
-  #MainContent > .shopify-section:first-child .text-block h1,
+  #MainContent > .shopify-section:first-child:not(:has(.hero-slideshow)) .text-block h1,
   .product-information--split .product-title-split__heading,
   .product-details .text-block h1 {
     font-size: 1.375rem;

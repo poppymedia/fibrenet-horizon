@@ -40,6 +40,9 @@
   class="partner-bar section section--full-width color-{{ section.settings.color_scheme }} spacing-style"
   style="{% render 'spacing-style', settings: section.settings %}"
 >
+  {%- if section.settings.heading != blank -%}
+    <h2 class="partner-bar__heading">{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
   {% render 'overflow-list',
     class: 'partner-bar__list',
     children: partner_items,
@@ -78,6 +81,12 @@
     }
   ],
   "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "One optical partner across your multi-vendor estate"
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",

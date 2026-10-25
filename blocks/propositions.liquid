@@ -1,0 +1,101 @@
+<article
+  class="proposition"
+  style="--proposition-accent: {{ block.settings.accent }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="proposition__content">
+    {% content_for 'blocks' %}
+  </div>
+</article>
+
+{% stylesheet %}
+  .proposition {
+    min-width: 0;
+    padding-block-start: var(--padding-md);
+    border-block-start: 0.25rem solid var(--proposition-accent, var(--brand-cta-blue));
+    --color-foreground: var(--proposition-kicker);
+    --color-foreground-heading: var(--proposition-heading);
+    --color-primary: var(--proposition-heading);
+  }
+
+  .proposition__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--padding-xs);
+  }
+
+  .proposition__content .link {
+    font-weight: var(--brand-weight-heading);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Proposition",
+  "tag": null,
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "settings": [
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent",
+      "default": "#111efa"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Proposition",
+      "category": "Fibrenet",
+      "settings": {
+        "accent": "#111efa"
+      },
+      "blocks": {
+        "eyebrow": {
+          "type": "text",
+          "settings": {
+            "text": "<p>01 — Label</p>",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "0.875rem",
+            "line_height": "normal",
+            "letter_spacing": "loose",
+            "case": "uppercase",
+            "width": "100%",
+            "color": "var(--color-foreground)"
+          }
+        },
+        "heading": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>Proposition</h2>",
+            "type_preset": "h2",
+            "width": "100%",
+            "color": "var(--color-foreground-heading)"
+          }
+        },
+        "body": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Describe the outcome this proposition gives the customer.</p>",
+            "type_preset": "paragraph",
+            "width": "100%",
+            "color": "var(--color-foreground)"
+          }
+        },
+        "link": {
+          "type": "button",
+          "settings": {
+            "label": "Learn more →",
+            "style_class": "link"
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "body", "link"]
+    }
+  ]
+}
+{% endschema %}

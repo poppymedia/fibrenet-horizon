@@ -25,7 +25,15 @@
 %}
 
 {% liquid
-  assign slide_class = 'hero-slide'
+  assign content_alignment = block_settings.content_alignment | default: 'center'
+  assign content_width = block_settings.content_width | default: 'full'
+  assign slide_class = 'hero-slide hero-slide--align-' | append: content_alignment
+  if content_width == 'half'
+    assign slide_class = slide_class | append: ' hero-slide--half'
+  endif
+  if block_settings.show_overlay
+    assign slide_class = slide_class | append: ' hero-slide--overlay'
+  endif
   if use_responsive_image
     assign slide_class = slide_class | append: ' hero-slide--responsive-image'
   endif
@@ -119,26 +127,33 @@
       {%- else -%}
         {{ 'hero-apparel-1' | placeholder_svg_tag: 'slide__image' }}
       {%- endif -%}
+      {%- if block_settings.show_overlay -%}
+        <span class="hero-slide__overlay" style="--hero-overlay-opacity: {{ block_settings.overlay_opacity | default: 50 }};" aria-hidden="true"></span>
+      {%- endif -%}
     {%- else -%}
       {%- if bg_image == blank -%}
         {{ 'hero-apparel-1' | placeholder_svg_tag: 'slide__image' }}
       {%- endif -%}
+      {%- if block_settings.show_overlay -%}
+        <span class="hero-slide__overlay" style="--hero-overlay-opacity: {{ block_settings.overlay_opacity | default: 50 }};" aria-hidden="true"></span>
+      {%- endif -%}
     {%- endif -%}
   </div>
   <div
-    class="slide__content background-transparent hero-slide__content"
+    class="slide__content background-transparent hero-slide__content hero-slide__content--{{ content_alignment }}"
     {{ block.shopify_attributes }}
   >
     <div
-      class="layout-panel-flex layout-panel-flex--column hero-slide__text"
-      style="--horizontal-alignment: center; --vertical-alignment: center;"
+      class="layout-panel-flex layout-panel-flex--column hero-slide__text{% if content_width == 'half' %} hero-slide__text--half{% endif %}"
+      style="--horizontal-alignment: flex-start; --vertical-alignment: center;"
     >
       {%- if block_settings.heading != blank -%}
-        <h2 class="hero-slide__heading">{{ block_settings.heading | escape }}</h2>
+        <h2 class="hero-slide__heading">{{ block_settings.heading | escape | newline_to_br }}</h2>
       {%- endif -%}
       {%- if block_settings.subheading != blank -%}
-        <p class="hero-slide__subheading">{{ block_settings.subheading | escape }}</p>
+        <p class="hero-slide__subheading">{{ block_settings.subheading | escape | newline_to_br }}</p>
       {%- endif -%}
+      {% content_for 'blocks' %}
     </div>
   </div>
 {% endcapture %}
@@ -154,18 +169,18 @@
 {
   "name": "Fibrenet slide",
   "tag": null,
-  "settings": [
+  "blocks": [
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Tested, evaluated, approved"
+      "type": "@theme"
     },
     {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "and used by the largest service providers in the world"
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
     },
     {
       "type": "image_picker",
@@ -176,6 +191,62 @@
       "type": "url",
       "id": "image_url_fallback",
       "label": "Background image URL (fallback)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show image overlay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ block.settings.show_overlay }}"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        { "value": "full", "label": "Full" },
+        { "value": "half", "label": "Half" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add text and button blocks for the heading, description, and call to action. The heading and subheading below are kept for older slides."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading"
     }
   ],
   "presets": [
