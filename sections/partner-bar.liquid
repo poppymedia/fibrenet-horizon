@@ -1,3 +1,12 @@
+{% liquid
+  assign partner_bar_class = 'partner-bar section section--full-width color-' | append: section.settings.color_scheme | append: ' spacing-style'
+  if section.settings.mobile_layout == 'stack'
+    assign partner_bar_class = partner_bar_class | append: ' partner-bar--mobile-stack'
+  else
+    assign partner_bar_class = partner_bar_class | append: ' partner-bar--mobile-swipe'
+  endif
+%}
+
 {% capture partner_items %}
   {%- for block in section.blocks -%}
     <li
@@ -37,7 +46,7 @@
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="partner-bar section section--full-width color-{{ section.settings.color_scheme }} spacing-style"
+  class="{{ partner_bar_class }}"
   style="{% render 'spacing-style', settings: section.settings %}"
 >
   {%- if section.settings.heading != blank -%}
@@ -92,6 +101,22 @@
       "id": "color_scheme",
       "label": "Color scheme",
       "default": "scheme-4"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile logo layout",
+      "options": [
+        {
+          "value": "swipe",
+          "label": "Swipe/drag"
+        },
+        {
+          "value": "stack",
+          "label": "Stack centrally"
+        }
+      ],
+      "default": "swipe"
     },
     {
       "type": "range",

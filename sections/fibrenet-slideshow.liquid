@@ -25,6 +25,11 @@
     assign autoplay_seconds = 5
   endif
 
+  assign show_autoplay_controls = false
+  if section.settings.auto_rotate and section.settings.show_play_pause_button
+    assign show_autoplay_controls = true
+  endif
+
   assign slide_height_mobile = section.settings.slide_height_mobile
   if slide_height_mobile == 'auto'
     assign slide_height_mobile_value = 'auto'
@@ -37,7 +42,7 @@
   {% capture controls %}
     {%- render 'slideshow-controls',
       style: section.settings.slideshow_controls_style,
-      autoplay: section.settings.auto_rotate,
+      autoplay: show_autoplay_controls,
       item_count: section.blocks.size,
       show_arrows: false,
       arrows_on_media: true,
@@ -139,6 +144,13 @@
       "id": "auto_rotate",
       "label": "Auto-rotate slides",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_play_pause_button",
+      "label": "Show play/pause button",
+      "default": false,
+      "visible_if": "{{ section.settings.auto_rotate }}"
     },
     {
       "type": "range",
