@@ -13,6 +13,7 @@
   else
     assign animation_speed = 200
   endif
+  assign third_level_layout = block_settings.third_level_layout | default: 'none'
 %}
 
 {% case variant %}
@@ -67,6 +68,8 @@
       data-animation-delay="{{ animation_speed }}"
       {% if fibrenet_header %}
         data-menu-mode="fibrenet"
+        data-third-level-layout="{{ third_level_layout }}"
+        data-balance-third-level-columns="{{ block_settings.balance_third_level_columns }}"
       {% endif %}
       {{ block.shopify_attributes }}
       style="--submenu-animation-speed: {{ animation_speed }}ms;"
@@ -712,6 +715,39 @@
     {
       "type": "header",
       "content": "t:content.submenu_feature"
+    },
+    {
+      "type": "select",
+      "id": "third_level_layout",
+      "label": "Third-level menu layout",
+      "info": "Desktop layout only. Three-level menus in the mobile drawer use nested accordions.",
+      "options": [
+        {
+          "value": "none",
+          "label": "Two levels only"
+        },
+        {
+          "value": "accordion",
+          "label": "Accordion"
+        },
+        {
+          "value": "flyout",
+          "label": "Side flyout"
+        },
+        {
+          "value": "full_width",
+          "label": "Full-width columns"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "balance_third_level_columns",
+      "label": "Balance full-width columns",
+      "info": "May change the order of second-level menu groups to create more even columns.",
+      "default": false,
+      "visible_if": "{{ block.settings.third_level_layout == 'full_width' }}"
     },
     {
       "type": "select",

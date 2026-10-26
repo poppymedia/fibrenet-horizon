@@ -3,20 +3,120 @@
 
   @param {object} parent_link - Top-level navigation link with child links
   @param {string} id - Unique id for the list element
+  @param {string} [third_level_layout] - Optional layout for third-level links
 {%- enddoc -%}
 
-<ul id="{{ id }}" class="submenu list-unstyled" role="list">
-  {%- for child_link in parent_link.links -%}
-    <li class="submenu__item">
-      <a
-        href="{{ child_link.url }}"
-        class="submenu__link{% if child_link.active %} submenu__link--active{% endif %}"
-        {% if child_link.current %}
-          aria-current="page"
-        {% endif %}
-      >
-        {{- child_link.title | escape -}}
-      </a>
-    </li>
-  {%- endfor -%}
-</ul>
+{%- if third_level_layout == 'full_width' -%}
+  <div id="{{ id }}" class="submenu submenu--third-level-full-width" role="list">
+    {%- for child_link in parent_link.links -%}
+      <div class="submenu__item submenu__item--column" role="listitem">
+        <a
+          href="{{ child_link.url }}"
+          class="submenu__link submenu__link--column-heading{% if child_link.active %} submenu__link--active{% endif %}"
+          {% if child_link.current %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{- child_link.title | escape -}}
+        </a>
+        {%- if child_link.links != blank -%}
+          <ul class="submenu__third-level-list list-unstyled" role="list">
+            {%- for grandchild_link in child_link.links -%}
+              <li>
+                <a
+                  href="{{ grandchild_link.url }}"
+                  class="submenu__link{% if grandchild_link.active %} submenu__link--active{% endif %}"
+                  {% if grandchild_link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- grandchild_link.title | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- elsif third_level_layout == 'accordion' or third_level_layout == 'flyout' -%}
+  {% assign layout_class = 'submenu__third-level-list--' | append: third_level_layout %}
+  <ul id="{{ id }}" class="submenu list-unstyled" role="list">
+    {%- for child_link in parent_link.links -%}
+      <li class="submenu__item">
+        {%- if child_link.links != blank -%}
+          {% assign child_menu_id = id | append: '-' | append: child_link.handle %}
+          <div class="submenu__third-level-heading">
+            <a
+              href="{{ child_link.url }}"
+              class="submenu__link{% if child_link.active %} submenu__link--active{% endif %}"
+              {% if child_link.current %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- child_link.title | escape -}}
+            </a>
+            <button
+              type="button"
+              class="submenu__third-level-toggle"
+              aria-label="Toggle {{ child_link.title | escape }} submenu"
+              aria-expanded="false"
+              aria-controls="{{ child_menu_id }}"
+              data-third-level-toggle
+            >
+              <span class="submenu__third-level-caret svg-wrapper icon-caret" aria-hidden="true">
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </span>
+            </button>
+          </div>
+          <ul
+            id="{{ child_menu_id }}"
+            class="submenu__third-level-list list-unstyled {{ layout_class }}"
+            hidden
+            role="list"
+          >
+            {%- for grandchild_link in child_link.links -%}
+              <li class="submenu__item">
+                <a
+                  href="{{ grandchild_link.url }}"
+                  class="submenu__link{% if grandchild_link.active %} submenu__link--active{% endif %}"
+                  {% if grandchild_link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- grandchild_link.title | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          <a
+            href="{{ child_link.url }}"
+            class="submenu__link{% if child_link.active %} submenu__link--active{% endif %}"
+            {% if child_link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{- child_link.title | escape -}}
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- else -%}
+  <ul id="{{ id }}" class="submenu list-unstyled" role="list">
+    {%- for child_link in parent_link.links -%}
+      <li class="submenu__item">
+        <a
+          href="{{ child_link.url }}"
+          class="submenu__link{% if child_link.active %} submenu__link--active{% endif %}"
+          {% if child_link.current %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{- child_link.title | escape -}}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
