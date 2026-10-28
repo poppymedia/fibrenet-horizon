@@ -991,38 +991,34 @@ button.shopify-payment-button__button--unbranded {
   fill: var(--brand-accent);
 }
 
-/* Static settled pose until window load enables animation (see _header-logo.liquid) */
-.header-logo__svg:not(.header-logo__svg--animated) .drop {
-  animation: none;
-  will-change: auto;
-}
-
-.header-logo__svg:not(.header-logo__svg--animated) .drop.large {
+.header-logo__svg .drop.large {
   transform: translate(var(--ax), var(--ay)) scale(0.9) translate(calc(var(--ax) * -1), calc(var(--ay) * -1));
 }
 
-.header-logo__svg:not(.header-logo__svg--animated) .drop.small {
+.header-logo__svg .drop.small {
   transform: translate(var(--ax), var(--ay)) scale(1.1) translate(calc(var(--ax) * -1), calc(var(--ay) * -1));
 }
 
-.header-logo__svg--animated .drop {
-  will-change: transform;
-  animation-timing-function: ease-in-out, cubic-bezier(0.42, 0, 0.28, 1);
-  animation-fill-mode: both, none;
-}
+@media (prefers-reduced-motion: no-preference) {
+  .header-logo__svg[data-fibrenet-logo-animate] .drop {
+    will-change: transform;
+    animation-timing-function: ease-in-out, cubic-bezier(0.42, 0, 0.28, 1);
+    animation-fill-mode: both, none;
+  }
 
-.header-logo__svg--animated .drop.large {
-  animation-name: logo-pulse-large-intro, logo-pulse-large-settle;
-  animation-duration: 2.4s, 2.1s;
-  animation-delay: 0s, 2.4s;
-  animation-iteration-count: 1, infinite;
-}
+  .header-logo__svg[data-fibrenet-logo-animate] .drop.large {
+    animation-name: logo-pulse-large-intro, logo-pulse-large-settle;
+    animation-duration: 2.4s, 2.1s;
+    animation-delay: 0s, 2.4s;
+    animation-iteration-count: 1, infinite;
+  }
 
-.header-logo__svg--animated .drop.small {
-  animation-name: logo-pulse-small-intro, logo-pulse-small-settle;
-  animation-duration: 2.4s, 2.1s;
-  animation-delay: 0s, 2.4s;
-  animation-iteration-count: 1, infinite;
+  .header-logo__svg[data-fibrenet-logo-animate] .drop.small {
+    animation-name: logo-pulse-small-intro, logo-pulse-small-settle;
+    animation-duration: 2.4s, 2.1s;
+    animation-delay: 0s, 2.4s;
+    animation-iteration-count: 1, infinite;
+  }
 }
 
 @keyframes logo-pulse-large-intro {
@@ -1085,6 +1081,14 @@ button.shopify-payment-button__button--unbranded {
   .header-logo__svg .drop {
     animation: none;
     will-change: auto;
+  }
+
+  .header-logo__svg .drop.large {
+    transform: translate(var(--ax), var(--ay)) scale(0.9) translate(calc(var(--ax) * -1), calc(var(--ay) * -1));
+  }
+
+  .header-logo__svg .drop.small {
+    transform: translate(var(--ax), var(--ay)) scale(1.1) translate(calc(var(--ax) * -1), calc(var(--ay) * -1));
   }
 
   .header-logo__svg .drop path {

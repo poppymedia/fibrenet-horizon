@@ -199,38 +199,6 @@
   }
 {% endstylesheet %}
 
-{% javascript %}
-  const enableLogoAnimation = () => {
-    document.querySelectorAll('.header-logo__svg[data-fibrenet-logo-animate]').forEach((logo) => {
-      logo.classList.add('header-logo__svg--animated');
-    });
-  };
-
-  const disableLogoAnimation = () => {
-    document.querySelectorAll('.header-logo__svg--animated').forEach((logo) => {
-      logo.classList.remove('header-logo__svg--animated');
-    });
-  };
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  if (!reducedMotion.matches) {
-    if (document.readyState === 'complete') {
-      enableLogoAnimation();
-    } else {
-      window.addEventListener('load', enableLogoAnimation, { once: true });
-    }
-  }
-
-  reducedMotion.addEventListener('change', (event) => {
-    if (event.matches) {
-      disableLogoAnimation();
-    } else if (document.readyState === 'complete') {
-      enableLogoAnimation();
-    }
-  });
-{% endjavascript %}
-
 {% schema %}
 {
   "name": "t:names.logo",
