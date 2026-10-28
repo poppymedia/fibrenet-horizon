@@ -1,6 +1,9 @@
+{% # theme-check-disable UndefinedObject %}
 {%- liquid
+  assign block_settings = block.settings
   assign product = closest.product
-  assign variant = product.selected_or_first_available_variant
+  assign product_variants = shsd_product_variants | default: product.variants
+  assign variant = shsd_product_selected_variant | default: product.selected_or_first_available_variant
   assign title_mode = section.settings.fibrenet_title_mode | default: 'public_sku'
   assign stock_protect = section.settings.fibrenet_stock_protect
 
@@ -8,7 +11,7 @@
   assign public_sku = product.metafields.data.public_sku.value | default: ''
   assign subtitle_prefix = product.metafields.custom.subtitle_prefix.value | default: ''
 
-  assign base_sku = product.variants.first.sku | default: ''
+  assign base_sku = product_variants.first.sku | default: ''
   if product.type contains 'Compatibles-'
     assign base_sku = product.type | remove: 'Compatibles-' | strip
   endif
@@ -73,9 +76,11 @@
     assign show_sku_part = false
   endif
 -%}
+{% # theme-check-enable UndefinedObject %}
 
 <product-title-split
   class="product-title-split text-block"
+  style="--text-align: {{ block_settings.alignment | default: 'center' }};"
   {{ block.shopify_attributes }}
   data-product-id="{{ product.id }}"
   data-title-mode="{{ title_mode }}"
@@ -126,6 +131,12 @@
   "name": "Fibrenet product title",
   "tag": null,
   "settings": [
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "default": "center"
+    },
     {
       "type": "paragraph",
       "content": "Composite H1 driven by section Fibrenet title mode (cables, public_sku, cwdm, aocdac). Updates on variant change via product-title-split.js."

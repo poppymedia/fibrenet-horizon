@@ -1,3 +1,4 @@
+{% # theme-check-disable UndefinedObject %}
 {% liquid
   assign block_settings = block.settings
   assign product = closest.product
@@ -5,7 +6,7 @@
     assign product = collections.all.products.first
   endif
 
-  assign variant = closest.product.selected_or_first_available_variant
+  assign variant = shsd_product_selected_variant | default: closest.product.selected_or_first_available_variant
   assign inventory_quantity = variant.inventory_quantity
   assign inventory_policy = variant.inventory_policy
 
@@ -26,7 +27,7 @@
       assign add_to_cart_text = 'products.product.add_to_cart' | t
     endif
   else
-    if closest.product.selected_or_first_available_variant != null
+    if variant != null
       assign can_add_to_cart = true
       assign add_to_cart_text = 'products.product.add_to_cart' | t
     else
@@ -35,6 +36,7 @@
     endif
   endif
 %}
+{% # theme-check-enable UndefinedObject %}
 
 <span
   class="buy-buttons-block buy-buttons-block--{{ block.id }}"
@@ -47,7 +49,7 @@
       data-product-id="{{ product.id }}"
       data-product-url="{{ product.url }}"
       on:submit="/handleSubmit"
-      data-quantity-default="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
+      data-quantity-default="{% if variant.quantity_rule.min %}{{ variant.quantity_rule.min }}{% else %}1{% endif %}"
     >
       <div
         class="visually-hidden"
@@ -61,7 +63,7 @@
           type="hidden"
           name="id"
           ref="variantId"
-          value="{{ product.selected_or_first_available_variant.id }}"
+          value="{{ variant.id }}"
         >
         {%- if block_settings.gift_card_form and product.gift_card? -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
@@ -117,7 +119,7 @@
     type="module"
   ></script>
 
-  {%- assign pick_up_availabilities = closest.product.selected_or_first_available_variant.store_availabilities
+  {%- assign pick_up_availabilities = variant.store_availabilities
     | where: 'pick_up_enabled', true
   -%}
 
@@ -128,7 +130,7 @@
     {% endif %}
     data-section-id="{{ section.id }}"
     data-product-url="{{ closest.product.url }}"
-    data-variant-id="{{ closest.product.selected_or_first_available_variant.id }}"
+    data-variant-id="{{ variant.id }}"
     style="{% render 'spacing-style', settings: block_settings %}"
     ref="localPickupButton"
   >
@@ -181,7 +183,7 @@
             <div class="pickup-availability__column">
               <h4 class="pickup-location__h4">{{ closest.product.title }}</h4>
               <p class="pickup-location__text-sm">
-                {{ closest.product.selected_or_first_available_variant.title }}
+                {{ variant.title }}
               </p>
             </div>
             <button

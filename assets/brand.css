@@ -667,7 +667,7 @@ button.shopify-payment-button__button--unbranded {
   letter-spacing: var(--font-h1--letter-spacing, var(--brand-letter-spacing));
   text-transform: var(--font-h1--case, none);
   color: var(--brand-accent);
-  text-align: left;
+  text-align: var(--text-align, inherit);
 }
 
 /* Beats the page-title accent above when the slideshow is the first section */
@@ -681,7 +681,7 @@ button.shopify-payment-button__button--unbranded {
 
 .product-information--split .product-title-split__heading,
 .product-information--split .product-details .text-block h1 {
-  text-align: center;
+  text-align: var(--text-align, inherit);
 }
 
 /* base.css zeros .text-block > *:first-child margin — title blocks use padding reset below */

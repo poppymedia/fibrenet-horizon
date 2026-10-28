@@ -9,6 +9,7 @@
   @param {object} [block] - The block object.
   @param {object} [section] - The section object.
   @param {object} [selected_product] - The currently selected product.
+  @param {array} [product_media] - Combined product media.
   @param {boolean} [first_3d_model] - Indicates if this is the first 3D model.
   @param {boolean} [is_main_product_media] - Indicates if this is the main product image.
 
@@ -172,7 +173,7 @@
             type="application/json"
             id="ProductModelJSON-{{ selected_product.id }}"
           >
-            {{ selected_product.media | where: 'media_type', 'model' | json }}
+            {{ product_media | default: selected_product.media | where: 'media_type', 'model' | json }}
           </script>
         {%- endif -%}
       {% when 'video', 'external_video' %}

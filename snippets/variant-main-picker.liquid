@@ -3,11 +3,16 @@
 
   @param {object} product_resource - The product object.
   @param {object} [block] - The block object
+  @param {object} [shsd_product_details] - Product Variant Reloaded details.
+  @param {array} [shsd_product_options_with_values] - Combined product options.
+  @param {object} [shsd_product_selected_variant] - Selected combined variant.
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
+{% assign product_options_with_values = shsd_product_options_with_values | default: product_resource.options_with_values %}
+{% assign selected_product_variant = shsd_product_selected_variant | default: product_resource.selected_or_first_available_variant %}
 
-{% unless product_resource.has_only_default_variant %}
+{% unless product_resource.has_only_default_variant and shsd_product_details.product_type != 'shsd_parent' %}
   {% liquid
     assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness
     if button_background_brightness < 105
@@ -33,7 +38,7 @@
     {% endif %}
   >
     <form class="variant-picker__form">
-      {%- for product_option in product_resource.options_with_values -%}
+      {%- for product_option in product_options_with_values -%}
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
           assign variant_style = block_settings.variant_style
@@ -195,7 +200,7 @@
       {%- endfor -%}
 
       <script type="application/json">
-        {{ product_resource.selected_or_first_available_variant | json }}
+        {{ selected_product_variant | json }}
       </script>
     </form>
   </variant-picker>

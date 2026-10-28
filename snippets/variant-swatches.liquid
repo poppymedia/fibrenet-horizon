@@ -3,10 +3,19 @@
 
   @param {object} product_resource - The product object, which contains variants and options.
   @param {boolean} [has_option_selected] - Whether an option is already selected.
+  @param {array} [product_options_with_values] - Product options override.
+  @param {array} [product_variants] - Product variants override.
+  @param {object} [selected_product_variant] - Selected variant override.
+  @param {array} [product_media] - Product media override.
+  @param {array} [product_images] - Product images override.
 
   @example
   {% render 'variant-swatches', product_resource: product %}
 {%- enddoc -%}
+
+{% assign product_options_with_values = product_options_with_values | default: product_resource.options_with_values %}
+{% assign product_variants = product_variants | default: product_resource.variants %}
+{% assign selected_product_variant = selected_product_variant | default: product_resource.selected_or_first_available_variant %}
 
 <swatches-variant-picker-component
   data-product-id="{{ product_resource.id }}"
@@ -14,7 +23,7 @@
   ref="swatchesVariantPicker"
 >
   <form>
-    {%- for product_option in product_resource.options_with_values -%}
+    {%- for product_option in product_options_with_values -%}
       {%- liquid
         assign swatch_count = product_option.values | map: 'swatch' | compact | size
       -%}
@@ -29,8 +38,8 @@
         # Only apply our custom logic if nothing is selected (initial page load)
         if has_option_selected != true and product_has_combined_listing == 0
           # Logic to determine which swatch should be pre-selected
-          assign first_image = product_resource.media.first
-          assign variant_images = product_resource.images | where: 'attached_to_variant?', true
+          assign first_image = product_media.first | default: product_resource.media.first
+          assign variant_images = product_images | default: product_resource.images | where: 'attached_to_variant?', true
           assign swatch_to_preselect = null
           if swatch_count == 1
             # Single swatch: Always pre-select it
@@ -85,7 +94,7 @@
                   # It could happen that the particular product_option_value.variant is nil
                   # (see https://shopify.dev/docs/api/liquid/objects/product_option_value#product_option_value-variant).
                   # We look for the first available variant in that option (e.g. Color) that has a featured media.
-                  for variant in product_resource.variants
+                  for variant in product_variants
                     if variant.available and variant[swatch_option_key] == product_option_value.name and variant.featured_media
                       assign featured_media = variant.featured_media
                       assign first_available_variant = variant
@@ -159,7 +168,7 @@
       </fieldset>
     {%- endfor -%}
     <script type="application/json">
-      {{ product_resource.selected_or_first_available_variant | json }}
+      {{ selected_product_variant | json }}
     </script>
   </form>
 </swatches-variant-picker-component>

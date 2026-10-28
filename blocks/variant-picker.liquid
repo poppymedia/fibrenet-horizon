@@ -5,7 +5,14 @@
   endif
 -%}
 
-{% render 'variant-main-picker', product_resource: product_resource %}
+{% # theme-check-disable UndefinedObject %}
+{% render 'variant-main-picker',
+  product_resource: product_resource,
+  shsd_product_details: shsd_product_details,
+  shsd_product_options_with_values: shsd_product_options_with_values,
+  shsd_product_selected_variant: shsd_product_selected_variant
+%}
+{% # theme-check-enable UndefinedObject %}
 
 {% schema %}
 {

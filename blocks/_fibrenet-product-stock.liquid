@@ -1,6 +1,8 @@
+{% # theme-check-disable UndefinedObject %}
 {%- liquid
   assign product = closest.product
-  assign variant = product.selected_or_first_available_variant
+  assign product_variants = shsd_product_variants | default: product.variants
+  assign variant = shsd_product_selected_variant | default: product.selected_or_first_available_variant
   assign stock_protect = section.settings.fibrenet_stock_protect
 
   assign stock_lead_time_entries = ''
@@ -38,7 +40,7 @@
 
 {%- capture variants_inventory -%}
   {
-  {%- for v in product.variants -%}
+  {%- for v in product_variants -%}
     "{{ v.id }}": {
       "quantity": {{ v.inventory_quantity | default: 0 }},
       "managed": {% if v.inventory_management == 'shopify' %}true{% else %}false{% endif %},
@@ -47,6 +49,7 @@
   {%- endfor -%}
   }
 {%- endcapture -%}
+{% # theme-check-enable UndefinedObject %}
 
 <product-stock-status
   class="product-stock-status product-inventory spacing-style"

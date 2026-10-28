@@ -1,4 +1,34 @@
 {% liquid
+  assign product_resource = closest.product
+  assign shsd_product_details = product_resource.metafields.sellersdash.shsdproducts.value
+
+  if shsd_product_details.product_type == 'shsd_parent'
+    assign shsd_product_handles = product_resource.handle
+    assign shsd_product_handles = shsd_product_handles | concat: shsd_product_details.handles
+    assign shsd_product_list = product_resource.metafields.sellersdash.shsd_product_list.value
+    assign shsd_product_variants = '' | split: ','
+    assign shsd_product_media = '' | split: ','
+    assign shsd_product_images = '' | split: ','
+
+    for shsd_single_product in shsd_product_list
+      assign shsd_product_variants = shsd_product_variants | concat: shsd_single_product.variants
+      assign shsd_product_media = shsd_product_media | concat: shsd_single_product.media
+      assign shsd_product_images = shsd_product_images | concat: shsd_single_product.images
+    endfor
+
+    assign shsd_product_options_with_values = shsd_product_details.options_with_values
+    assign shsd_product_options = shsd_product_options_with_values | map: 'name'
+    assign shsd_product_selected_variant = shsd_product_variants | where: 'available', true | first
+    assign shsd_product_selected_variant = shsd_product_selected_variant | default: shsd_product_variants.first
+  else
+    assign shsd_product_options_with_values = product_resource.options_with_values
+    assign shsd_product_variants = product_resource.variants
+    assign shsd_product_media = product_resource.media
+    assign shsd_product_images = product_resource.images
+    assign shsd_product_options = shsd_product_options_with_values | map: 'name'
+    assign shsd_product_selected_variant = product_resource.selected_or_first_available_variant
+  endif
+
   if section.settings.desktop_media_position == 'left'
     assign render_order = 'media,product-details'
   else
@@ -6,7 +36,7 @@
   endif
 
   assign product_has_media = true
-  if closest.product.media.size == 0
+  if shsd_product_media.size == 0
     assign product_has_media = false
   endif
 
@@ -47,6 +77,35 @@
   {{ closest.product | structured_data }}
 </script>
 
+{% if shsd_product_details.product_type == 'shsd_parent' %}
+  <script type="application/json" id="ProductJson-{{ section.id }}">{{ closest.product | json }}</script>
+  <script>
+    var shsd_original_product_js = {{ closest.product | json }};
+    shsd_original_product_js["variants"] = {{ shsd_product_variants | json }};
+    shsd_original_product_js["options_with_values"] = {{ shsd_product_options_with_values | json }};
+    shsd_original_product_js["images"] = {{ shsd_product_images | json }};
+    shsd_original_product_js["media"] = {{ shsd_product_media | json }};
+    {% if shsd_product_details.product_extension_type == "shsd_extended" %}
+      shsd_original_product_js["options"] = {{ shsd_product_options | json }};
+      var shsd_variants = shsd_original_product_js["variants"];
+      var shsd_options = {{ shsd_product_options | json }};
+      for (var shsd_v = 0; shsd_v < shsd_variants.length; shsd_v++) {
+        var shsd_variant = shsd_variants[shsd_v];
+        var shsd_option_values = shsd_variant["option1"].split("//");
+        var shsd_option_values_trimmed = [];
+        for (var shsd_o = 0; shsd_o < shsd_options.length; shsd_o++) {
+          var shsd_option_trimmed = shsd_option_values[shsd_o].trim();
+          shsd_option_values_trimmed.push(shsd_option_trimmed);
+          shsd_variants[shsd_v]["option" + (shsd_o + 1).toString()] = shsd_option_trimmed;
+        }
+        shsd_variants[shsd_v]["options"] = shsd_option_values_trimmed;
+      }
+      shsd_original_product_js["variants"] = shsd_variants;
+    {% endif %}
+    document.getElementById("ProductJson-{{ section.id }}").textContent = JSON.stringify(shsd_original_product_js);
+  </script>
+{% endif %}
+
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
   class="product-information section section--{{ content_width }} spacing-style color-{{ section.settings.color_scheme }} relative{% if fibrenet_product_layout %} product-information--split{% endif %}"
@@ -72,7 +131,10 @@
         {%- content_for 'block',
           type: '_product-media-gallery',
           id: 'media-gallery',
-          closest.product: closest.product
+          closest.product: closest.product,
+          shsd_product_media: shsd_product_media,
+          shsd_product_images: shsd_product_images,
+          shsd_product_selected_variant: shsd_product_selected_variant
         -%}
       </div>
     {% endcapture %}
@@ -81,7 +143,11 @@
       {% content_for 'block',
         type: '_product-details',
         id: 'product-details',
-        closest.product: closest.product
+        closest.product: closest.product,
+        shsd_product_details: shsd_product_details,
+        shsd_product_options_with_values: shsd_product_options_with_values,
+        shsd_product_variants: shsd_product_variants,
+        shsd_product_selected_variant: shsd_product_selected_variant
       %}
     {% endcapture %}
 

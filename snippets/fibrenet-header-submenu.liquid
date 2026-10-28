@@ -9,7 +9,11 @@
 {%- if third_level_layout == 'full_width' -%}
   <div id="{{ id }}" class="submenu submenu--third-level-full-width" role="list">
     {%- for child_link in parent_link.links -%}
-      <div class="submenu__item submenu__item--column" role="listitem">
+      <div
+        class="submenu__item submenu__item--column"
+        data-menu-order="{{ forloop.index0 }}"
+        role="listitem"
+      >
         <a
           href="{{ child_link.url }}"
           class="submenu__link submenu__link--column-heading{% if child_link.active %} submenu__link--active{% endif %}"

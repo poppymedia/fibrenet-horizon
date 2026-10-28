@@ -7,13 +7,17 @@
   ></script>
 {%- endif -%}
 
+{% # theme-check-disable UndefinedObject %}
 {%- liquid
   assign selected_product = closest.product
-  assign selected_variant_media = selected_product.selected_or_first_available_variant.featured_media
-  assign first_3d_model = selected_product.media | where: 'media_type', 'model' | first
+  assign product_media = shsd_product_media | default: selected_product.media
+  assign product_images = shsd_product_images | default: selected_product.images
+  assign selected_variant = shsd_product_selected_variant | default: selected_product.selected_or_first_available_variant
+  assign selected_variant_media = selected_variant.featured_media
+  assign first_3d_model = product_media | where: 'media_type', 'model' | first
 
   if block_settings.hide_variants
-    assign variant_images = selected_product.images | where: 'attached_to_variant?', true | map: 'src'
+    assign variant_images = product_images | where: 'attached_to_variant?', true | map: 'src'
   endif
 
   if block_settings.slideshow_controls_style == 'thumbnails'
@@ -40,13 +44,13 @@
 
   assign slideshow_controls_style = block_settings.slideshow_controls_style
   # Use a counter instead of dots when there are many images to avoid cropping/overflow.
-  if slideshow_controls_style == 'dots' and selected_product.media.size > 15
+  if slideshow_controls_style == 'dots' and product_media.size > 15
     assign slideshow_controls_style = 'counter'
   endif
 
   assign render_slideshow_arrows = false
 
-  if selected_product.media.size <= 1
+  if product_media.size <= 1
     assign slideshow_class = 'product-media-gallery__slideshow--single-media slideshow--single-media'
   else
     assign slideshow_class = ''
@@ -78,24 +82,25 @@
     endif
   endif
 -%}
+{% # theme-check-enable UndefinedObject %}
 
 {%- liquid
   assign sorted_media = '' | split: ','
   if selected_variant_media
-    assign sorted_media = sorted_media | concat: selected_product.media | where: 'id', selected_variant_media.id
+    assign sorted_media = sorted_media | concat: product_media | where: 'id', selected_variant_media.id
 
-    for media in selected_product.media
+    for media in product_media
       if block_settings.hide_variants and variant_images contains media.src and sorted_media.size > 0
         continue
       endif
 
       if media.id != selected_variant_media.id
-        assign found_media = selected_product.media | where: 'id', media.id
+        assign found_media = product_media | where: 'id', media.id
         assign sorted_media = sorted_media | concat: found_media
       endif
     endfor
   else
-    assign sorted_media = selected_product.media
+    assign sorted_media = product_media
   endif
   assign has_image_drop = sorted_media | has: 'media_type', 'image'
 
@@ -311,7 +316,9 @@
               media: media,
               sizes: media_sizes,
               loading: media_loading,
-              is_main_product_media: forloop.first
+              is_main_product_media: forloop.first,
+              selected_product: selected_product,
+              product_media: product_media
             -%}
           </div>
         {% else %}
@@ -319,7 +326,9 @@
             media: media,
             sizes: media_sizes,
             loading: media_loading,
-            is_main_product_media: forloop.first
+            is_main_product_media: forloop.first,
+            selected_product: selected_product,
+            product_media: product_media
           -%}
         {% endif %}
       {% endcapture %}
@@ -433,7 +442,9 @@
                 media: media,
                 sizes: media_sizes,
                 loading: media_loading,
-                is_main_product_media: forloop.first
+                is_main_product_media: forloop.first,
+                selected_product: selected_product,
+                product_media: product_media
               -%}
             </div>
           {% else %}
@@ -441,7 +452,9 @@
               media: media,
               sizes: media_sizes,
               loading: media_loading,
-              is_main_product_media: forloop.first
+              is_main_product_media: forloop.first,
+              selected_product: selected_product,
+              product_media: product_media
             -%}
           {% endif %}
         </li>
@@ -533,7 +546,9 @@
                     media: media,
                     sizes: '100vw',
                     loading: 'lazy',
-                    is_main_product_media: false
+                    is_main_product_media: false,
+                    selected_product: selected_product,
+                    product_media: product_media
                   -%}
                 </drag-zoom-wrapper>
               {% else %}
@@ -541,7 +556,9 @@
                   media: media,
                   sizes: '100vw',
                   loading: 'lazy',
-                  is_main_product_media: false
+                  is_main_product_media: false,
+                  selected_product: selected_product,
+                  product_media: product_media
                 -%}
               {% endif %}
             </li>

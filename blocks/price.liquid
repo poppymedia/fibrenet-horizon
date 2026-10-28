@@ -1,8 +1,10 @@
+{% # theme-check-disable UndefinedObject %}
 {%- liquid
   assign block_settings = block.settings
   assign product_resource = closest.product
-  assign selected_variant = product_resource.selected_or_first_available_variant
+  assign selected_variant = shsd_product_selected_variant | default: product_resource.selected_or_first_available_variant
 -%}
+{% # theme-check-enable UndefinedObject %}
 
 {% liquid
   if block_settings.type_preset == 'rte' or block_settings.type_preset == 'paragraph'
@@ -48,6 +50,7 @@
   {% render 'price',
     show_unit_price: true,
     product_resource: product_resource,
+    selected_variant: selected_variant,
     show_sale_price_first: block_settings.show_sale_price_first
   %}
 

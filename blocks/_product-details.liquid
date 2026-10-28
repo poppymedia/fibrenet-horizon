@@ -1,5 +1,6 @@
 {%- assign block_settings = block.settings -%}
 
+{% # theme-check-disable UndefinedObject %}
 <div
   id="ProductInformation-{{ section.id }}"
   class="
@@ -16,12 +17,13 @@
   {% capture children %}
     <div class="view-product-title">
       <a
-        href="{{ product.selected_or_first_available_variant.url }}"
+        href="{{ shsd_product_selected_variant.url | default: product.selected_or_first_available_variant.url }}"
         class="link"
       >
         {{- product.title }}
       </a>
     </div>
+    {% # theme-check-enable UndefinedObject %}
     {% content_for 'blocks' %}
   {% endcapture %}
 

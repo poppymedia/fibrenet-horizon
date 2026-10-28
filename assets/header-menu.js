@@ -36,7 +36,10 @@ class HeaderMenu extends Component {
       this.refs.submenu?.forEach((submenu) => {
         submenu.addEventListener(
           'pointerenter',
-          () => this.#debouncedDeactivate?.cancel(),
+          () => {
+            this.#debouncedDeactivate?.cancel();
+            requestAnimationFrame(this.#balanceFullWidthMenus);
+          },
           { signal: this.#abortController.signal }
         );
         submenu.addEventListener(
@@ -59,7 +62,7 @@ class HeaderMenu extends Component {
       capture: true,
       signal: this.#abortController.signal,
     });
-    window.addEventListener('scroll', this.#updateFullWidthMenuTop, {
+    window.addEventListener('scroll', this.#handleFullWidthMenuScroll, {
       capture: true,
       signal: this.#abortController.signal,
     });
@@ -140,7 +143,6 @@ class HeaderMenu extends Component {
     this.#debouncedDeactivate?.cancel();
 
     this.dispatchEvent(new MegaMenuHoverEvent());
-    this.#updateFullWidthMenuTop();
 
     this.removeAttribute('data-animating');
 
@@ -149,6 +151,8 @@ class HeaderMenu extends Component {
     let item = findMenuItem(event.target);
 
     if (!item || item == this.#state.activeItem) return;
+
+    this.#updateFullWidthMenuTop();
 
     const isDefaultSlot = event.target.slot === '';
 
@@ -163,6 +167,9 @@ class HeaderMenu extends Component {
     this.#state.activeItem = item;
     this.ariaExpanded = 'true';
     item.ariaExpanded = 'true';
+    if (this.dataset.thirdLevelLayout === 'full_width') {
+      requestAnimationFrame(this.#balanceFullWidthMenus);
+    }
 
     let submenu = findSubmenu(item);
     let overflowMenuHeight = this.overflowMenu?.offsetHeight ?? 0;
@@ -277,6 +284,10 @@ class HeaderMenu extends Component {
     );
   };
 
+  #handleFullWidthMenuScroll = () => {
+    this.#updateFullWidthMenuTop();
+  };
+
   #balanceFullWidthMenus = () => {
     if (this.dataset.balanceThirdLevelColumns !== 'true') return;
 
@@ -310,7 +321,7 @@ class HeaderMenu extends Component {
         measure.append(clone);
         return {
           element,
-          index,
+          index: Number(element.dataset.menuOrder ?? index),
           height: clone.getBoundingClientRect().height,
         };
       });

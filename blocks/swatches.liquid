@@ -1,6 +1,8 @@
+{% # theme-check-disable UndefinedObject %}
 {%- liquid
   assign block_settings = block.settings
-  for product_option in closest.product.options_with_values
+  assign product_options_with_values = shsd_product_options_with_values | default: closest.product.options_with_values
+  for product_option in product_options_with_values
     assign swatch_count = product_option.values | map: 'swatch' | compact | size
 
     if swatch_count > 0
@@ -25,9 +27,17 @@
     "
     {{ block.shopify_attributes }}
   >
-    {% render 'variant-swatches', product_resource: closest.product %}
+    {% render 'variant-swatches',
+      product_resource: closest.product,
+      product_options_with_values: product_options_with_values,
+      product_variants: shsd_product_variants,
+      selected_product_variant: shsd_product_selected_variant,
+      product_media: shsd_product_media,
+      product_images: shsd_product_images
+    %}
   </product-swatches>
 {% endif %}
+{% # theme-check-enable UndefinedObject %}
 
 {% # theme-check-disable %}
 {% stylesheet %}

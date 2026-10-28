@@ -5,12 +5,13 @@
   @param {product} product_resource - The product to render
   @param {boolean} [show_unit_price] - Whether to show the unit price
   @param {boolean} [show_sale_price_first] - Whether to show the sale price first
+  @param {object} [selected_variant] - A variant override for product-page integrations
 {%- enddoc -%}
 
 {%- liquid
   assign show_unit_price = show_unit_price | default: false
   assign show_sale_price_first = show_sale_price_first | default: false
-  assign selected_variant = product_resource.selected_or_first_available_variant
+  assign selected_variant = selected_variant | default: product_resource.selected_or_first_available_variant
   assign price = selected_variant.price
   assign compare_at_price = selected_variant.compare_at_price
 
