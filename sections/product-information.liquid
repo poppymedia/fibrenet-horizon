@@ -71,6 +71,11 @@
   if section.settings.layout_style == 'fibrenet'
     assign fibrenet_product_layout = true
   endif
+
+  assign is_cleaners_product_template = false
+  if template.suffix == 'cleaners'
+    assign is_cleaners_product_template = true
+  endif
 %}
 
 <script type="application/ld+json">
@@ -108,7 +113,7 @@
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="product-information section section--{{ content_width }} spacing-style color-{{ section.settings.color_scheme }} relative{% if fibrenet_product_layout %} product-information--split{% endif %}"
+  class="product-information section section--{{ content_width }} spacing-style color-{{ section.settings.color_scheme }} relative{% if fibrenet_product_layout %} product-information--split{% endif %}{% if is_cleaners_product_template %} product-information--cleaners{% endif %}"
   style="{% render 'spacing-style', settings: section.settings %} --gap: {{ section.settings.gap }}px;"
 >
   {% if section.settings.desktop_media_position == 'left' and product_has_media %}

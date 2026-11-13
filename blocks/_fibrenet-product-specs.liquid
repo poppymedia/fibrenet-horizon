@@ -2,6 +2,10 @@
   assign product = closest.product
   assign spec = product.metafields.spec
   assign public_sku = product.metafields.data.public_sku.value | default: ''
+  assign cleaner_specification = blank
+  if template.suffix == 'cleaners'
+    assign cleaner_specification = product.metafields.custom.specification.value
+  endif
 -%}
 
 {%- capture spec_rows -%}
@@ -27,13 +31,22 @@
 {%- liquid
   assign spec_rows_stripped = spec_rows | strip
 -%}
-{%- if spec_rows_stripped != blank -%}
-  <div class="product-specs-table" {{ block.shopify_attributes }}>
-    <div class="product-specs-table__table" role="table">
-      <div class="product-specs-table__body" role="rowgroup">
-        {{ spec_rows }}
+{%- if spec_rows_stripped != blank or cleaner_specification != blank -%}
+  <div class="product-specs-block" {{ block.shopify_attributes }}>
+    {%- if cleaner_specification != blank -%}
+      <div class="product-cleaner-specification">
+        {{ cleaner_specification | escape | newline_to_br }}
       </div>
-    </div>
+    {%- endif -%}
+    {%- if spec_rows_stripped != blank -%}
+      <div class="product-specs-table">
+        <div class="product-specs-table__table" role="table">
+          <div class="product-specs-table__body" role="rowgroup">
+            {{ spec_rows }}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 {%- endif -%}
 
@@ -44,7 +57,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Rows render from product metafields in the spec namespace, data.public_sku, and datasheet. On templates that use spec.datasheet_pdf, the datasheet row always appears (PDF link or no-download message)."
+      "content": "Rows render from product metafields in the spec namespace, data.public_sku, and datasheet. The cleaners template also displays custom.specification here. On templates that use spec.datasheet_pdf, the datasheet row always appears (PDF link or no-download message)."
     }
   ]
 }

@@ -2663,6 +2663,19 @@ label:not(.variant-option__button-label) {
   content: ' ';
 }
 
+.product-information--cleaners .product-title-split__middle {
+  color: var(--color-text-body);
+  font-size: 90%;
+  font-weight: var(--brand-weight-base) !important;
+}
+
+.product-information--cleaners .product-cleaner-specification {
+  margin-block: var(--padding-lg);
+  font-size: var(--brand-type-min);
+  line-height: 1.5;
+  text-align: left;
+}
+
 .product-information--split .product-subtitle {
   margin: 0 0 var(--padding-lg);
   font-size: var(--product-subtitle-size);

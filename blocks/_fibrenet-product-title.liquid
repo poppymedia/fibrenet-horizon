@@ -6,6 +6,10 @@
   assign variant = shsd_product_selected_variant | default: product.selected_or_first_available_variant
   assign title_mode = section.settings.fibrenet_title_mode | default: 'public_sku'
   assign stock_protect = section.settings.fibrenet_stock_protect
+  assign hide_variant_title = false
+  if template.suffix == 'cleaners'
+    assign hide_variant_title = true
+  endif
 
   assign product_title_clean = product.title | replace: '(Second)', '' | replace: '(second)', '' | strip
   assign public_sku = product.metafields.data.public_sku.value | default: ''
@@ -84,6 +88,7 @@
   {{ block.shopify_attributes }}
   data-product-id="{{ product.id }}"
   data-title-mode="{{ title_mode }}"
+  data-hide-variant-title="{{ hide_variant_title }}"
   data-stock-protect="{{ stock_protect }}"
   data-product-type="{{ product.type | escape }}"
   data-product-title-clean="{{ product_title_clean | escape }}"
@@ -101,7 +106,7 @@
     {%- if title_mode == 'aocdac' -%}
       <span class="product-title-split__barcode" data-product-title-part="barcode"{% if h1_barcode == blank %} hidden{% endif %}>{{ h1_barcode | escape }}</span>
     {%- endif -%}
-    {%- if h1_suffix != blank and template != 'product.cables' -%}
+    {%- if h1_suffix != blank and template != 'product.cables' and hide_variant_title == false -%}
       <span class="product-title-split__suffix" data-product-title-part="suffix">{{ h1_suffix | escape }}</span>
     {%- endif -%}
   </h1>

@@ -204,6 +204,7 @@ class FibrenetProductTitle extends HTMLElement {
     const productTitleClean = String(this.dataset.productTitleClean || this.#config.productTitleClean || '');
     const publicSku = String(this.dataset.publicSku || this.#config.publicSku || '');
     const subtitlePrefix = String(this.dataset.subtitlePrefix || this.#config.subtitlePrefix || '');
+    const hideVariantTitle = this.dataset.hideVariantTitle === 'true';
     let baseSku = String(this.dataset.baseSku || this.#config.baseSku || '');
 
     if (productType.includes('Compatibles-')) {
@@ -264,6 +265,9 @@ class FibrenetProductTitle extends HTMLElement {
 
     if (!h1Leading && baseSku) {
       h1Leading = baseSku;
+    }
+    if (hideVariantTitle) {
+      h1Suffix = '';
     }
 
     this.#ensureSegment('leading');
